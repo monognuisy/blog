@@ -1,4 +1,5 @@
 module.exports = {
+  pathPrefix: `/blog`,
   siteMetadata: {
     title: `monognuisy blog.`,
     author: {
@@ -113,9 +114,9 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
-        start_url: `/`,
+        name: `monognuisy blog`,
+        short_name: `monognuisy blog`,
+        start_url: `/blog`,
         background_color: `#ffffff`,
         // This will impact how browsers show your PWA/website
         // https://css-tricks.com/meta-theme-color-and-trickery/
