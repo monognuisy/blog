@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-pages-index-js",
+    "path": "/",
+    "result": {"data":{"site":{"siteMetadata":{"title":"monognuisy blog."}},"allMarkdownRemark":{"nodes":[{"excerpt":"This is my first post on my new fake blog! How exciting! I’m sure I’ll write a lot more interesting things in the future. Oh, and here’s a…","fields":{"slug":"/hello-world/"},"frontmatter":{"date":"May 01, 2015","title":"Hello World","description":"Hello World"}}]}},"pageContext":{}},
+    "staticQueryHashes": ["2841359383","3274528899"]}
