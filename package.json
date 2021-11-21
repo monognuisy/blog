@@ -34,6 +34,7 @@
     "typeface-montserrat": "0.0.75"
   },
   "devDependencies": {
+    "gatsby-cli": "^4.2.0",
     "prettier": "^2.4.1"
   },
   "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
@@ -54,6 +55,6 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
-    "deploy": "gatsby build && gh-pages -d build -b main"
+    "deploy": "gatsby build && gh-pages -d public -b main"
   }
 }
