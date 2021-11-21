@@ -18,7 +18,7 @@ $ a^2 + b^2 = c^2 $
 또한 **block 수식**을 넣을 수 있습니다.
 
 $$ 
-V^* \in \mathfrak{L}(V,F) 
+V^* = \mathfrak{L}(V,F) 
 $$
 
 당연히 `code`도 넣을 수 있습니다.
