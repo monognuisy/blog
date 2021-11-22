@@ -2,6 +2,7 @@
 title: 벡터 공간
 date: "2021-11-22"
 description: "vector space basic"
+tags: ["Dummy"]
 ---
 
 우리는 고등학교 때 부터 알게 모르게 **벡터**라는 단어를 많이 들어왔다. 

@@ -2,6 +2,7 @@
 title: 이것이 Gatsby?
 date: "2021-11-21"
 description: "first post"
+tags: ["Mathematics", "Linear Algebra"]
 ---
 
 유사-블로그를 개설해 보았습니다.
