@@ -13,8 +13,11 @@ const TagsPage = ({
     },
   },
 }) => (
-  <div>
+  <div className="global-wrapper">
     <Helmet title={title} />
+    <Link className="header-link-home" to="/">
+        {title}
+    </Link>
     <div>
       <h1>Tags</h1>
       <ul>

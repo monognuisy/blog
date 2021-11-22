@@ -9,19 +9,41 @@ const Tags = ({ pageContext, data }) => {
     totalCount === 1 ? "" : "s"
   } tagged with "${tag}"`
   return (
-    <div>
+    <div className="global-wrapper">
       <h1>{tagHeader}</h1>
-      <ul>
+      <ol style={{ listStyle: `none`}}>
         {edges.map(({ node }) => {
           const { slug } = node.fields
           const { title } = node.frontmatter
+          console.log(node)
           return (
             <li key={slug}>
-              <Link to={slug}>{title}</Link>
+              <article
+                className="post-list-item"
+                itemScope
+                itemType="http://schema.org/Article"
+              >
+                <header>
+                  <h2>
+                    <Link to={slug} itemProp="url">
+                      <span itemProp="headline">{title}</span>
+                    </Link>
+                  </h2>
+                  <small>{node.frontmatter.date}</small>
+                </header>
+                <section>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: node.frontmatter.description || node.excerpt,
+                    }}
+                    itemProp="description"
+                  />
+                </section>
+              </article>
             </li>
           )
         })}
-      </ul>
+      </ol>
       {/*
               This links to a page that does not yet exist.
               You'll come back to it!
@@ -68,6 +90,8 @@ export const pageQuery = graphql`
           }
           frontmatter {
             title
+            date
+            description
           }
         }
       }
