@@ -43,12 +43,6 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: `gatsby-plugin-generate-typings`,
-      options: {
-        dest: `./src/graphql-types.d.ts`,
-      },
-    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sharp`,
