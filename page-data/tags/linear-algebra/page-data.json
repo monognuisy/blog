@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-templates-tags-tsx",
+    "path": "/tags/linear-algebra/",
+    "result": {"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/vector-space/"},"frontmatter":{"title":"벡터 공간","date":"2021-11-22","description":"vector space basic"}}}]}},"pageContext":{"tag":"Linear Algebra"}},
+    "staticQueryHashes": []}

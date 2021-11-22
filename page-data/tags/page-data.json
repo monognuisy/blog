@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-pages-tags-tsx",
+    "path": "/tags/",
+    "result": {"data":{"site":{"siteMetadata":{"title":"monognuisy blog."}},"allMarkdownRemark":{"group":[{"fieldValue":"Linear Algebra","totalCount":1},{"fieldValue":"Mathematics","totalCount":1},{"fieldValue":"dummy","totalCount":1}]}},"pageContext":{}},
+    "staticQueryHashes": []}
