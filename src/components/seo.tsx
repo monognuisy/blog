@@ -13,7 +13,14 @@ import { useStaticQuery, graphql } from "gatsby"
 import { defineCustomElements as deckDeckGoHighlightElement } from "@deckdeckgo/highlight-code/dist/loader"
 deckDeckGoHighlightElement()
 
-const Seo = ({ description, lang, meta, title }) => {
+interface SEOProps {
+  description?: string;
+  lang?: string;
+  meta?: any;
+  title?: string;
+}
+
+const Seo = ({ description, lang, meta, title }: SEOProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -39,7 +46,7 @@ const Seo = ({ description, lang, meta, title }) => {
         lang,
       }}
       title={title}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : undefined}
       meta={[
         {
           name: `description`,
