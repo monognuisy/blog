@@ -39,7 +39,8 @@
     "gatsby-transformer-remark": "^5.2.0",
     "gh-pages": "^3.2.3",
     "katex": "^0.13.24",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "typescript": "^4.5.2"
   },
   "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
   "keywords": [
