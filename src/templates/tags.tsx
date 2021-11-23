@@ -2,12 +2,14 @@ import React from "react"
 import PropTypes from "prop-types"
 // Components
 import { Link, graphql } from "gatsby"
+
 const Tags = ({ pageContext, data }) => {
   const { tag } = pageContext
   const { edges, totalCount } = data.allMarkdownRemark
   const tagHeader = `${totalCount} post${
     totalCount === 1 ? "" : "s"
   } tagged with "${tag}"`
+  
   return (
     <div className="global-wrapper">
       <h1>{tagHeader}</h1>
