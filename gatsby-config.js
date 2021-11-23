@@ -4,7 +4,7 @@ module.exports = {
     title: `monognuisy blog.`,
     author: {
       name: `monognuisy`,
-      summary: `who study Computer & Software Science in Hanyang University, Seoul, Korea`,
+      summary: `studying Computer & Software Science in Hanyang University, Seoul, Korea`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://monognuisy.github.io/blog/`,

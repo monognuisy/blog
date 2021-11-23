@@ -263,7 +263,7 @@ a:focus {
   font-size: var(--fontSize-7);
   margin: 0;
   display: inline;
-  box-shadow: inset 0 -3vmin 0 var(--color-highlight);
+  box-shadow: inset 0 -1rem 0 var(--color-highlight);
 }
 
 .post-list-item {
