@@ -9,7 +9,7 @@ const Tags = ({ pageContext, data }) => {
   const tagHeader = `${totalCount} post${
     totalCount === 1 ? "" : "s"
   } tagged with "${tag}"`
-  
+
   return (
     <div className="global-wrapper">
       <h1>{tagHeader}</h1>
