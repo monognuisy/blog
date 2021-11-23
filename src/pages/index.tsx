@@ -1,11 +1,59 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { Link, graphql, useStaticQuery, PageProps } from "gatsby"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-const BlogIndex = ({ data, location }) => {
+interface PostNode {
+  excerpt: string
+  fields: {
+    slug: string
+  }
+  frontmatter: {
+    date: string
+    title: string
+    description: string
+    tags: string[]
+  }
+}
+
+interface BlogIndexQueryData {
+  site: {
+    siteMetadata: {
+      title: string
+    }
+  }
+  allMarkdownRemark: {
+    nodes: PostNode[]
+  }
+}
+
+const BlogIndex = ({ location }: PageProps) => {
+  const data: BlogIndexQueryData = useStaticQuery(graphql`
+    query {
+      site {
+        siteMetadata {
+          title
+        }
+      }
+      allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+        nodes {
+          excerpt
+          fields {
+            slug
+          }
+          frontmatter {
+            date(formatString: "MMMM DD, YYYY")
+            title
+            description
+            tags
+          }
+        }
+      }
+    }
+  `)
+
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes
 
@@ -64,27 +112,3 @@ const BlogIndex = ({ data, location }) => {
 }
 
 export default BlogIndex
-
-export const pageQuery = graphql`
-  query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      nodes {
-        excerpt
-        fields {
-          slug
-        }
-        frontmatter {
-          date(formatString: "MMMM DD, YYYY")
-          title
-          description
-          tags
-        }
-      }
-    }
-  }
-`
