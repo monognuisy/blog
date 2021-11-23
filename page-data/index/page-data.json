@@ -1,5 +1,5 @@
 {
-    "componentChunkName": "component---src-pages-index-js",
+    "componentChunkName": "component---src-pages-index-tsx",
     "path": "/",
-    "result": {"data":{"site":{"siteMetadata":{"title":"monognuisy blog."}},"allMarkdownRemark":{"nodes":[{"excerpt":"Sample Heading 안녕하세요, 세상","fields":{"slug":"/gatsby-blog/1/"},"frontmatter":{"date":"November 23, 2021","title":"Gatsby 블로그 만들기 - 1","description":"기본적인 세팅 등등","tags":["Javascript"]}},{"excerpt":"…","fields":{"slug":"/vector-space/"},"frontmatter":{"date":"November 22, 2021","title":"벡터 공간","description":"vector space basic","tags":["Mathematics","Linear Algebra"]}},{"excerpt":"유사-블로그를 개설해 보았습니다. heading은 이렇게 쓰는 겁니다. 아닌가?  어떻게 하면 line을 break할 수 있습니까? 이렇게 inline 수식을 넣을 수 있습니다.  또한 block 수식을 넣을 수 있습니다. 당연히 code…","fields":{"slug":"/hello-world/"},"frontmatter":{"date":"November 21, 2021","title":"이것이 Gatsby?","description":"first post","tags":["dummy"]}}]}},"pageContext":{}},
-    "staticQueryHashes": ["2841359383","3274528899"]}
+    "result": {"pageContext":{}},
+    "staticQueryHashes": ["1682760107","2841359383","3274528899"]}

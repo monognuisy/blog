@@ -1,5 +1,5 @@
 {
-    "componentChunkName": "component---src-templates-tags-tsx",
+    "componentChunkName": "component---src-templates-tags-post-tsx",
     "path": "/tags/dummy/",
     "result": {"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/hello-world/"},"frontmatter":{"title":"이것이 Gatsby?","date":"2021-11-21","description":"first post"}}}]}},"pageContext":{"tag":"dummy"}},
     "staticQueryHashes": []}
