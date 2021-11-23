@@ -31,7 +31,11 @@ const TagsPage = ({
           padding: 0,
         }}>
         {group.map(tag => (
-          <li key={tag.fieldValue} style={{ marginRight: `1rem` }}>
+          <li key={tag.fieldValue} 
+            style={{ 
+              marginRight: `1rem`,
+              marginBottom: `2rem`
+            }}>
             <TagBox tagName={tag.fieldValue} />
           </li>
         ))}
