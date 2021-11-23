@@ -5,6 +5,8 @@ import kebabCase from "lodash/kebabCase"
 // Components
 import { Helmet } from "react-helmet"
 import { Link, graphql } from "gatsby"
+import TagBox from "../components/tag"
+
 const TagsPage = ({
   data: {
     allMarkdownRemark: { group },
@@ -19,13 +21,18 @@ const TagsPage = ({
         {title}
     </Link>
     <div>
-      <h1>Tags</h1>
-      <ul>
+      <h1>All Tags.</h1>
+      <ul 
+        style={{
+          display: `flex`,
+          flexWrap: `wrap`,
+          justifyContent: `flex-start`,
+          listStyle: `none`,
+          padding: 0,
+        }}>
         {group.map(tag => (
-          <li key={tag.fieldValue}>
-            <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
-              {tag.fieldValue} ({tag.totalCount})
-            </Link>
+          <li key={tag.fieldValue} style={{ marginRight: `1rem` }}>
+            <TagBox tagName={tag.fieldValue} />
           </li>
         ))}
       </ul>

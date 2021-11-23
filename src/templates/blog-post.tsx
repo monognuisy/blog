@@ -39,7 +39,6 @@ const BlogPostTemplate = ({ data, location }: any) => {
           >
             {tags.map(tag => (
               <li key={tag} style={{ marginRight: `1rem` }}>
-                {/* <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link> */}
                 <TagBox tagName={tag} />
               </li>
             ))}
