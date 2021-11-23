@@ -8,6 +8,7 @@ import Seo from "../components/seo"
 import kebabCase from "lodash/kebabCase"
 
 import "katex/dist/katex.min.css"
+import TagBox from "../components/tag"
 
 const BlogPostTemplate = ({ data, location }) => {
   const post = data.markdownRemark
@@ -40,7 +41,8 @@ const BlogPostTemplate = ({ data, location }) => {
           >
             {tags.map(tag => (
               <li key={tag} style={{ marginRight: `1rem` }}>
-                <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
+                {/* <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link> */}
+                <TagBox tagName={tag} />
               </li>
             ))}
           </ul>
@@ -101,6 +103,7 @@ export const pageQuery = graphql`
       id
       excerpt(pruneLength: 160)
       html
+      tableOfContents
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
