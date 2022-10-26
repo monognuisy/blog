@@ -1,5 +1,1 @@
-{
-    "componentChunkName": "component---src-templates-tags-post-tsx",
-    "path": "/tags/javascript/",
-    "result": {"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/gatsby-blog/1/"},"frontmatter":{"title":"Gatsby 블로그 만들기 - 1","date":"2021-11-23","description":"기본적인 세팅 등등"}}}]}},"pageContext":{"tag":"Javascript"}},
-    "staticQueryHashes": []}
+{"componentChunkName":"component---src-templates-tags-post-tsx","path":"/tags/javascript/","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/gatsby-blog/1/"},"frontmatter":{"title":"Gatsby 블로그 만들기 - 1","date":"2021-11-23","description":"기본적인 세팅 등등"}}}]}},"pageContext":{"tag":"Javascript"}},"staticQueryHashes":[]}

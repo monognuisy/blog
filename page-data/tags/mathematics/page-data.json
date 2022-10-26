@@ -1,5 +1,1 @@
-{
-    "componentChunkName": "component---src-templates-tags-post-tsx",
-    "path": "/tags/mathematics/",
-    "result": {"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/vector-space/1/"},"frontmatter":{"title":"벡터 공간","date":"2021-11-22","description":"vector space basic"}}}]}},"pageContext":{"tag":"Mathematics"}},
-    "staticQueryHashes": []}
+{"componentChunkName":"component---src-templates-tags-post-tsx","path":"/tags/mathematics/","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/vector-space/1/"},"frontmatter":{"title":"벡터 공간","date":"2021-11-22","description":"vector space basic"}}}]}},"pageContext":{"tag":"Mathematics"}},"staticQueryHashes":[]}
