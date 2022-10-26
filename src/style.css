@@ -245,6 +245,74 @@ a:focus {
 
 /* Custom classes */
 
+.most-outer-wrapper {
+  margin: 0 auto;
+  /* position: relative; */
+}
+
+.global-header {
+  display: block;
+  /* flex-direction: column;
+  justify-content: center; */
+  margin: var(--spacing-0) auto;
+  padding-left: var(--spacing-10);
+  padding-right: var(--spacing-10);
+}
+
+.gh-inner {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr 0.8fr;
+  grid-auto-flow: row dense;
+  max-width: 1200px;
+  align-items: center;
+}
+
+.gh-inner-brand {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  grid-row-start: 1;
+  grid-column-start: 1;
+  height: 80px;
+}
+
+.gh-inner-menus {
+  justify-self: start;
+  grid-row-start: 2;
+}
+
+.nav {
+  margin: 0 auto;
+  display: flex;
+  list-style: none;
+}
+
+.nav > li {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.nav-about,
+.nav-donation {
+  margin-left: var(--spacing-5);
+}
+
+.gh-hr {
+  position: absolute;
+  z-index: 0;
+  margin: 0 auto;
+  width: 100vw;
+}
+.hr-1 {
+  top: 80px;
+}
+.hr-2 {
+  position: absolute;
+  top: 144px;
+}
+
 .global-wrapper {
   margin: var(--spacing-0) auto;
   max-width: var(--maxWidth-wrapper);
@@ -253,10 +321,6 @@ a:focus {
 
 .global-wrapper[data-is-root-path="true"] .bio {
   margin-bottom: var(--spacing-20);
-}
-
-.global-header {
-  margin-bottom: var(--spacing-12);
 }
 
 .main-heading {
