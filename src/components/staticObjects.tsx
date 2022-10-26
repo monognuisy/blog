@@ -23,9 +23,15 @@ export const blogHeader = (
         </div>
         <nav className="gh-inner-menus">
           <ul className="nav">
-            <li className="nav-home">HOME</li>
-            <li className="nav-about">ABOUT</li>
-            <li className="nav-donation">DONATION</li>
+            <li className="nav-home">
+              <Link to="/">HOME</Link>
+            </li>
+            <li className="nav-about">
+              <Link to="/">ABOUT</Link>
+            </li>
+            <li className="nav-donation">
+              <Link to="https://toss.me/monognuisy/10000">DONATION</Link>
+            </li>
           </ul>
         </nav>
       </div>
@@ -35,16 +41,16 @@ export const blogHeader = (
 
 export const blogFooter = (
   <footer className="gh-footer-wrapper">
-    <div className="gh-footer">
-      <p className="gh-footer-items gh-footer-copyright">
+    <ul className="gh-footer">
+      <li className="gh-footer-items gh-footer-copyright">
         © {new Date().getFullYear()}. monognuisy. <br/> All Rights Reserved.
-      </p>
-      <p className="gh-footer-items gh-footer-contact">
-        Contact
-      </p>
-      <p className="gh-footer-items gh-footer-source">
-        Site source
-      </p>
-    </div>
+      </li>
+      <li className="gh-footer-items gh-footer-contact">
+        <Link to="mailto:ysmsmart1@gmail.com">Contact</Link>
+      </li>
+      <li className="gh-footer-items gh-footer-source">
+        <Link to="https://github.com/monognuisy/blog">Site source</Link>
+      </li>
+    </ul>
   </footer>
 )
