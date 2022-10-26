@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Link, graphql, useStaticQuery } from "gatsby"
+import Utterances from "../components/Utterances"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -79,6 +80,7 @@ const BlogPostTemplate = ({ data, location }: any) => {
           </li>
         </ul>
       </nav>
+      <Utterances repo='monognuisy/blog' theme='github-light' />
     </Layout>
   )
 }
