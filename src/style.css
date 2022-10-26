@@ -245,6 +245,16 @@ a:focus {
   text-decoration: none;
 }
 
+figure {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+figcaption {
+  color: var(--color-text-light);
+}
+
 /* Custom classes */
 
 .most-outer-wrapper {
