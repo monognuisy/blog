@@ -6,6 +6,7 @@ import kebabCase from "lodash/kebabCase"
 import { Helmet } from "react-helmet"
 import { Link, graphql } from "gatsby"
 import TagBox from "../components/tag"
+import { blogHeader } from "../components/staticObjects"
 
 const TagsPage = ({
   data: {
@@ -15,31 +16,30 @@ const TagsPage = ({
     },
   },
 }) => (
-  <div className="global-wrapper">
-    <Helmet title={title} />
-    <Link className="header-link-home" to="/">
-        {title}
-    </Link>
-    <div>
-      <h1>All Tags.</h1>
-      <ul 
-        style={{
-          display: `flex`,
-          flexWrap: `wrap`,
-          justifyContent: `flex-start`,
-          listStyle: `none`,
-          padding: 0,
-        }}>
-        {group.map(tag => (
-          <li key={tag.fieldValue} 
-            style={{ 
-              marginRight: `1rem`,
-              marginBottom: `2rem`
-            }}>
-            <TagBox tagName={tag.fieldValue} />
-          </li>
-        ))}
-      </ul>
+  <div className="most-outer-wrapper">
+    {blogHeader}
+    <div className="global-wrapper">
+      <main>
+        <h1>All Tags.</h1>
+        <ul 
+          style={{
+            display: `flex`,
+            flexWrap: `wrap`,
+            justifyContent: `flex-start`,
+            listStyle: `none`,
+            padding: 0,
+          }}>
+          {group.map(tag => (
+            <li key={tag.fieldValue} 
+              style={{ 
+                marginRight: `1rem`,
+                marginBottom: `2rem`
+              }}>
+              <TagBox tagName={tag.fieldValue} />
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   </div>
 )

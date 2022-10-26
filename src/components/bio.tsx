@@ -40,7 +40,9 @@ const Bio = () => {
         alt="Profile picture"
       />
       {author?.name && (
-        <p>
+        <p style={{
+          verticalAlign: `middle`,
+        }}>
           Written by <strong>{author.name}</strong> {author?.summary || null}
           {` `}
         </p>

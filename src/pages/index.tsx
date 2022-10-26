@@ -64,20 +64,44 @@ const BlogIndex = ({ location }: PageProps) => {
         <Bio />
         <p>
           No blog posts found. 
-          {/* Add markdown posts to "content/blog" (or the
-          directory you specified for the "gatsby-source-filesystem" plugin in
-          gatsby-config.js). */}
         </p>
       </Layout>
     )
   }
+  
+  const firstElement = posts[0];
+  const firstTitle = firstElement.frontmatter.title || firstElement.fields.slug
 
   return (
     <Layout location={location} title={siteTitle}>
       <Seo title="All posts" />
-      <Bio />
+      <div className="article-first">
+        <article
+          className="post-list-item"
+          itemScope
+          itemType="http://schema.org/Article"
+        >
+          <header>
+            <h1>
+              <Link to={firstElement.fields.slug} itemProp="url">
+                <span itemProp="headline">{firstTitle}</span>
+              </Link>
+            </h1>
+            <small><span className="text-accent">Latest Post</span> - {firstElement.frontmatter.date}</small>
+          </header>
+          <section>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: firstElement.frontmatter.description || firstElement.excerpt,
+              }}
+              itemProp="description"
+            />
+          </section>
+        </article>
+      </div>
       <ol style={{ listStyle: `none` }}>
-        {posts.map(post => {
+        <hr/>
+        {posts.slice(1).map(post => {
           const title = post.frontmatter.title || post.fields.slug
 
           return (
@@ -108,6 +132,7 @@ const BlogIndex = ({ location }: PageProps) => {
           )
         })}
       </ol>
+      <Bio />
     </Layout>
   )
 }
