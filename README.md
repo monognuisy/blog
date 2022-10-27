@@ -5,6 +5,7 @@
 ## TO-DO
 
 - [x] tex
+- [ ] responsive
 - [ ] category 분류
   - [x] tags page
 - [x] 댓글 기능 활성화
