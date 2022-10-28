@@ -82,9 +82,34 @@ const BlogIndex = ({ location }: PageProps) => {
   const firstElement = posts[0];
   const firstTitle = firstElement.frontmatter.title || firstElement.fields.slug
 
+  if (filteredCategory === `All`) {
+    return (
+      <Layout location={location} title={siteTitle}>
+        <Seo title="All posts" />
+          {postLists(posts)}
+        <Categories data={data} onChangeCategory={filteredCategoryHandler} />
+      </Layout>
+    )
+  } 
+  else {
+    const filteredPosts = posts.filter(post => (post.frontmatter.categories === filteredCategory))
+    const seoTitle = `Posts in ${filteredCategory}`
+    return (
+      <Layout location={location} title={siteTitle}>
+        <Seo title={seoTitle} />
+          {postLists(filteredPosts)}
+        <Categories data={data} onChangeCategory={filteredCategoryHandler} />
+      </Layout>
+    )
+  }
+}
+
+const postLists = (posts) => {
+  const firstElement = posts[0];
+  const firstTitle = firstElement.frontmatter.title || firstElement.fields.slug
+
   return (
-    <Layout location={location} title={siteTitle}>
-      <Seo title="All posts" />
+    <>
       <div className="article-first">
         <article
           className="post-list-item"
@@ -97,7 +122,7 @@ const BlogIndex = ({ location }: PageProps) => {
                 <span itemProp="headline">{firstTitle}</span>
               </Link>
             </h1>
-            <small><span className="text-accent">Latest Post</span> - {firstElement.frontmatter.date}</small>
+            <small><span className="text-accent">Latest Post</span> in <b>{firstElement.frontmatter.categories}</b> - {firstElement.frontmatter.date}</small>
           </header>
           <section>
             <p
@@ -127,7 +152,7 @@ const BlogIndex = ({ location }: PageProps) => {
                       <span itemProp="headline">{title}</span>
                     </Link>
                   </h2>
-                  <small>{post.frontmatter.date}</small>
+                  <small>in <b>{post.frontmatter.categories}</b> - {post.frontmatter.date}</small>
                 </header>
                 <section>
                   <p
@@ -142,8 +167,7 @@ const BlogIndex = ({ location }: PageProps) => {
           )
         })}
       </ol>
-      <Categories data={data} onChangeCategory={filteredCategoryHandler} />
-    </Layout>
+    </>
   )
 }
 

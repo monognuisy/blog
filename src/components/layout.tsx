@@ -18,10 +18,9 @@ const Layout = ({ location, title, children }: any) => {
       <div className="global-wrapper" data-is-root-path={isRootPath}>
         <main>
           {children}
-          
+          <Bio />
         </main>
       </div>
-      <Bio />
       {blogFooter}
     </div>
   )

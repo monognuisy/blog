@@ -431,6 +431,16 @@ main .article-first {
   list-style: none;
 }
 
+.categories {
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.categories:hover {
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
 .header-link-home {
   font-weight: var(--fontWeight-bold);
   font-family: var(--font-heading);

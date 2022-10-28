@@ -7,6 +7,11 @@ import { graphql, PageProps } from "gatsby"
 
 const Categories = ({ data, onChangeCategory }) => {
   const group = data.allMarkdownRemark.nodes
+  const categorySet:Set<string> = new Set()
+  group.forEach(prop => {
+    categorySet.add(prop.frontmatter.categories)
+  });
+
   const clickHandler = (event) => {
     onChangeCategory(event.target.innerText)
   }
@@ -23,8 +28,8 @@ const Categories = ({ data, onChangeCategory }) => {
         >
           All
         </li>
-        {group.map(prop => {
-          const fieldValue = prop.frontmatter.categories
+        {[...categorySet].map((fieldValue: string) => {
+          // const fieldValue = prop.frontmatter.categories
           return (
             <li
               key={fieldValue}
