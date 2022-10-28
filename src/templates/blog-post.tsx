@@ -50,9 +50,9 @@ const BlogPostTemplate = ({ data, location }: any) => {
           itemProp="articleBody"
         />
         <hr />
-        <footer>
+        {/* <footer>
           <Bio />
-        </footer>
+        </footer> */}
       </article>
       <nav className="blog-post-nav">
         <ul

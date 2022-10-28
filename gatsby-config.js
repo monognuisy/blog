@@ -71,7 +71,7 @@ module.exports = {
             resolve: `gatsby-remark-highlight-code`,
             options: {
               terminal: "carbon",
-              theme: "one-light",
+              theme: "material",
               lineNumbers: true,
             },
           },
