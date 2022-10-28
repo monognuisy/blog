@@ -1,9 +1,11 @@
 import * as React from "react"
+import { useState } from "react"
 import { Link, graphql, useStaticQuery, PageProps } from "gatsby"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import Categories from "../components/categories"
 
 interface PostNode {
   excerpt: string
@@ -29,8 +31,10 @@ interface BlogIndexQueryData {
   }
 }
 
+type CategoriesQuery = { site?: { siteMetadata?: { title?: string | null } | null } | null, allMarkdownRemark: { nodes: Array<{ excerpt?: string | null, fields?: { slug?: string | null } | null, frontmatter?: { date?: any | null, title?: string | null, description?: string | null, categories?: string | null } | null }>, group: Array<{ fieldValue?: string | null, totalCount: number, edges: Array<{ node: { id: string } }> }> } };
+
 const BlogIndex = ({ location }: PageProps) => {
-  const data: BlogIndexQueryData = useStaticQuery(graphql`
+  const data: CategoriesQuery = useStaticQuery(graphql`
     query {
       site {
         siteMetadata {
@@ -48,6 +52,7 @@ const BlogIndex = ({ location }: PageProps) => {
             title
             description
             tags
+            categories
           }
         }
       }
@@ -56,6 +61,11 @@ const BlogIndex = ({ location }: PageProps) => {
 
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes
+
+  const [filteredCategory, setFilteredCategory] = useState('All')
+  const filteredCategoryHandler = (selected) => {
+    setFilteredCategory(selected)
+  }
 
   if (posts.length === 0) {
     return (
@@ -132,7 +142,7 @@ const BlogIndex = ({ location }: PageProps) => {
           )
         })}
       </ol>
-      <Bio />
+      <Categories data={data} onChangeCategory={filteredCategoryHandler} />
     </Layout>
   )
 }
