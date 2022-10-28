@@ -134,7 +134,7 @@ const postLists = (posts) => {
           </section>
         </article>
       </div>
-      <ol style={{ listStyle: `none` }}>
+      <ol className="other-posts" style={{ listStyle: `none` }}>
         <hr/>
         {posts.slice(1).map(post => {
           const title = post.frontmatter.title || post.fields.slug

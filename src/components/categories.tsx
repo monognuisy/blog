@@ -17,6 +17,7 @@ const Categories = ({ data, onChangeCategory }) => {
   }
   return (
     <div className="category-wrapper">
+      <hr/>
       <h2>Categories</h2>
       <ol className="category-box">
         <li
