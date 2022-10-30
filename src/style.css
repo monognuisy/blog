@@ -468,6 +468,13 @@ main .article-first {
   cursor: pointer;
 }
 
+.categories[is-selected="true"] {
+  /* border-radius: 2px;
+  background-color: var(--color-highlight); */
+  font-size: var(--fontSize-2);
+  list-style-type: "➤  ";
+}
+
 .header-link-home {
   font-weight: var(--fontWeight-bold);
   font-family: var(--font-heading);

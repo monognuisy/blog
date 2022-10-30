@@ -87,7 +87,7 @@ const BlogIndex = ({ location }: PageProps) => {
       <Layout location={location} title={siteTitle}>
         <Seo title="All posts" />
           {postLists(posts)}
-        <Categories data={data} onChangeCategory={filteredCategoryHandler} />
+        <Categories data={data} onChangeCategory={filteredCategoryHandler} filteredCategory={filteredCategory} />
       </Layout>
     )
   } 
@@ -98,7 +98,7 @@ const BlogIndex = ({ location }: PageProps) => {
       <Layout location={location} title={siteTitle}>
         <Seo title={seoTitle} />
           {postLists(filteredPosts)}
-        <Categories data={data} onChangeCategory={filteredCategoryHandler} />
+        <Categories data={data} onChangeCategory={filteredCategoryHandler} filteredCategory={filteredCategory} />
       </Layout>
     )
   }

@@ -5,7 +5,7 @@ import { graphql, PageProps } from "gatsby"
 // type CategoriesQuery = { site?: { siteMetadata?: { title?: string | null } | null } | null, allMarkdownRemark: { nodes: Array<{ excerpt?: string | null, fields?: { slug?: string | null } | null, frontmatter?: { date?: any | null, title?: string | null, description?: string | null, categories?: string | null } | null }>, group: Array<{ fieldValue?: string | null, totalCount: number, edges: Array<{ node: { id: string } }> }> } };
 // Catefories:FC<PageProps<CategoriesQuery>>
 
-const Categories = ({ data, onChangeCategory }) => {
+const Categories = ({ data, onChangeCategory, filteredCategory }) => {
   const group = data.allMarkdownRemark.nodes
   const categorySet:Set<string> = new Set()
   group.forEach(prop => {
@@ -26,6 +26,7 @@ const Categories = ({ data, onChangeCategory }) => {
           onClick={clickHandler}
           onKeyPress={clickHandler}
           role="presentation"
+          is-selected={(`All` === filteredCategory).toString()}
         >
           All
         </li>
@@ -38,6 +39,7 @@ const Categories = ({ data, onChangeCategory }) => {
               onClick={clickHandler}
               onKeyPress={clickHandler}
               role="presentation"
+              is-selected={(fieldValue === filteredCategory).toString()}
             >
               {fieldValue}
             </li>
