@@ -43,7 +43,7 @@ export const blogFooter = (
   <footer className="gh-footer-wrapper">
     <ul className="gh-footer">
       <li className="gh-footer-items gh-footer-copyright">
-        © {new Date().getFullYear()}. monognuisy. <br/> All Rights Reserved.
+        © {new Date().getFullYear()} monognuisy
       </li>
       <li className="gh-footer-items gh-footer-contact">
         <Link to="mailto:ysmsmart1@gmail.com">Contact</Link>
