@@ -1,6 +1,7 @@
 /* CSS Custom Properties Definitions */
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("http://fonts.cdnfonts.com/css/ibm-plex-mono-3");
 
 :root {
   --maxWidth-none: "none";
@@ -36,6 +37,7 @@
     "Segoe UI Symbol", "Noto Color Emoji";
   --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
     Times, serif;
+  --fontFamily-mono: "IBM Plex Mono", monospace;
   --font-body: var(--fontFamily-sans);
   --font-heading: var(--fontFamily-sans);
   --fontWeight-normal: 400;
@@ -66,6 +68,9 @@
   --color-heading: #1a202c;
   --color-heading-black: black;
   --color-accent: #d1dce5;
+  --deckgo-highlight-code-font-family: var(--fontFamily-mono);
+  --deckgo-highlight-code-carbon-background: #f0f0f0 !important;
+  --color-code-background: var(--deckgo-highlight-code-carbon-background);
 }
 
 /* HTML elements */
@@ -84,9 +89,18 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-body), "IBM Plex Mono";
   font-size: var(--fontSize-1);
   color: var(--color-text);
+}
+
+code {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  border-radius: 2px;
+  padding-left: var(--spacing-1);
+  padding-right: var(--spacing-1);
+  background-color: var(--color-code-background);
 }
 
 footer {
@@ -97,6 +111,10 @@ hr {
   background: var(--color-accent);
   height: 1px;
   border: 0;
+}
+
+deckgo-highlight-code {
+  box-shadow: none;
 }
 
 /* Heading */
