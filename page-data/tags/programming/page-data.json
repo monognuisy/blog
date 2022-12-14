@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-post-tsx","path":"/tags/programming/","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/system-prog/goto/"},"frontmatter":{"title":"C에서의 goto","date":"2022-12-11","description":"과연 정말로 쓰면 안되는 것일까?"}}}]}},"pageContext":{"tag":"Programming"}},"staticQueryHashes":[]}
