@@ -1,7 +1,9 @@
 /* CSS Custom Properties Definitions */
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
-@import url("http://fonts.cdnfonts.com/css/ibm-plex-mono-3");
+/* @import url("http://fonts.cdnfonts.com/css/ibm-plex-mono-3"); */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
 
 :root {
   --maxWidth-none: "none";
@@ -37,7 +39,7 @@
     "Segoe UI Symbol", "Noto Color Emoji";
   --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
     Times, serif;
-  --fontFamily-mono: "IBM Plex Mono", monospace;
+  --fontFamily-mono: "JetBrains Mono", monospace;
   --font-body: var(--fontFamily-sans);
   --font-heading: var(--fontFamily-sans);
   --fontWeight-normal: 400;
@@ -115,6 +117,15 @@ hr {
 
 deckgo-highlight-code {
   box-shadow: none;
+  font-size: 0.92rem;
+  font-family: var(--fontFamily-mono);
+  --deckgo-highlight-code-font-family: var(--fontFamily-mono);
+  font-weight: 400;
+  --deckgo-highlight-code-token-atrule: #d33d48;
+  --deckgo-highlight-code-token-function: #7241c1;
+  --deckgo-highlight-code-token-operator: #d33d48;
+  /* --deckgo-highlight-code-token-punctuation: #df6403; */
+  --deckgo-highlight-code-token-selector: #4680be;
 }
 
 /* Heading */

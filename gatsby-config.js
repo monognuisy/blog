@@ -65,6 +65,11 @@ module.exports = {
             options: {
               // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
               strict: `ignore`,
+              macros: {
+                "\\dv": `{\\frac{{\\rm d}{#1}}{{\\rm d}{#2}}}`,
+                "\\pdv": `{\\frac{{\\partial}{#1}}{{\\partial}{#2}}}`,
+                "\\dd": `{{\\rm d}{#1}}`,
+              },
             },
           },
           {

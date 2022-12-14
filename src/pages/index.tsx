@@ -7,6 +7,9 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Categories from "../components/categories"
 
+import { defineCustomElements as deckDeckGoHighlightElement } from "@deckdeckgo/highlight-code/dist/loader";
+deckDeckGoHighlightElement();
+
 interface PostNode {
   excerpt: string
   fields: {
