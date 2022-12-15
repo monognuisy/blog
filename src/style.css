@@ -1,9 +1,9 @@
 /* CSS Custom Properties Definitions */
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
-/* @import url("http://fonts.cdnfonts.com/css/ibm-plex-mono-3"); */
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff");
 
 :root {
   --maxWidth-none: "none";
@@ -39,7 +39,7 @@
     "Segoe UI Symbol", "Noto Color Emoji";
   --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
     Times, serif;
-  --fontFamily-mono: "JetBrains Mono", monospace;
+  --fontFamily-mono: "Roboto Mono", "D2Coding", "JetBrains Mono", monospace;
   --font-body: var(--fontFamily-sans);
   --font-heading: var(--fontFamily-sans);
   --fontWeight-normal: 400;
@@ -91,13 +91,13 @@ html {
 }
 
 body {
-  font-family: var(--font-body), "IBM Plex Mono";
+  font-family: var(--font-body);
   font-size: var(--fontSize-1);
   color: var(--color-text);
 }
 
 code {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: var(--fontFamily-mono);
   font-weight: 500;
   border-radius: 2px;
   padding-left: var(--spacing-1);
@@ -212,6 +212,7 @@ ol {
   margin-bottom: var(--spacing-8);
   list-style-position: outside;
   list-style-image: none;
+  font-weight: var(--fontWeight-medium);
 }
 
 ul li,
