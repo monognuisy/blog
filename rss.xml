@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://monognuisy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 14 Dec 2022 14:12:33 GMT</lastBuildDate><item><title><![CDATA[C에서의 goto]]></title><description><![CDATA[🤔 goto? 많은 C 입문 교재를 보면 goto를 마치 '절대로 쓰면 안되는 것' 이라던지, '한 번이라도 쓰면 큰일이 나는 것' 과 같이 취급한다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://monognuisy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 17 Dec 2022 06:39:31 GMT</lastBuildDate><item><title><![CDATA[C에서의 goto]]></title><description><![CDATA[🤔 goto? 많은 C 입문 교재를 보면 goto를 마치 '절대로 쓰면 안되는 것' 이라던지, '한 번이라도 쓰면 큰일이 나는 것' 과 같이 취급한다.
 컴퓨터 과학에 지대한 영향을 끼친 에츠허르 다익스트라(Edsger W. Dijkstra…]]></description><link>https://monognuisy.github.io/blog/system-prog/goto/</link><guid isPermaLink="false">https://monognuisy.github.io/blog/system-prog/goto/</guid><pubDate>Sun, 11 Dec 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;🤔 goto?&lt;/h2&gt;
 &lt;p&gt;많은 C 입문 교재를 보면 goto를 마치 &apos;절대로 쓰면 안되는 것&apos; 이라던지, &apos;한 번이라도 쓰면 큰일이 나는 것&apos; 과 같이 취급한다.
 컴퓨터 과학에 지대한 영향을 끼친 에츠허르 다익스트라(Edsger W. Dijkstra) 옹께서 &lt;code&gt;goto&lt;/code&gt;를 절대로 쓰지 말라고 한 것의 영향이
@@ -34,7 +34,6 @@ done:
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
 &lt;p&gt;당연히 위의 &lt;code&gt;for&lt;/code&gt; 문이 더 간결하고 깔끔해 보인다. &lt;code&gt;goto&lt;/code&gt;문을 쓴 코드는 마치 어셈블리어 같다.&lt;/p&gt;
-&lt;p&gt;(최대한 단순히 logic만 표현하였다.)&lt;/p&gt;
 &lt;deckgo-highlight-code language=&quot;asmatmel&quot; terminal=&quot;carbon&quot; theme=&quot;one-light&quot; line-numbers=&quot;true&quot;  &gt;
           &lt;code slot=&quot;code&quot;&gt;.sumTo
     pushq   %rbx
@@ -51,6 +50,7 @@ done:
     popq    %rbx
     ret&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;(최대한 단순히 logic만 표현하였다.)&lt;/p&gt;
 &lt;p&gt;이렇게, 굳이 어셈블리어로 쓰기 위한 것이 아닌 이상, goto 문은 대부분 &lt;code&gt;if&lt;/code&gt;와 같은 조건문과 &lt;code&gt;while&lt;/code&gt;, &lt;code&gt;for&lt;/code&gt;과 같은 반복문으로 &lt;strong&gt;대체&lt;/strong&gt;될 수 있다.&lt;/p&gt;
 &lt;h3&gt;🤮 스파게티 코드?&lt;/h3&gt;
 &lt;p&gt;또한, &lt;code&gt;goto&lt;/code&gt;를 남용하면 흔히 말하는 &lt;strong&gt;스파게티 코드&lt;/strong&gt;가 나올 수 있다. 만드는 법은 어렵지 않다. 다만, 해석하기 힘들 뿐.&lt;/p&gt;
