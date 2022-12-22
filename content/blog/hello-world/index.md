@@ -10,8 +10,7 @@ categories: "Others"
 
 ## heading은 이렇게 쓰는 겁니다
 
-아닌가? \
-어떻게 하면 line을 break할 수 있습니까?[^lnbreak]
+아닌가?[^lnbreak]
 
 [^lnbreak]: 대충 하면 됩니다.
 

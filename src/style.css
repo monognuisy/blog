@@ -5,75 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 @import url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff");
 
-:root {
-  --maxWidth-none: "none";
-  --maxWidth-xs: 20rem;
-  --maxWidth-sm: 24rem;
-  --maxWidth-md: 28rem;
-  --maxWidth-lg: 32rem;
-  --maxWidth-xl: 36rem;
-  --maxWidth-2xl: 42rem;
-  --maxWidth-3xl: 48rem;
-  --maxWidth-4xl: 56rem;
-  --maxWidth-full: "100%";
-  --maxWidth-wrapper: var(--maxWidth-3xl);
-  --maxWidth-index: 1200px;
-  --spacing-px: "1px";
-  --spacing-side: 2.5rem;
-  --spacing-0: 0;
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-3: 0.75rem;
-  --spacing-4: 1rem;
-  --spacing-5: 1.25rem;
-  --spacing-6: 1.5rem;
-  --spacing-8: 2rem;
-  --spacing-10: 2.5rem;
-  --spacing-12: 3rem;
-  --spacing-16: 4rem;
-  --spacing-20: 5rem;
-  --spacing-24: 6rem;
-  --spacing-32: 8rem;
-  --fontFamily-sans: "Pretendard", "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
-    Times, serif;
-  --fontFamily-mono: "Roboto Mono", "D2Coding", "JetBrains Mono", monospace;
-  --font-body: var(--fontFamily-sans);
-  --font-heading: var(--fontFamily-sans);
-  --fontWeight-normal: 400;
-  --fontWeight-medium: 500;
-  --fontWeight-semibold: 600;
-  --fontWeight-bold: 700;
-  --fontWeight-extrabold: 800;
-  --fontWeight-black: 900;
-  --fontSize-root: 16px;
-  --lineHeight-none: 1;
-  --lineHeight-tight: 1.1;
-  --lineHeight-normal: 1.5;
-  --lineHeight-relaxed: 1.625;
-  /* 1.200 Minor Third Type Scale */
-  --fontSize-0: 0.833rem;
-  --fontSize-1: 1rem;
-  --fontSize-2: 1.2rem;
-  --fontSize-3: 1.44rem;
-  --fontSize-4: 1.728rem;
-  --fontSize-5: 2.074rem;
-  --fontSize-6: 2.5rem;
-  --fontSize-7: 3.5rem;
-  /* --color-primary: #005b99; */
-  --color-primary: #0066ff;
-  --color-highlight: #ffd000;
-  --color-text: #2e353f;
-  --color-text-light: #717986;
-  --color-heading: #1a202c;
-  --color-heading-black: black;
-  --color-accent: #d1dce5;
-  --deckgo-highlight-code-font-family: var(--fontFamily-mono);
-  --deckgo-highlight-code-carbon-background: #f0f0f0 !important;
-  --color-code-background: var(--deckgo-highlight-code-carbon-background);
-}
+@import "./constants.css";
 
 /* HTML elements */
 
@@ -126,6 +58,15 @@ deckgo-highlight-code {
   --deckgo-highlight-code-token-operator: #d33d48;
   /* --deckgo-highlight-code-token-punctuation: #df6403; */
   --deckgo-highlight-code-token-selector: #4680be;
+  --deckgo-highlight-code-scroll: true;
+  overflow-x: auto !important;
+}
+
+div.container code > div.line-number {
+  overflow: auto !important;
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
+  word-break: keep-all !important;
 }
 
 /* Heading */

@@ -72,12 +72,22 @@ module.exports = {
               },
             },
           },
+          // {
+          //   resolve: `gatsby-remark-highlight-code`,
+          //   options: {
+          //     terminal: "carbon",
+          //     theme: "one-light",
+          //     lineNumbers: true,
+          //   },
+          // },
           {
-            resolve: `gatsby-remark-highlight-code`,
+            resolve: `gatsby-remark-prismjs`,
             options: {
-              terminal: "carbon",
-              theme: "one-light",
-              lineNumbers: true,
+              classPrefix: "language-",
+              inlineCodeMarker: null,
+              aliases: {},
+              showLineNumbers: true,
+              noInlineHighlight: false,
             },
           },
           `gatsby-remark-numbered-footnotes`,

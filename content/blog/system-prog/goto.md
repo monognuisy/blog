@@ -14,7 +14,7 @@ categories: "System Programming"
 
 그렇다면, 왜 쓰지 말아야 할까?
 
-### 🤦‍♂️ 굳이 쓸 필요가 없음
+### 🤦‍♂️ 굳이 쓸 필요가 없다!
 
 다음 두 코드는 완벽히 동일하게 작동한다. 어느 것이 더 깔끔한가?
 
@@ -49,7 +49,7 @@ done:
 
 당연히 위의 `for` 문이 더 간결하고 깔끔해 보인다. `goto`문을 쓴 코드는 마치 어셈블리어 같다.
 
-```asmatmel
+```nasm
 .sumTo
     pushq   %rbx
     movl    $0, %eax
@@ -127,24 +127,22 @@ out:
 // nice break. do something...
 ```
 
-오히려 이런 경우에는 `goto`를 사용하지 않으면 복잡해진다. `goto`를 안쓰면 flag 변수를 여러개 만들어서 매번 검사하고 탈출해야 하는데,
-만일 이러한 flag 변수가 일회용이라면, 이는 크게 비효율적일 것이다.
+오히려 이런 경우에는 `goto`를 사용하지 않으면 복잡해진다. `goto`를 안쓰면 flag 변수를 만들어서 매번 검사하고 탈출해야 하는데,
+반복문이 깊어지면 깊어질수록, 이는 크게 비효율적일 것이다.
 
 ```c
 // do something...
-int flag1 = 0;
+int flag = 0;
 for (int i = ...) {
-    int flag2 = 0;
     for (int j = ...) {
-        int flag3 = 0;
         for (int k = ...) {
             // nested for문 전체를 break 해버리고 싶음!
-            flag1 = flag2 = flag3 = 1;
-            if (flag3) break;
+            flag = 1;
+            if (flag) break;
         }
-        if (flag2) break;
+        if (flag) break;
     }
-    if (flag1) break;
+    if (flag) break;
 }
 
 // 이 얼마나 비효율적인가!
@@ -192,7 +190,7 @@ out:
     return ret;
 ```
 
-source: <https://github.com/torvalds/linux/blob/master/kernel/cpu.c>
+<https://github.com/torvalds/linux/blob/master/kernel/cpu.c>
 
 이는 linux kernel의 cpu.c 코드에서 에러 처리를 위하여 `goto`를 사용한 모습이다. \
 오류를 발생하는 `ret` 변수는 `_cpu_down` 함수 내에서 할당되고, 처리된다.
