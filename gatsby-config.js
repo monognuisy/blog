@@ -13,6 +13,7 @@ module.exports = {
     // },
   },
   plugins: [
+    `gatsby-plugin-advanced-sitemap`,
     `gatsby-plugin-image`,
     // `gatsby-plugin-graphql-codegen`,
     {

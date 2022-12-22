@@ -10,6 +10,7 @@
   "dependencies": {
     "@ibm/plex": "^6.1.1",
     "gatsby": "^4.2.0",
+    "gatsby-plugin-advanced-sitemap": "^2.1.0",
     "gatsby-plugin-feed": "^4.2.0",
     "gatsby-plugin-gatsby-cloud": "^4.2.0",
     "gatsby-plugin-google-analytics": "^4.2.0",
