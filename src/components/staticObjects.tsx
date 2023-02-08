@@ -26,11 +26,11 @@ export const blogHeader = (
             <li className="nav-home">
               <Link to="/">HOME</Link>
             </li>
-            <li className="nav-about">
+            {/* <li className="nav-about">
               <Link to="/">ABOUT</Link>
-            </li>
+            </li> */}
             <li className="nav-donation">
-              <Link to="https://toss.me/monognuisy/10000">DONATION</Link>
+              <Link to="https://toss.me/monognuisy/3000">DONATION</Link>
             </li>
           </ul>
         </nav>
