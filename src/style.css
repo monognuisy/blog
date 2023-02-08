@@ -125,11 +125,24 @@ ul,
 ol {
   /* margin-left: var(--spacing-0); */
   margin-right: var(--spacing-0);
-  /* padding: var(--spacing-0); */
+  padding-left: var(--spacing-0);
   margin-bottom: var(--spacing-8);
-  /* list-style-position: outside; */
-  list-style-image: none;
+  list-style-position: outside;
+  /* list-style-image: none; */
   font-weight: var(--fontWeight-medium);
+}
+
+ol {
+  padding-left: var(--spacing-8);
+}
+
+li > p:first-child {
+  display: inline-block;
+  /* padding-bottom: var(--spacing-4); */
+}
+
+section > ol {
+  padding-left: var(--spacing-0);
 }
 
 ul li,
@@ -312,6 +325,7 @@ main .bio {
 
 .other-posts {
   margin: 0;
+  padding-left: 0;
 }
 
 .gh-footer-wrapper {
@@ -390,6 +404,7 @@ main .bio {
 
 .category-box {
   list-style: none;
+  padding-left: 0;
 }
 
 .categories {
