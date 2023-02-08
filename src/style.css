@@ -32,8 +32,6 @@ code {
   font-family: var(--fontFamily-mono);
   font-weight: 500;
   border-radius: 2px;
-  padding-left: var(--spacing-1);
-  padding-right: var(--spacing-1);
   background-color: var(--color-code-background);
 }
 
@@ -45,28 +43,6 @@ hr {
   background: var(--color-accent);
   height: 1px;
   border: 0;
-}
-
-deckgo-highlight-code {
-  box-shadow: none;
-  font-size: 0.92rem;
-  font-family: var(--fontFamily-mono);
-  --deckgo-highlight-code-font-family: var(--fontFamily-mono);
-  font-weight: 400;
-  --deckgo-highlight-code-token-atrule: #d33d48;
-  --deckgo-highlight-code-token-function: #7241c1;
-  --deckgo-highlight-code-token-operator: #d33d48;
-  /* --deckgo-highlight-code-token-punctuation: #df6403; */
-  --deckgo-highlight-code-token-selector: #4680be;
-  --deckgo-highlight-code-scroll: true;
-  overflow-x: auto !important;
-}
-
-div.container code > div.line-number {
-  overflow: auto !important;
-  overflow-wrap: normal !important;
-  word-wrap: normal !important;
-  word-break: keep-all !important;
 }
 
 /* Heading */
@@ -147,11 +123,11 @@ p {
 
 ul,
 ol {
-  margin-left: var(--spacing-0);
+  /* margin-left: var(--spacing-0); */
   margin-right: var(--spacing-0);
-  padding: var(--spacing-0);
+  /* padding: var(--spacing-0); */
   margin-bottom: var(--spacing-8);
-  list-style-position: outside;
+  /* list-style-position: outside; */
   list-style-image: none;
   font-weight: var(--fontWeight-medium);
 }
@@ -266,6 +242,7 @@ figcaption {
 
 .nav {
   margin: 0 auto;
+  padding-left: 0;
   display: flex;
   list-style: none;
 }
