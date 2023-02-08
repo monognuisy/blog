@@ -28,6 +28,11 @@ body {
   color: var(--color-text);
 }
 
+section {
+  word-break: break-all;
+  text-overflow: ellipsis;
+}
+
 code {
   font-family: var(--fontFamily-mono);
   font-weight: 500;
