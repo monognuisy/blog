@@ -1,7 +1,7 @@
 ---
 title: Right-to-Left Rule과 typedef
-date: "2022-12-22"
-description: "C에서 복잡한 변수들의 선언을 해석하는 방법을 알아보자."
+date: "2023-02-08"
+description: "C에서 복잡한 선언을 해석하는 방법을 알아보자."
 tags: ["System Programming","Programming"]
 categories: "System Programming"
 ---
