@@ -15,6 +15,12 @@ module.exports = {
   plugins: [
     `gatsby-plugin-advanced-sitemap`,
     `gatsby-plugin-image`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+      },
+    },
     // `gatsby-plugin-graphql-codegen`,
     {
       resolve: `gatsby-source-filesystem`,
