@@ -29,12 +29,12 @@ interface BlogIndexQueryData {
       title: string
     }
   }
-  allMarkdownRemark: {
+  allMdx: {
     nodes: PostNode[]
   }
 }
 
-type CategoriesQuery = { site?: { siteMetadata?: { title?: string | null } | null } | null, allMarkdownRemark: { nodes: Array<{ excerpt?: string | null, fields?: { slug?: string | null } | null, frontmatter?: { date?: any | null, title?: string | null, description?: string | null, categories?: string | null } | null }>, group: Array<{ fieldValue?: string | null, totalCount: number, edges: Array<{ node: { id: string } }> }> } };
+type CategoriesQuery = { site?: { siteMetadata?: { title?: string | null } | null } | null, allMdx: { nodes: Array<{ excerpt?: string | null, fields?: { slug?: string | null } | null, frontmatter?: { date?: any | null, title?: string | null, description?: string | null, categories?: string | null } | null }>, group: Array<{ fieldValue?: string | null, totalCount: number, edges: Array<{ node: { id: string } }> }> } };
 
 const BlogIndex = ({ location }: PageProps) => {
   const data: CategoriesQuery = useStaticQuery(graphql`
@@ -44,7 +44,7 @@ const BlogIndex = ({ location }: PageProps) => {
           title
         }
       }
-      allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+      allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
         nodes {
           excerpt
           fields {
@@ -63,7 +63,7 @@ const BlogIndex = ({ location }: PageProps) => {
   `)
 
   const siteTitle = data.site.siteMetadata?.title || `Title`
-  const posts = data.allMarkdownRemark.nodes
+  const posts = data.allMdx.nodes
 
   const [filteredCategory, setFilteredCategory] = useState('All')
   const filteredCategoryHandler = (selected) => {

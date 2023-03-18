@@ -15,12 +15,6 @@ module.exports = {
   plugins: [
     `gatsby-plugin-advanced-sitemap`,
     `gatsby-plugin-image`,
-    {
-      resolve: `gatsby-plugin-mdx`,
-      options: {
-        extensions: [`.mdx`, `.md`],
-      },
-    },
     // `gatsby-plugin-graphql-codegen`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -30,9 +24,11 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-transformer-remark`,
+      // resolve: `gatsby-transformer-remark`,
+      resolve: `gatsby-plugin-mdx`,
       options: {
-        plugins: [
+        extensions: [`.mdx`],
+        gatsbyRemarkPlugins: [
           {
             resolve: `gatsby-remark-images`,
             options: {
@@ -57,16 +53,6 @@ module.exports = {
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
-        ],
-      },
-    },
-    `gatsby-transformer-sharp`,
-    `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-sharp`,
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
           {
             resolve: `gatsby-remark-katex`,
             options: {
@@ -101,65 +87,68 @@ module.exports = {
         ],
       },
     },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-sharp`,
     // {
     //   resolve: `gatsby-plugin-google-analytics`,
     //   options: {
     //     trackingId: `ADD YOUR TRACKING ID HERE`,
     //   },
     // },
-    {
-      resolve: `gatsby-plugin-feed`,
-      options: {
-        query: `
-          {
-            site {
-              siteMetadata {
-                title
-                description
-                siteUrl
-                site_url: siteUrl
-              }
-            }
-          }
-        `,
-        feeds: [
-          {
-            serialize: ({ query: { site, allMarkdownRemark } }) => {
-              return allMarkdownRemark.nodes.map(node => {
-                return Object.assign({}, node.frontmatter, {
-                  description: node.excerpt,
-                  date: node.frontmatter.date,
-                  url: site.siteMetadata.siteUrl + node.fields.slug,
-                  guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [{ "content:encoded": node.html }],
-                })
-              })
-            },
-            query: `
-              {
-                allMarkdownRemark(
-                  sort: { order: DESC, fields: [frontmatter___date] },
-                ) {
-                  nodes {
-                    excerpt
-                    html
-                    fields {
-                      slug
-                    }
-                    frontmatter {
-                      title
-                      date
-                    }
-                  }
-                }
-              }
-            `,
-            output: "/rss.xml",
-            title: "Gatsby Starter Blog RSS Feed",
-          },
-        ],
-      },
-    },
+    // {
+    //   resolve: `gatsby-plugin-feed`,
+    //   options: {
+    //     query: `
+    //       {
+    //         site {
+    //           siteMetadata {
+    //             title
+    //             description
+    //             siteUrl
+    //             site_url: siteUrl
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     feeds: [
+    //       {
+    //         serialize: ({ query: { site, allMarkdownRemark } }) => {
+    //           return allMarkdownRemark.nodes.map(node => {
+    //             return Object.assign({}, node.frontmatter, {
+    //               description: node.excerpt,
+    //               date: node.frontmatter.date,
+    //               url: site.siteMetadata.siteUrl + node.fields.slug,
+    //               guid: site.siteMetadata.siteUrl + node.fields.slug,
+    //               custom_elements: [{ "content:encoded": node.html }],
+    //             })
+    //           })
+    //         },
+    //         query: `
+    //           {
+    //             allMarkdownRemark(
+    //               sort: { order: DESC, fields: [frontmatter___date] },
+    //             ) {
+    //               nodes {
+    //                 excerpt
+    //                 html
+    //                 fields {
+    //                   slug
+    //                 }
+    //                 frontmatter {
+    //                   title
+    //                   date
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         `,
+    //         output: "/rss.xml",
+    //         title: "Gatsby Starter Blog RSS Feed",
+    //       },
+    //     ],
+    //   },
+    // },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {

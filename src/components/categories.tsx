@@ -6,7 +6,7 @@ import { graphql, PageProps } from "gatsby"
 // Catefories:FC<PageProps<CategoriesQuery>>
 
 const Categories = ({ data, onChangeCategory, filteredCategory }) => {
-  const group = data.allMarkdownRemark.nodes
+  const group = data.allMdx.nodes
   const categorySet:Set<string> = new Set()
   group.forEach(prop => {
     categorySet.add(prop.frontmatter.categories)
@@ -58,7 +58,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
       nodes {
         excerpt
         fields {

@@ -9,8 +9,8 @@ import Seo from "../components/seo"
 import "katex/dist/katex.min.css"
 import TagBox from "../components/tag"
 
-const BlogPostTemplate = ({ data, location }: any) => {
-  const post = data.markdownRemark
+const BlogPostTemplate = ({ data, location, children }: any) => {
+  const post = data.mdx
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const { previous, next } = data
   const tags = post.frontmatter.tags
@@ -45,10 +45,11 @@ const BlogPostTemplate = ({ data, location }: any) => {
             ))}
           </ul>
         </header>
-        <section
+        {/* <section
           dangerouslySetInnerHTML={{ __html: post.html }}
           itemProp="articleBody"
-        />
+        /> */}
+        <section itemProp="articleBody">{children}</section>
         <hr />
         {/* <footer>
           <Bio />
@@ -98,10 +99,9 @@ export const pageQuery = graphql`
         title
       }
     }
-    markdownRemark(id: { eq: $id }) {
+    mdx(id: { eq: $id }) {
       id
       excerpt(pruneLength: 160)
-      html
       tableOfContents
       frontmatter {
         title
@@ -110,7 +110,7 @@ export const pageQuery = graphql`
         tags
       }
     }
-    previous: markdownRemark(id: { eq: $previousPostId }) {
+    previous: mdx(id: { eq: $previousPostId }) {
       fields {
         slug
       }
@@ -118,7 +118,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    next: markdownRemark(id: { eq: $nextPostId }) {
+    next: mdx(id: { eq: $nextPostId }) {
       fields {
         slug
       }

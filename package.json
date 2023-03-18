@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ibm/plex": "^6.2.0",
+    "@mdx-js/react": "^2.3.0",
     "gatsby": "^5.7.0",
     "gatsby-plugin-advanced-sitemap": "^2.1.0",
     "gatsby-plugin-feed": "^5.7.0",
