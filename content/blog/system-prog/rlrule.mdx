@@ -6,6 +6,8 @@ tags: ["System Programming", "Programming"]
 categories: "System Programming"
 ---
 
+import { textHighlightBlue, Code } from "../../../src/utils/blogUtils.tsx"
+
 [C Right-Left Rule (Rick Ord's CSE 30 - UC San Diego)](https://cseweb.ucsd.edu//~ricko/rt_lt.rule.html)
 를 참고하였습니다.
 
@@ -42,32 +44,29 @@ int *(*(*fp1)(int))[10];
 일단은 영어로 읽기로 하자. 그럼, 어떻게 기호를 **만날까**? \
 다음과 같은 순서를 따른다.
 
-1. <span style="background-color: #aff0ef; padding: 3px; border-radius: 3px">
-     **식별자**를 찾는다.
-   </span>
+1. <span style={textHighlightBlue}>**식별자**를 찾는다.</span>
 
-   식별자(identifier)는 변수의 이름으로, 유일하다. 여기가 출발점이다. 그러면, 문장을 다음과 같이 시작하면 된다.
+   식별자(identifier)는 변수의 이름으로, 유일하다. 여기가 출발점이다. 그러면,
+   문장을 다음과 같이 시작하면 된다.
 
    ```c
    식별자 is ...
    ```
 
-2. <span style="background-color: #aff0ef; padding: 3px; border-radius: 3px">
-     **오른쪽으로 이동!**
-   </span>
-   - 식별자로부터 오른쪽으로 이동할 수 있을 때까지 오른쪽으로 이동하면서 기호를 읽는다.
-   즉, 만일 식별자 오른쪽에 `[]`가 있다면 `식별자 is array of ...` 으로 읽으면 된다.
-   - 만일, `(`를 만난다면, 그것은 `()`의 일부분일 것이다. 즉, `()` 전체를 `식별자
-   is function returning ...` 이라고 읽고 넘어가면 된다. - 하지만, `(` 를 만나지
-   않고 `)` 만 만난다면, 그것은 함수의 괄호가 아닌 다른 괄호의 닫는 괄호이다. 즉,
-   오른쪽으로 이동하는 것을 **멈춰야 한다**.
-3. <span style="background-color: #aff0ef; padding: 3px; border-radius: 3px">
-     **왼쪽으로 이동!**
-   </span>
-   - 오른쪽으로 가기를 멈췄다면, 식별자로부터 왼쪽으로 이동할 수 있을 때까지 왼쪽으로
-   이동하면서 기호를 읽는다. 즉, 왼쪽에 `*`가 있다면 `식별자 is pointer to ...` 으로
-   읽으면 된다. - `(` 는 여는 괄호이므로, 만난다면 멈춘다. - 만일 멈춘 후, 오른쪽으로
-   갈 수 있다면 다시 오른쪽으로 간다 (오른쪽 가다가 멈췄던 곳 부터).
+2. <span style={textHighlightBlue}>**오른쪽으로 이동!**</span>
+
+   - 식별자로부터 오른쪽으로 이동할 수 있을 때까지 오른쪽으로 이동하면서 기호를 읽는다. 즉,
+     만일 식별자 오른쪽에 `[]`가 있다면 `식별자 is array of ...` 으로 읽으면 된다.
+   - 만일, `(`를 만난다면, 그것은 `()`의 일부분일 것이다. 즉, `()` 전체를
+     `식별자 is function returning ...` 이라고 읽고 넘어가면 된다. - 하지만, `(`
+     를 만나지 않고 `)` 만 만난다면, 그것은 함수의 괄호가 아닌 다른 괄호의 닫는
+     괄호이다. 즉, 오른쪽으로 이동하는 것을 **멈춰야 한다**.
+
+3. <span style={textHighlightBlue}>**왼쪽으로 이동!**</span>
+
+   - 오른쪽으로 가기를 멈췄다면, 식별자로부터 왼쪽으로 이동할 수 있을 때까지 왼쪽으로 이동하면서 기호를 읽는다. 즉, 왼쪽에 `*`가 있다면 `식별자 is pointer to ...` 으로 읽으면 된다.
+   - `(` 는 여는 괄호이므로, 만난다면 멈춘다.
+   - 만일 멈춘 후, 오른쪽으로 갈 수 있다면 다시 오른쪽으로 간다 (오른쪽 가다가 멈췄던 곳 부터).
 
 ### 예시
 
@@ -88,7 +87,7 @@ int *p[];
         ^
    ```
 
-   즉, <code class="language-text">“**p is**”</code>
+   즉, <Code>“**p is**”</Code>
 
 2. **오른쪽으로 이동!**
 
@@ -99,7 +98,7 @@ int *p[];
             ^^
       ```
 
-      즉, <code class="language-text">“p is **array of**”</code>
+      즉, <Code>“p is **array of**”</Code>
 
    2. 더 이상 오른쪽으로 갈 수 없다. (세미콜론이 있기 때문) 따라서 멈추고, 다음 단계를 따른다.
 
@@ -112,7 +111,7 @@ int *p[];
           ^
       ```
 
-      즉, <code class="language-text">“p is array of **pointer to**”</code>
+      즉, <Code>“p is array of **pointer to**”</Code>
 
    2. 왼쪽으로 이동한다. `int`가 보인다.
 
@@ -121,7 +120,7 @@ int *p[];
       ^^^
       ```
 
-      즉, <code class="language-text">“p is array of pointer to **int**”</code>
+      즉, <Code>“p is array of pointer to **int**”</Code>
 
    3. 더 이상 왼쪽으로 이동할 수 없고, 오른쪽으로도 갈 수 없다. 종료.
 
@@ -142,7 +141,7 @@ int *(*func())();
           ^^^^
    ```
 
-   즉, <code class="language-text">“**func is**”</code>
+   즉, <Code>“**func is**”</Code>
 
 2. **오른쪽으로 이동!**
 
@@ -153,7 +152,7 @@ int *(*func())();
                  ^^
       ```
 
-      즉, <code class="language-text">“func is **function returning**”</code>
+      즉, <Code>“func is **function returning**”</Code>
 
    2. 오른쪽이 닫는 괄호 `)` 로 막혀있다. 즉, 왼쪽으로 이동한다.
 
@@ -166,7 +165,7 @@ int *(*func())();
             ^
       ```
 
-      즉, <code class="language-text">“func is function returning **pointer to**”</code>
+      즉, <Code>“func is function returning **pointer to**”</Code>
 
    2. 왼쪽이 여는 괄호 `(` 로 막혀있다. 따라서 다시 오른쪽으로 간다.
 
@@ -179,7 +178,7 @@ int *(*func())();
                     ^^
       ```
 
-      즉, <code class="language-text">“func is function returning pointer to **function returning**”</code>
+      즉, <Code>“func is function returning pointer to **function returning**”</Code>
 
    2. `;`에 의해 막히므로 다시 왼쪽으로 간다.
 
@@ -192,7 +191,7 @@ int *(*func())();
           ^
       ```
 
-      즉, <code class="language-text">“func is function returning pointer to function returning **pointer to**”</code>
+      즉, <Code>“func is function returning pointer to function returning **pointer to**”</Code>
 
    2. 한번 더 가면 `int`가 나온다.
 
@@ -201,7 +200,7 @@ int *(*func())();
       ^^^
       ```
 
-      즉, <code class="language-text">“func is function returning pointer to function returning pointer to **int**”</code>
+      즉, <Code>“func is function returning pointer to function returning pointer to **int**”</Code>
 
    3. 더이상 갈 수 없으므로 종료.
 
@@ -308,17 +307,11 @@ typedef void (*sighandler_t)(int);
 
 대신, 중간에 이것이 **타입**이라는 것을 알려주는 말을 넣으면 된다.
 
-<code class="language-text">
-  “sighandler_t is **type which is** pointer to function expecting (int)
-  returning void“
-</code>
+<Code>“sighandler_t is **type which is** pointer to function expecting (int) returning void“</Code>
 
 한국어로 번역하면,
 
-<code class="language-text">
-  “sighandler_t는 void를 반환하는 (int를 매개변수로 하는) 함수의 포인터**를
-  나타내는 타입이다**”
-</code>
+<Code>“sighandler_t는 void를 반환하는 (int를 매개변수로 하는) 함수의 포인터**를 나타내는 타입이다**”</Code>
 
 라고 할 수 있겠다.
 
