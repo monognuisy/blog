@@ -1,5 +1,7 @@
 graphql-types.ts
 
+.vscode/*
+
 # Logs
 logs
 *.log
