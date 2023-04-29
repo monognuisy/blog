@@ -1,8 +1,8 @@
 ---
-title: Differentiation w.r.t. Vector / Matrix
-date: "2022-10-30"
-description: "함수의 벡터 / 행렬로의 미분. 여러가지 함수를 벡터나 행렬로 미분해보자."
-tags: ["AI","Mathematics"]
+title: 스칼라를 벡터로 미분하면?
+date: "2023-04-29"
+description: "여러가지 스칼라 함수를 벡터로 미분해보자."
+tags: ["AI","Mathematics", "Series: AI & Math"]
 categories: "AI"
 ---
 
@@ -16,7 +16,7 @@ $$
 
 이를 최소화 하는 $\bf w$의 값을 찾기 위해서는 $L$을 $\bf w$에 대해 미분해야 한다. 이러한 벡터로의 미분, 나아가 행렬로의 미분을 알아보자.
 
-## w.r.t Vector
+## w.r.t. Vector
 
 함수 $f : \R^D \to \R$ 을 생각하자. 즉, $\R^D$의 벡터 ${\bf x} = (x_1, \cdots, x_D)^\top$를 스칼라 $y$로 mapping 하는 함수이다.
 
@@ -102,13 +102,21 @@ $$
 
 (단, 여기서 ${\bf w} \in \R^D$, ${\bf X} \in \R^{D \times D}$)
 
-편의상, 행렬 ${\bf X}$ 의 `(i, j)` index 를 $X_{ij}$ 로 나타내자. 즉, $[{\bf X}]_{ij} = X_{ij}$ 이다.
+지금까지는 무작정 전개하여, 성분을 비교하는 방법으로 미분의 결과를 구했지만, 조금 다른 방법을 사용해보자.
+
+벡터에 대한 미분 또한, 곱의 미분법이 비슷하게 적용된다. (전개하면 곱의 미분을 적용시킬 수 있으므로!) 
+하지만, 그 꼴을 잘 맞추어야 한다. 
+
+${\bf Xw = x}$, $\bf w^\top X = y^\top$ 라고 하자. 그러면, $\dv{f}{\bf w}$ 는 다음과 같다.
 
 $$
 \begin{align*}
-  f({\bf X}) &= {\bf w}^\top{\bf X}{\bf w} \\
-             &= \begin{pmatrix}
-              w_1 & \cdots & w_D
-             \end{pmatrix}
+  
+  \dv{f}{\bf w} &= \dv{(\bf w^\top x)}{\bf w} + \dv{(\bf y^\top w)}{\bf w} \\
+                &= \bf x + y \\
+                &= \bf (X + X^\top) w
 \end{align*}
 $$
+
+이 방법은 실로 강력하다. 하지만, 처음에는 굉장히 비직관적이게 보일 수도 있으므로, 익숙하지 않다면 
+이전처럼 전개하여 증명하여도 좋다.
