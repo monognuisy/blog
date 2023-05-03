@@ -1,0 +1,304 @@
+---
+title: Linear Regression (2) - Bayesian의 방법
+date: "2023-04-30"
+description: "Linear regression의 Training 부분을 Bayesian의 관점에서 해석하자"
+tags: ["AI","Mathematics", "Series: AI & Math"]
+categories: "AI"
+---
+
+import { Highlight, textHighlightBlue, Code } from "../../../src/utils/blogUtils.tsx";
+
+## 지난 이야기
+$$
+  y = {\bf x}^\top ({\bf XX^\top } + \gamma {\bf I}) ^{-1} {\bf Xy}
+$$
+
+그래서 $\gamma$가 뭔데?
+
+## Training
+### 들어가기 앞서
+복잡한 수식이 많이 등장할 예정. 따라서, **모바일보다는 PC에서 보는 것이 정신적으로도 신체적으로도 훨씬 좋습니다**.
+
+또한, 이를 잘 이해하기 위해서는 **선형대수학**, **다변수 정규분포**, **베이즈 정리**에 대한 이해가 있어야 합니다.
+
+### Bayesian, 누구인가?
+
+Bayesian은 그 누구보다도 주관을 사랑하는 사람들이다. 그들이 한 확률에 대한 정의를 보면, 그 주관성을 단번에 느낄 수 있을 것이다.
+그들은 확률을 다음과 같이 정의한다.
+
+> 어떠한 사건이 일어날 것이라는 믿음의 정도
+
+?? 정말 이상하다. 
+
+다소 모호한 감이 있으므로 예시를 들어보면, 어떠한 주사위(6개의 눈이 있는)를 던지는 상황을 가정하자. 
+여기서 한 Bayesian은 주사위의 눈이 1이 나올 확률을 $1/4$로 믿고 있다. 
+하지만, 이후 실제로 주사위를 1000번 던졌더니 1이 160번 나왔다고 하자. 그러면, 이 사람은 새로운 관측을 바탕으로 기존의 믿음을 update한다.
+
+조금 더 정확히 말하면, Bayesian은 Frequentist 처럼 하나의 정해진 답(혹은 참값)을 정해 놓은 것이 아닌, 자신의 믿음을 나타내는
+확률 분포를 가지고 있다. 즉, 위의 주사위 예시를 다시 들고 와보면 1의 눈이 1000번 던졌을 때 1번 나올 확률, 2번 나올 확률, ..., 1000번 나올
+확률에 대한 분포를 가지고 있다고 생각하면 된다. 이를 <Highlight>**prior**</Highlight> 라고 한다. \
+이후에, 새로운 관측값 (정확히는 관측한 분포; likelihood) 을 기반으로(주로 곱하여) prior를 update한다. 이렇게 구한 새로운 분포를 
+<Highlight>**posterior**</Highlight> 라고 한다.
+
+따라서, Bayesian은 prior과 likelihood를 기반으로 posterior를 얻어내어 자신의 믿음을 '참된 분포'에 근접시키는 것이 목표라고 할 수 있겠다.
+
+이렇게 Frequentist들과는 너무 다른 방법으로 세상을 바라보기 때문에, Data를 바라보는 관점도 독특하다.
+이들은 Frequentist가 가장 최적의 parameter의 **값**을 구했던 것과는 대비되게, 최적의 **분포**를 구한다. 
+
+### 그래서 왜? 이게 더 좋은가?
+
+그것을 앞으로 확인하게 될 것이다.
+
+### Likelihood = Model
+
+모델을 세워보자. 아니, Bayesian들의 말을 빌려서 “**Likelihood**”를 세운다고 표현하자.
+
+앞서서도 bias는 고려하지 않았으므로, 다음과 같은 likelihood를 세울 수 있다.
+$$
+{\cal L}({\bf w} | y, {\bf x}) = p(y | {\bf w}, {\bf x}) = {\bf w}^\top {\bf x} + \varepsilon
+$$
+
+여기서 $\varepsilon \sim {\cal N} (0, \sigma^2)$ 라고 하자. 일종의 error, 혹은 noise 라고 생각하면 된다.
+
+결국, $p(y | {\bf w}, {\bf x}) = {\cal N}({\bf w}^\top {\bf x} , \sigma^2 )$ 이므로 다음과 같이 나타낼 수 있다.
+
+$$
+p(y | {\bf w}, {\bf x})  = \frac{1}{\sqrt{2\pi \sigma^2}} \exp \left( - \frac{(y - {\bf w}^\top {\bf x}) ^ 2}{2 \sigma^2} \right)
+$$
+
+##### 😀 잠깐, likelihood란?
+
+번역하면 '**그럴싸한 정도**'가 되겠다. 즉, 주어진 데이터를 만든 분포의 parameter가 어느정도 적절한지를 알려주는 함수로, 
+parameter $\theta$에 대하여 ${\cal L}(\theta | {\cal D})$ 로 쓸 수 있다. 이는, 결국 주어진 parameter에 대한
+데이터의 확률 분포로 생각할 수 있으므로, 다음이 성립한다.
+
+$$
+  {\cal L}(\theta | {\cal D}) = p ({\cal D} | \theta)
+$$
+
+### Prior
+
+그리고, prior $p({\bf w})$ 는 ${\cal N } ( 0, \sigma_0^2 {\bf I} )$ 로 생각하자. 즉,
+
+$$
+p({\bf w}) = \frac{1}{\sqrt{2\pi \sigma_0^2}^D} \exp \left( -\frac{\Vert{\bf w} \Vert^2}{2 \sigma^2_0} \right)
+$$
+
+### Posterior
+
+집합 ${\cal X} = \{ {\bf x}_1, \cdots, {\bf x}_N \}$  과 ${\cal Y} = \{ y_1, \cdots, y_N\}$ 을 생각하자.
+
+그러면, Bayes rule에 따라 data ${\cal D} = \{{\bf x}_i, y_i \}_{i = 1} ^ N$ 에 대한 likelihood $p({\cal D} | {\bf w})$ 와 prior $p({\bf w})$ 를 이용하여 \
+posterior $p ({\bf w} | \cal D)$ 를 도출할 수 있다.
+
+$$
+p({\bf w} | {\cal D}) = \frac{p({\cal D} | {\bf w}) p({\bf w})}{p({\cal D})} = \frac{p({\cal Y} | {\cal X}, {\bf w}) p({\bf w})}{p(\cal{Y | X} )}
+$$
+
+<details>
+<summary> 두 번째 등호에 대한 proof</summary>
+    
+$p({\bf w} | {\cal D}) = p({\bf w} | {\cal X}, {\cal Y})$ 를 정리하면,
+
+$$
+p({\bf w} | {\cal D}) = \frac{p({\bf w}, {\cal X, Y})}{p({\cal X, Y})} = \frac{p({\cal Y | X} ,{\bf w} ) p(\cal{X}, {\bf w})}{p(\cal{Y | X}) p(\cal X)}
+$$
+
+여기서 $\cal X$와 ${\bf w}$는 marginally independent 하므로, $p({\cal X}, {\bf w}) = p({\cal X})p({\bf w})$ 이다.
+
+즉, 계산하면 다음과 같다.
+
+$$
+p({\bf w} | {\cal D})  = \frac{p({\cal Y} | {\cal X}, {\bf w}) p({\bf w})}{p(\cal{Y | X} )}
+$$
+
+결국 posterior $p ({\bf w} | \cal D)$는 ${\bf w}$ 에 대한 확률(정확히는 likelihood)이므로, 분모의 $p(\cal Y | X)$ 는 constant 이다.
+
+따라서, 다음과 같이 쓸 수 있다.
+
+$$
+p({\bf w} | {\cal D}) \propto p({\cal Y} | {\cal X}, {\bf w}) p({\bf w})
+
+$$
+</details>
+
+<br />
+
+결국 posterior $p ({\bf w} | \cal D)$는 ${\bf w}$ 에 대한 확률(정확히는 likelihood)이므로, 분모의 $p(\cal Y | X)$ 는 constant 이다.
+
+따라서, 다음과 같이 쓸 수 있다.
+
+$$
+p({\bf w} | {\cal D}) \propto p({\cal Y} | {\cal X}, {\bf w}) p({\bf w})
+
+$$
+
+여기서, 모든 data $\in \cal D$ 들은 mutually independent 라고 가정하자.
+
+즉, $p({\cal Y|X}, {\bf w})$ 는 다음과 같다.
+
+$$
+\begin{align*}
+p({\cal Y | X}, {\bf w})&= \prod_{i = 1}^N p(y_i | {\bf x}_i, {\bf w}) \\
+&= \prod_{i = 1}^N \frac{1}{\sqrt{2 \pi \sigma^2}}\exp \left( -\frac{(y_i - {\bf w}^\top {\bf x}_i)^2}{2 \sigma^2} \right)
+\end{align*}
+$$
+
+따라서, posterior은 다음과 같다.
+
+$$
+\begin{align*}
+p({\bf w} | {\cal D}) &\propto 
+\left( \prod_{i = 1}^N \frac{1}{\sqrt{2 \pi \sigma^2}}\exp \left( -\frac{(y_i - {\bf w}^\top {\bf x}_i)^2}{2 \sigma^2} \right) \right) \frac{1}{\sqrt{2\pi\sigma^2_0} ^D} \exp \left( -\frac{\Vert {\bf w} \Vert^2}{2 \sigma_0^2}\right)
+\\
+&\propto  
+\exp \left( -\frac{1}{2\sigma^2} \sum_{i = 1}^N (y_i - {\bf w}^\top{\bf x}_i)^2 - \frac{{\bf w}^\top {\bf w}}{2 \sigma^2_0} \right)
+\end{align*}
+$$
+
+계속 “비례한다($\propto$)” 라는 표현을 쓰는 이유는, 앞에 곱해지는 상수들을 제외하고 생각한 뒤, 나중에 normalize 해주면 되기 때문이다.
+
+### 잠깐 쉬기 ([1] suspended …)
+
+휴— 잠깐 쉬도록 하자.
+
+<div style={{width: `50%`, margin:`auto`}}>
+![짱구](../../image/zzanggu.jpg)
+</div>
+
+<br />
+
+농담이 아니라, 조금 쉬면서 식을 천천히 감상해보라는 것이다. 
+무식하게 식을 전개하고, 계산하는 것이 아닌, 잠깐 쉬면서 우리의 목표를 확고히 하고, 그로 향하는 더욱 쉬운 길을 찾자는 의미이다.
+
+저 posterior은 무슨 분포일까? 즉, 두 gaussian 함수의 곱은 무슨 함수일까?
+
+gaussian?
+
+왜? 증명할 수 있겠는가? 
+
+#### 완전제곱식 - Perfect Square Form
+
+잠깐 중학생때로 돌아가자. 모든 이차식은 완전제곱식과 상수의 덧셈으로 표현할 수 있다.
+그리고, 그 완전제곱식을 만들기 위해서는 **이차항**과 **일차항**을 잘 봐야 한다.
+
+$$
+x^2 + 6x + 10 = (x + 3)^2 + 1
+$$
+
+이것은 행렬에서도 그대로 적용될 수 있다. 다만, 행렬에서는 완전제곱식이 아니라 **이차형식**(Quadratic form)이라고 한다.
+
+그러면, symmetric한 $A \in \R^{D \times D}$에 대하여, $-{\bf x} ^\top A {\bf x} + {\bf b}^\top {\bf x}$ 를 어떻게 Quadratic form으로 정리할까?
+
+역으로 생각해보는 것이다.
+
+$$
+-{\bf x} ^\top A {\bf x} + {\bf b}^\top {\bf x} = -({\bf x} - 🤔)^\top 💩 ({\bf x} - 🤔) + \tt const
+$$
+
+결국에는 이렇게 정리될 터인데, 우변을 전개했을 때, 이차항은 $- {\bf x}^\top 💩 {\bf x}$ 이므로 $💩 = A$ 이다.
+
+일차항은 $2 🤔^\top 💩{\bf x} = {\bf b} ^\top {\bf x}$ 이므로,   $🤔 = \dfrac{1}{2} A^{-1} {\bf b}$ 이다.
+
+따라서, 식은 다음과 같다.
+
+$$
+-{\bf x} ^\top A {\bf x} + {\bf b}^\top {\bf x} = -\left({\bf x} - \dfrac{1}{2} A^{-1} {\bf b}\right)^\top A \left({\bf x} - \dfrac{1}{2} A^{-1} {\bf b}\right)+ \tt const
+$$
+
+또한, gaussian에서는 이 이차식이 모두 $\exp$ 안에 있으니 $\tt const$는 $\exp$ 밖으로 꺼낼 수 있고, 이는 (지금까지 그래왔듯이) 무시될 수 있다.
+
+### fg
+
+posterior의 $\exp$ 내부 부분만 보면, 결국 이차형식으로 정리된다는 것을 알 수 있다. 잠깐만 전개하여 ${\bf w}$ 에 대한 내림차순으로 나타내어 보자.
+
+$$
+-\frac{1}{2\sigma^2} \left\{ \sum_{i}({\bf w}^\top {\bf x}_i)^2 + \frac{\sigma^2}{\sigma^2_0} {\bf w}^\top {\bf w} - 2\sum_i y_i {\bf w}^\top {\bf x}_i + \sum_i y_i ^2 \right\}
+$$
+
+여기서 $({\bf w}^\top {\bf x}_i)^2 = {\bf w}^\top {\bf x}_i {\bf x}_i ^\top {\bf w}$ 임을 떠올리면, 식은 다음과 같이 정리된다.
+
+$$
+-\frac{1}{2\sigma^2} \left\{ \underbrace{{\bf w}^\top\left(\sum_{i} {\bf x}_i {\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0} {\bf I} \right) {\bf w}}_{2차} ~~\underbrace{- 2\sum_i y_i {\bf w}^\top {\bf x}_i}_{1차} + \sum_i y_i ^2 \right\}
+$$
+
+그러면, 앞서 살펴본 완전제곱식 관찰에 의해 다음과 같이 쓸 수 있다.
+
+$$
+-\frac{1}{2}({\bf w} - {\bm \mu}_{{\bf w}})^\top \Sigma^{-1}_{{\bf w}}({\bf w} - {\bm \mu }_{\bf w}) + \tt const
+$$
+
+단, 여기서 $\bm \mu_{{\bf w}}$와 $\Sigma_{\bf w}$는 각각 다음과 같다.
+
+$$
+\begin{align*}
+{\bm \mu}_{\bf w} &= \left(\sum_i {\bf x}_i {\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0} {\bf I} \right) ^{-1} \sum_i y_i{\bf x}_i\\\\
+\Sigma_{\bf w} &= \sigma^2\left( \sum_i {\bf x}_i {\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0} {\bf I}\right)^{-1}
+\end{align*}
+$$
+
+따라서, 다음을 알 수 있다.
+
+$$
+p({\bf w} | {\cal D}) = {\cal N} ({\bf w}; {\bm \mu }_{\bf w}, \Sigma_{\bf w})
+$$
+
+Wow! Gaussian!
+
+## posterior parameter의 의미
+
+자. 정말 중요한 의미 부여 시간이다. 굉장히 복잡한 수식을 미친듯이 전개해나갔는데, 결국 얻은 것은 posterior은 gaussian이고, 그것의 평균과 공분산은 $\bm \mu_{{\bf w}}$와 $\Sigma_{\bf w}$라는 것이다.
+
+posterior $p( {\bf w} | {\cal D})$ 는, 결국 지금까지의 data $\cal D$ 에 대하여, 어떠한 ${\bf w}$가 좋았는지를 보여주는 분포라고 할 수 있다. 이는, 애초에 posterior = prior $\times$  likelihood 였기 때문이다.
+
+이를 조금 쉽게 설명하면, prior $p({\bf w})$은 내가 무작위로 정한 일종의 후보(믿음)들이다. 정말 중구난방하게 다양한 후보(${\bf w}$)들이 있기에, 그 중에 많은 수는 실제 data를 전혀 regression 하지 못하는 엉터리 후보들일지도 모른다.
+
+이를 판별하기 위해 우리는 likelihood라는 **성능 좋은 평가단**을 두었다. 이는, 주어진 후보(${\bf w}$)가 데이터($\cal D$)를 잘 대변하는지를 평가($p({\cal D} | {\bf w})$)하여 가중치를 준다 → $p({\bf w}) p({\cal D} | {\bf w})$
+
+따라서, 이런 과정을 거치면 여러 후보들에 대한 분포가 나오게 되고, 이것이 정규분포라는 것을 지금까지 보였다.
+
+### $\Sigma_{{\bf w}}$  에 대한 분석
+
+먼저 분산에 대해 분석해보자. 분산은, 평가단 사이의 의견차를 보여준다.
+
+$\Sigma_{\bf w}$를 data의 개수인 $N$을 포함시켜 다시 써보면 다음과 같다.
+
+$$
+\Sigma_{\bf w} = \frac{\sigma^2}{N} \left( \frac{1}{N} \sum_{i = 1}^N {\bf x}_i {\bf x}_{i} ^\top + \frac{\sigma^2}{N\sigma^2_0} {\bf I} \right)^{-1}
+$$
+
+$N$을 키워보자. 그러면, $\dfrac{1}{N} \sum\limits_{i = 1}^N {\bf x}_i{\bf x}^\top _i$ 는 data의 평균을 나타내므로, 사실 큰 변화는 없다. (좀 더 precise 해지겠지)
+
+하지만, $\dfrac{\sigma^2 }{N \sigma^2 _0} {\bf I}$  는 $0$ 에 수렴한다. 이는 곧, 우리가 설정한 prior의 분산($\sigma_0^2$)이나, 원래 likelihood의 분산($\sigma^2$)의 차이가 희석된다는 것을 의미한다. 즉, data의 개수가 많아지면 많아질수록, 우리가 어떻게 prior을 설정하는지 상관없어진다는 것이다.
+
+또한, $N$이 커지면 $(...)^{-1}$ 은 data의 평균의 inverse에 수렴한다는 사실을 알았으므로, 다음과 같다.
+
+$$
+\Sigma_{\bf w} = \frac{\sigma^2}{N} \times (\text{average of data})^{-1} \to 0
+$$
+
+즉, 분산 또한 $0$ 에 수렴한다. 이는, 곧 평가단의 의견차가 좁혀진다는 것이고, 신뢰도가 높아진다는 것을 의미한다.
+
+마지막으로, $N$이 작은 경우를 생각해보자. 이때는 상대적으로 $\dfrac{\sigma^2 }{N \sigma^2 _0} {\bf I}$  term의 영향이 커진다. 이는 마치, data가 적을 때, data의 평균 $\dfrac{1}{N} \sum\limits_{i = 1}^N {\bf x}_i{\bf x}^\top _i$만 가지고는 큰일날 수도 있는 상황을 full-rank positive 행렬을 더해줌으로써 막아주는 것으로 해석될 수 있다.
+
+또한, 이때는 $\sigma^2$과 $\sigma^2_0$ 의 차이가 중요해지는데, 결국 data가 적을 때에는 어떻게 prior을 선택하는지가 중요하게 작용한다는 것을 시사한다.
+
+### $\bm \mu_{\bf w}$에 대한 분석
+
+gaussian에서 mean은 가장 likelihood가 높은 값이다. 즉, data $\cal D$ 에 대하여 가장 그럴싸한 ${\bf w}$를 의미한다고 할 수 있다.
+
+당연히, 이 $\bm \mu_{\bf w}$ 또한 $N$이 크고 작을 때, 어떤 term에 지배적인 영향을 받는지 확인해볼 수 있을 것이다.
+
+그런데 가만히 보니, 이 $\bm \mu_{\bf w}$ 어디에서 본 것 같다. 오?
+
+$$
+{\bf w}^* = \left(\sum_i {\bf x}_i {\bf x}_i^\top + \gamma {\bf I} \right) ^{-1} \sum_i y_i{\bf x}_i
+$$
+
+그렇다. 바로 regularization이 있는 linear regression의 optimal한 ${\bf w}^*$를 frequentist들의 방법으로 구한 것과 매우매우 비슷하다는 것을 알 수 있다. 즉, 사실 그들의 $\gamma$는 bayesian들의 $\dfrac{\sigma^2}{\sigma^2_0}$에 대응되는 것이었다!
+
+결국, 서로 다른 길을 걸어갔지만 목적지는 동일했다.
+
+### 그래서 왜 Bayesian 이어야 하는지 알겠지?
+
+훨씬 meaningful한 설명을 해준다는 것. 그것이야말로 bayesian의 장점이다.
