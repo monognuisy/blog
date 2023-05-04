@@ -35,12 +35,7 @@ export const Sidenote = ({ id, children }) => {
 
   return (
     <span id={`sn-${id}`} style={sidenoteStyle} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
-      {/* <mark style={{display: `inline-block`,
-                    lineHeight: `0em`,
-                    // backgroundColor: `#f7e200`,
-                    paddingBottom: `0.5em`,}}> */}
-        {children}
-      {/* </mark> */}
+      {children}
     </span>
   )
 }

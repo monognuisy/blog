@@ -29,23 +29,65 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
     })
   }, [])
 
-  console.log(positions);
+
+
+
+  type positionType = {
+    pos: number,
+    content: string,
+  }
 
   return (
-    <div>
+    <div className="sidenotes-wrapper">
       {positions.map((e, index) => {
-        const { pos, content } = e;
+        const { pos, content }: positionType = e;
         const id = `sn-ref-${index}`;
+
         return (
-          <p 
-            style={{position:`absolute`, top:pos}} 
-            id={id}
-            key={id}
-          >
+          <Note id={id} pos={pos}>
             {content}
-          </p>
+          </Note>
         )
       })}
+    </div>
+  )
+}
+
+const Note = ({ pos, id, children }) => {
+  const [onhover, setOnhover] = useState(false);
+
+  const mouseEnter = () => {
+    setOnhover(() => true);
+  }
+
+  const mouseLeave = () => {
+    setOnhover(() => false);
+  }
+
+  const sidenoteStyle = {
+    top: 0,
+    position: `absolute`, 
+    boxShadow: `rgba(0, 0, 0, 0.01) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px`,
+    padding: `10px`,
+    width: `300px`,
+    borderRadius: `5px`,  
+    backgroundColor: onhover ? `#eeeeee` : `#ffffff`,
+  }
+
+  return (
+    <div 
+      style={{
+        ...sidenoteStyle,
+        top: pos,
+      }} 
+      id={id}
+      key={id}
+      onMouseEnter={mouseEnter}
+      onMouseLeave={mouseLeave}
+      >
+      <span>
+        {children}
+      </span>
     </div>
   )
 }
