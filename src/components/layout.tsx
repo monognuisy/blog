@@ -16,10 +16,12 @@ const Layout = ({ location, title, children }: any) => {
     <div className="most-outer-wrapper">
       {blogHeader}
       <div className="global-wrapper" data-is-root-path={isRootPath}>
+        {/* {!isRootPath && <div className="table-of-contents"></div>} */}
         <main>
           {children}
           <Bio />
         </main>
+        {/* {!isRootPath && <div className="sidenote-wrapper"></div>} */}
       </div>
       {blogFooter}
     </div>

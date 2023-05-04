@@ -8,12 +8,15 @@ import Seo from "../components/seo"
 
 import "katex/dist/katex.min.css"
 import TagBox from "../components/tag"
+import Sidenotes from "../components/sidenotes"
+import Toc from "../components/toc"
 
 const BlogPostTemplate = ({ data, location, children }: any) => {
   const post = data.mdx
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const { previous, next } = data
   const tags = post.frontmatter.tags
+  const sidenotes = post.frontmatter.sidenotes
 
   return (
     <Layout location={location} title={siteTitle}>
@@ -21,6 +24,7 @@ const BlogPostTemplate = ({ data, location, children }: any) => {
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
       />
+      <Toc />
       <article
         className="blog-post"
         itemScope
@@ -55,6 +59,7 @@ const BlogPostTemplate = ({ data, location, children }: any) => {
           <Bio />
         </footer> */}
       </article>
+      <Sidenotes sidenotesRecord={sidenotes} />
       <nav className="blog-post-nav">
         <ul
           style={{
@@ -108,6 +113,10 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, YYYY")
         description
         tags
+        sidenotes {
+          id
+          content
+        }
       }
     }
     previous: mdx(id: { eq: $previousPostId }) {
