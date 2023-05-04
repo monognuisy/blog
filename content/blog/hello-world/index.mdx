@@ -6,15 +6,17 @@ tags: ["dummy"]
 categories: "Others"
 sidenotes: [
     {
-        id: "sn-1",
+        id: 1,
         content: "sample sidenote"
     },
     {
-        id: "sn-2",
+        id: 2,
         content: "두번째 사이드 노트일껄요?"
     }
 ]
 ---
+
+import { Sidenote } from "../../../src/utils/blogUtils.tsx"
 
 유사-블로그를 개설해 보았습니다.
 
@@ -45,10 +47,10 @@ auto main() -> void {
 }
 ```
 
-<span id="sn-1">sidenote test입니다.</span>
+<Sidenote id={1}>sidenote test입니다.</Sidenote>
 
 이렇게 sidenote를 넣을 수 있다는 것 만으로도 어지간한 블로그보다 낫습니다. ㅇㅇ 
 
 <br />
 
-여기에도 넣어볼까요? <span id="sn-2">이렇게요</span>
+여기에도 넣어볼까요? <Sidenote id={2}>이렇게요.</Sidenote>

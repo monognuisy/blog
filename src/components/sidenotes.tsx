@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react"
 import { graphql, PageProps } from "gatsby"
 
 type sidenotesType = {
-  id: string,
+  id: number,
   content: string
 }
 
@@ -18,7 +18,7 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
   useEffect(() => {
     sidenotesRecord.forEach(e => {
       const key = e.id;
-      const pos = document.querySelector(`#${key}`).getBoundingClientRect();
+      const pos = document.querySelector(`#sn-${key}`).getBoundingClientRect();
       const res = pos.top + window.scrollY;
 
       setPositions((positions) => {
@@ -48,19 +48,6 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
       })}
     </div>
   )
-}
-
-const findLocation = (key) => {
-  let ret = 0;
-  useEffect(() => {
-    const target = document.querySelector(`#${key}`);
-    const pos = target.getBoundingClientRect();
-    
-    // console.log(pos.top + window.scrollY);
-    ret = pos.top + window.scrollY;
-  });
-
-  return ret;
 }
 
 export default Sidenotes
