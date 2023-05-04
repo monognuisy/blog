@@ -4,7 +4,15 @@ date: "2023-05-01"
 description: "대표적인 함수형 언어 Standard ML을 배워보자"
 tags: ["Functional Programming","Standard ML"]
 categories: "Functional Programming"
+sidenotes: [
+    {
+        id: 1,
+        content: "하지만 곧 생략해도 된다는 것을 알게 될 것이다!"
+    }
+]
 ---
+
+import { Sidenote } from "../../../src/utils/blogUtils.tsx"
 
 ## 🖥️ Environment
 앞으로 Standard ML(이하 sml) 코드를 수행하기 위해 [sml/nj](https://www.smlnj.org/) 를 사용할 것이다. 
@@ -103,7 +111,7 @@ fun add (a: int, b: int) : int =
 ```
 
 눈에 띄는 것은 거추장스러운 `return` 키워드가 없다는 것이다. 이는 수학의 함수에서 굳이 `return`이라는 키워드가 필요 없는것과 비슷하다.
-또한, 위와 같이 매개변수와 반환값의 타입을 지정해야 하는 것은 static type 언어의 특징을 잘 표현한다. (하지만 곧 생략해도 된다는 것을 알게 될 것이다)
+또한, 위와 같이 <Sidenote id={1}>매개변수와 반환값의 타입을 지정해야 하는 것</Sidenote>은 static type 언어의 특징을 잘 표현한다.
 
 여기서 함수 `add`의 type은 `(int * int) -> int` 로 추론된다. 여기서 `*`를 multiplication으로 생각하는 사람은 없겠지?!
 그냥 두 인자를 받는다는 것을 저렇게 표현한 것이다.
