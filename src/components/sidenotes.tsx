@@ -13,13 +13,19 @@ type sidenotesRecType = {
 const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {  
   const [positions, setPositions] = useState([]);
 
+  console.log(sidenotesRecord);
+
   useEffect(() => {
     sidenotesRecord.forEach(e => {
       const key = e.id;
       const pos = document.querySelector(`#${key}`).getBoundingClientRect();
       const res = pos.top + window.scrollY;
 
-      setPositions([...positions, res]);
+      setPositions((positions) => {
+        return ([...positions, {
+        pos: res,
+        content: e.content,
+      }])});
     })
   }, [])
 
@@ -27,9 +33,17 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
 
   return (
     <div>
-      {positions.map(pos => {
+      {positions.map((e, index) => {
+        const { pos, content } = e;
+        const id = `sn-ref-${index}`;
         return (
-          <span style={{position:`absolute`, top:pos}}>this is sample sidenote</span>
+          <p 
+            style={{position:`absolute`, top:pos}} 
+            id={id}
+            key={id}
+          >
+            {content}
+          </p>
         )
       })}
     </div>
