@@ -14,8 +14,6 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
   const [positions, setPositions] = useState([]);
   const [docElement, setDocElement] = useState([]);
 
-  console.log(sidenotesRecord);
-
   useEffect(() => {
     sidenotesRecord.forEach(e => {
       const key = e.id;
@@ -36,7 +34,20 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
     })
   }, [])
 
-  console.log(positions);
+  sidenotesRecord.forEach((e, index) => {
+    if (index < positions.length - 1) {
+      const currpos = positions[index].pos;
+      const nextpos = positions[index + 1].pos;
+      const currheight = (Math.ceil(getByte(e.content) * 7.8 / 269))*(24) - 5;
+
+      console.log(currheight);
+      console.log(nextpos);
+
+      if (currpos + currheight >= nextpos) {
+        positions[index + 1].pos = currpos + currheight + 45;
+      }
+    }
+  })
 
   type positionType = {
     pos: number,
@@ -99,6 +110,13 @@ const Note = ({ pos, id, elements, children }) => {
       </span>
     </div>
   )
+}
+
+const getByte = (str) => {
+  return str
+    .split('') 
+    .map(s => s.charCodeAt(0))
+    .reduce((prev, c) => (prev + ((c === 10) ? 1.8 : ((c >> 7) ? 1.8 : 1))), 0);
 }
 
 export default Sidenotes
