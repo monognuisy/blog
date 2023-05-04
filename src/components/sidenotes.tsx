@@ -12,25 +12,31 @@ type sidenotesRecType = {
 
 const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {  
   const [positions, setPositions] = useState([]);
+  const [docElement, setDocElement] = useState([]);
 
   console.log(sidenotesRecord);
 
   useEffect(() => {
     sidenotesRecord.forEach(e => {
       const key = e.id;
-      const pos = document.querySelector(`#sn-${key}`).getBoundingClientRect();
+      const ele = document.querySelector(`#sn-${key}`);
+      const pos = ele.getBoundingClientRect();
       const res = pos.top + window.scrollY;
 
       setPositions((positions) => {
         return ([...positions, {
-        pos: res,
-        content: e.content,
+          pos: res,
+          content: e.content,
       }])});
+
+      setDocElement((elements) => {
+        return ([...elements, ele])
+      });
+
     })
   }, [])
 
-
-
+  console.log(positions);
 
   type positionType = {
     pos: number,
@@ -41,10 +47,10 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
     <div className="sidenotes-wrapper">
       {positions.map((e, index) => {
         const { pos, content }: positionType = e;
-        const id = `sn-ref-${index}`;
+        const id = `sn-ref-${index + 1}`;
 
         return (
-          <Note id={id} pos={pos}>
+          <Note id={index} pos={pos} key={id} elements={docElement}>
             {content}
           </Note>
         )
@@ -53,15 +59,19 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
   )
 }
 
-const Note = ({ pos, id, children }) => {
+const Note = ({ pos, id, elements, children }) => {
   const [onhover, setOnhover] = useState(false);
 
-  const mouseEnter = () => {
+  const mouseEnter = (i) => {
     setOnhover(() => true);
+    
+    elements[i].style.backgroundColor = `#ffdc5c`
   }
 
-  const mouseLeave = () => {
+  const mouseLeave = (i) => {
     setOnhover(() => false);
+
+    elements[i].style.backgroundColor = `#fff9db`
   }
 
   const sidenoteStyle = {
@@ -80,11 +90,10 @@ const Note = ({ pos, id, children }) => {
         ...sidenoteStyle,
         top: pos,
       }} 
-      id={id}
-      key={id}
-      onMouseEnter={mouseEnter}
-      onMouseLeave={mouseLeave}
-      >
+      id={`sn-ref-${id + 1}`}
+      onMouseEnter={() => mouseEnter(id)}
+      onMouseLeave={() => mouseLeave(id)}
+    >
       <span>
         {children}
       </span>

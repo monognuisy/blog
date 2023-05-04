@@ -1,7 +1,7 @@
 import * as React from "react"
 import ogs from "open-graph-scraper"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export const LinkBox = ({ urlValue }) => {
   return <div>{urlValue}</div>
@@ -17,13 +17,25 @@ export const Highlight = ({ color = textHighlightBlue, children}) => {
 
 export const Sidenote = ({ id, children }) => {
   const [onhover, setOnhover] = useState(false);
+  const [sideElement, setSideElement] = useState(null);
+
+  useEffect(() => {
+    const sidekey = `sn-ref-${id}`
+    const docElement = document.querySelector(`#${sidekey}`)
+
+    setSideElement(() => docElement)
+  }, [onhover])
 
   const mouseEnter = () => {
     setOnhover(() => true);
+
+    if (sideElement) sideElement.style.backgroundColor = `#eeeeee`
   }
 
   const mouseLeave = () => {
     setOnhover(() => false);
+
+    if (sideElement) sideElement.style.backgroundColor = `#ffffff`
   }
 
   const sidenoteStyle = {
