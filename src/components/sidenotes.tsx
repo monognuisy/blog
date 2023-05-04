@@ -15,7 +15,7 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
   const [docElement, setDocElement] = useState([]);
 
   useEffect(() => {
-    sidenotesRecord.forEach(e => {
+    sidenotesRecord?.forEach(e => {
       const key = e.id;
       const ele = document.querySelector(`#sn-${key}`);
       const pos = ele.getBoundingClientRect();
@@ -34,7 +34,7 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
     })
   }, [])
 
-  sidenotesRecord.forEach((e, index) => {
+  sidenotesRecord?.forEach((e, index) => {
     if (index < positions.length - 1) {
       const currpos = positions[index].pos;
       const nextpos = positions[index + 1].pos;
