@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { graphql, PageProps } from "gatsby"
 
 const Toc = () => {
-  return <div></div>
+  return <div className="toc-wrapper"></div>
 }
 
 export default Toc

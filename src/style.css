@@ -308,12 +308,11 @@ footer a {
 }
 
 .global-wrapper[data-is-root-path="false"] > main {
-  /* margin: 0 auto;
-  max-width: var(--maxWidth-wrapper); */
-  /* max-width: var(--maxWidth-wrapper); */
+  /* max-width: var(--maxWidth-index); */
+  /* max-width: 80%; */
   padding-top: var(--spacing-10); 
   display: grid;
-  grid-template-columns: 1fr var(--maxWidth-wrapper) 1fr;
+  grid-template-columns: 1fr var(--maxWidth-wrapper) minmax(300px, 1fr);
   column-gap: var(--spacing-5);
 }
 
@@ -498,6 +497,29 @@ main .utterances-wrapper {
   ul,
   ol {
     list-style-position: inside;
+  }
+}
+
+@media (max-width: 1200px) {
+  /* .toc-wrapper {
+    display: none;
+  }
+   */
+  
+  .global-wrapper[data-is-root-path="false"] > main {
+    display: flex;
+    max-width: var(--maxWidth-wrapper);
+    flex-direction: column;
+  }
+
+  .sidenotes-wrapper {
+    /* padding-top: var(--spacing-4); */
+  }
+  
+  .sidenotes-wrapper > div {
+    max-width: var(--maxWidth-wrapper) !important;
+    position: static !important;
+    margin: var(--spacing-4) auto;
   }
 }
 
