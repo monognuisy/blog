@@ -1,7 +1,7 @@
 ---
-title: "SML - 유용한 자료구조, local bindings"
+title: "SML - 유용한 자료구조"
 date: "2023-05-05"
-description: "sml의 tuple, list, record와 local binding을 알아보자"
+description: "sml의 tuple, list, record를 알아보자"
 tags: ["Functional Programming","Standard ML"]
 categories: "Functional Programming"
 sidenotes: [
@@ -170,5 +170,30 @@ fun append (xs: 'a list, ys: 'a list) =
 ```
 
 ## 🎥 Record
+record는 필드와 값을 가진다. 다음 예시 코드를 보자.
+```sml
+val x = {name = "monognuisy", id = 123456}
 
-## 🐛 let-expressions
+(* type of x is {name: string, id: int} *)
+```
+
+record는 마치 C의 구조체(`struct`)와도 닮았다.
+
+### Accessing records
+record는 필드의 이름으로 값에 접근할 수 있다. 다음과 같이 말이다.
+```sml
+val x = {name = "monognuisy", id = 123456}
+
+val xname = #name x   (* xname = "monognuisy" *)
+val xid = #id x       (* xid = 123456 *)
+```
+
+응? 이렇게 보니 마치 '튜플'같다. 실제로, 이 레코드는 튜플과 연관이 있다.
+
+### Relation between Tuple and Record
+사실, 튜플 `(e1, e2, ..., en)`은 레코드 `{1 = e1, 2 = e2, ..., n = en}`를 조금 다르게 쓴 것이다. 
+즉, 튜플은 '**필드 이름이 숫자인 레코드**' 라는 것이다.
+
+하지만, 필드 이름을 숫자로 하는 것은 가독성에도 나쁜 영향을 끼치고, 튜플이라는 것이 sml에서 워낙 많이 쓰이다 보니
+조금 더 간편하게(?) 쓸 수 있도록 만든 것이다. 이런 것을 **Syntactic sugar** 라고 한다.
+
