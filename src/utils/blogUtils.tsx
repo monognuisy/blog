@@ -19,6 +19,10 @@ export const Highlight = ({ color = textHighlightBlue, children}) => {
 export const Sidenote = ({ id, children }) => {
   const [onhover, setOnhover] = useState(false);
   const [sideElement, setSideElement] = useState(null);
+  const [waiter, setWaiter] = useState(false);
+
+  const primaryColor = `#ffffff`;
+  const dimmedColor = `#eeeeee`;
 
   useEffect(() => {
     const sidekey = `sn-ref-${id}`
@@ -30,13 +34,25 @@ export const Sidenote = ({ id, children }) => {
   const mouseEnter = () => {
     setOnhover(() => true);
 
-    if (sideElement) sideElement.style.backgroundColor = `#eeeeee`
+    if (sideElement) sideElement.style.backgroundColor = dimmedColor
   }
 
   const mouseLeave = () => {
     setOnhover(() => false);
 
-    if (sideElement) sideElement.style.backgroundColor = `#ffffff`
+    if (sideElement && !waiter) 
+      sideElement.style.backgroundColor = primaryColor
+  }
+
+  
+  const mouseClick = (i) => {
+    console.log(i);
+
+    sideElement.style.backgroundColor = dimmedColor
+    setWaiter(() => true);
+
+    setTimeout(() => setWaiter(false), 1000);
+    setTimeout(() => (sideElement.style.backgroundColor = primaryColor), 1000);
   }
 
   const sidenoteStyle = {
@@ -56,6 +72,7 @@ export const Sidenote = ({ id, children }) => {
       style={sidenoteStyle} 
       onMouseEnter={mouseEnter} 
       onMouseLeave={mouseLeave}
+      onClick={mouseClick}
     >
       <span >
         {children}

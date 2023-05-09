@@ -69,21 +69,33 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
 
 const Note = ({ pos, id, elements, children }) => {
   const [onhover, setOnhover] = useState(false);
+  const [waiter, setWaiter] = useState(false);
+
+  const primaryHColor = `#fff9db`;
+  const dimmedHColor = `#ffdc5c`
 
   const mouseEnter = (i) => {
     setOnhover(() => true);
     
-    elements[i].style.backgroundColor = `#ffdc5c`
+    elements[i].style.backgroundColor = dimmedHColor
   }
 
   const mouseLeave = (i) => {
     setOnhover(() => false);
 
-    elements[i].style.backgroundColor = `#fff9db`
+    if (!waiter) {
+      elements[i].style.backgroundColor = primaryHColor
+    }
   }
 
   const mouseClick = (i) => {
     console.log(i);
+
+    elements[i].style.backgroundColor = dimmedHColor
+    setWaiter(() => true);
+
+    setTimeout(() => setWaiter(false), 1000);
+    setTimeout(() => (elements[i].style.backgroundColor = primaryHColor), 1000);
   }
 
 
