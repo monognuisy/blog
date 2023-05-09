@@ -45,6 +45,7 @@ export const Sidenote = ({ id, children }) => {
     borderRadius: `3px`,
     textDecoration: `none`,
     color: `#2e353f`,
+    transition: `0.2s`,
   }
   
 

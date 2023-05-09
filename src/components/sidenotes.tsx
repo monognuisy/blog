@@ -40,9 +40,6 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
       const nextpos = positions[index + 1].pos;
       const currheight = (Math.ceil(getByte(e.content) * 7.8 / 269))*(24) - 5;
 
-      console.log(currheight);
-      console.log(nextpos);
-
       if (currpos + currheight >= nextpos) {
         positions[index + 1].pos = currpos + currheight + 45;
       }
@@ -85,6 +82,10 @@ const Note = ({ pos, id, elements, children }) => {
     elements[i].style.backgroundColor = `#fff9db`
   }
 
+  const mouseClick = (i) => {
+    console.log(i);
+  }
+
 
   const sidenoteStyle = {
     top: 0,
@@ -98,6 +99,7 @@ const Note = ({ pos, id, elements, children }) => {
     color: `#2e353f`,
     backgroundColor: onhover ? `#eeeeee` : `#ffffff`,
     display: `block`,
+    transition: `0.2s`,
   }
 
   return (
@@ -110,6 +112,7 @@ const Note = ({ pos, id, elements, children }) => {
       id={`sn-ref-${id + 1}`}
       onMouseEnter={() => mouseEnter(id)}
       onMouseLeave={() => mouseLeave(id)}
+      onClick={() => mouseClick(id)}
       to={`./#sn-${id + 1}`}>
       <span>
         {children}
