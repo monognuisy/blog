@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { graphql, PageProps } from "gatsby"
+import { graphql, Link, PageProps } from "gatsby"
 
 type sidenotesType = {
   id: number,
@@ -85,6 +85,7 @@ const Note = ({ pos, id, elements, children }) => {
     elements[i].style.backgroundColor = `#fff9db`
   }
 
+
   const sidenoteStyle = {
     top: 0,
     position: `absolute`, 
@@ -93,11 +94,15 @@ const Note = ({ pos, id, elements, children }) => {
     maxWidth: `300px`,
     width: `100%`,
     borderRadius: `5px`,  
+    textDecoration: `none`,
+    color: `#2e353f`,
     backgroundColor: onhover ? `#eeeeee` : `#ffffff`,
+    display: `block`,
   }
 
   return (
-    <div 
+    <Link 
+      className="sn-ref"
       style={{
         ...sidenoteStyle,
         top: pos,
@@ -105,11 +110,11 @@ const Note = ({ pos, id, elements, children }) => {
       id={`sn-ref-${id + 1}`}
       onMouseEnter={() => mouseEnter(id)}
       onMouseLeave={() => mouseLeave(id)}
-    >
+      to={`./#sn-${id + 1}`}>
       <span>
         {children}
       </span>
-    </div>
+    </Link>
   )
 }
 

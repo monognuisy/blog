@@ -2,6 +2,7 @@ import * as React from "react"
 import ogs from "open-graph-scraper"
 
 import { useEffect, useState } from "react"
+import { Link } from "gatsby"
 
 export const LinkBox = ({ urlValue }) => {
   return <div>{urlValue}</div>
@@ -42,13 +43,23 @@ export const Sidenote = ({ id, children }) => {
     backgroundColor: onhover ? `#ffdc5c` :`#fff9db`,
     padding: `3px`,
     borderRadius: `3px`,
+    textDecoration: `none`,
+    color: `#2e353f`,
   }
   
 
   return (
-    <span id={`sn-${id}`} style={sidenoteStyle} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
-      {children}
-    </span>
+    <Link 
+      to={`./#sn-ref-${id}`}
+      id={`sn-${id}`} 
+      style={sidenoteStyle} 
+      onMouseEnter={mouseEnter} 
+      onMouseLeave={mouseLeave}
+    >
+      <span >
+        {children}
+      </span>
+    </Link>
   )
 }
 

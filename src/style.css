@@ -516,7 +516,7 @@ main .utterances-wrapper {
     /* padding-top: var(--spacing-4); */
   }
   
-  .sidenotes-wrapper > div {
+  .sidenotes-wrapper > .sn-ref {
     max-width: var(--maxWidth-wrapper) !important;
     position: static !important;
     margin: var(--spacing-4) auto;
