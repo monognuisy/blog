@@ -69,6 +69,8 @@ module.exports = {
                 "\\pdv": `{\\dfrac{{\\partial}{#1}}{{\\partial}{#2}}}`,
                 "\\dd": `{{\\rm d}{#1}}`,
                 "\\norm": `{\\left \\Vert {#1} \\right \\Vert}`,
+                "\\iindep": `{\\perp \\! \\! \\! \\perp}`,
+                "\\indep": `\\mathrel{\\iindep}`
               },
             },
           },
