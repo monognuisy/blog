@@ -87,6 +87,13 @@ export const textHighlightBlue = {
   borderRadius: `3px`,
 }
 
+export const textHighlightRed = {
+  backgroundColor: `#ffb8bb`,
+  padding: `3px`,
+  borderRadius: `3px`,
+}
+
+
 export const textHighlightYellow = {
   backgroundColor: `#fff9db`,
   padding: `3px`,

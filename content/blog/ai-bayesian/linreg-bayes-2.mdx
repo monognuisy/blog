@@ -1,0 +1,351 @@
+---
+title: Linear Regression (3) - Bayesian의 Prediction
+date: "2023-05-31"
+description: "Linear regression의 Prediction 부분을 Bayesian의 관점에서 해석하자"
+tags: ["AI","Mathematics"]
+categories: "AI - Bayesian Approach"
+---
+
+import { Highlight, textHighlightBlue, textHighlightRed, Code } from "../../../src/utils/blogUtils.tsx";
+import { Link } from "gatsby";
+
+## 지난 이야기
+
+$$
+p({\bf w} | {\cal D}) = {\cal N} ({\bf w}; {\bm \mu }_{\bf w}, \Sigma_{\bf w})
+$$
+
+where
+$$
+\begin{align*}
+{\bm \mu}_{\bf w} &= \left(\sum_i {\bf x}_i {\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0} {\bf I} \right) ^{-1} \sum_i y_i{\bf x}_i\\\\
+\Sigma_{\bf w} &= \sigma^2\left( \sum_i {\bf x}_i {\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0} {\bf I}\right)^{-1}
+\end{align*}
+$$
+
+## Prediction
+### 들어가기 앞서
+복잡한 수식이 많이 등장할 예정. 따라서, **모바일보다는 PC에서 보는 것이 정신적으로도 신체적으로도 훨씬 좋습니다**.
+
+또한, 이를 잘 이해하기 위해서는 **선형대수학**, **다변수 정규분포**, **베이즈 정리**에 대한 이해가 있어야 합니다.
+
+### Predictive Distribution
+
+Training을 마쳤으므로 Prediction을 할 차례다. Bayesian은 하나의 point로 답을 내는 것이 아니라, 일종의 density로 답을 낸다. 
+
+새로운 input ${\bf x}$ 와 그로 기대되는 output $y$ 를 도입하자. 그러면, 기존의 data $\cal D$ 와 ${\bf x}$에 대한 $y$ 의 **predictive density**는 다음과 같다.
+
+$$
+p(y | {\bf x}, {\cal D}) = \int _{{\bf w} \in {\cal W} } p(y | {\bf x}, {\bf w}) p({\bf w} | {\cal D})~{\rm d} {\bf w}
+$$
+
+즉, 새로운 ${\bf x}, y$ 에 대한 likelihood에 지금까지 모았던 정보인 posterior을 곱해서 모든 ${\bf w}$에 대해 적분한 것이다.
+
+이렇게 되면, 훌륭한 ${\bf w}$ 들에 기반한 likelihood만 남게 된다.
+
+이를 계산하기 위해, 정적분 내의 식만 전개해보자. 
+
+#### 정적분 내의 식
+
+그 전에, 둘 다 gaussian 이므로, 결과적으로 또 다른 gaussian이 될 것이라는 것을 알 수 있다.
+
+또한, 어차피 ${\bf w}$ 에 대해 정적분할 것이므로 ${\bf w}$ 에 대해 정리해야 함과, ${\bf w}$는 곧 없어질 변수라는 것도 확인할 수 있다. 그리고 predictive density는 $y$에 대한 density 이므로, $y$ 에 대해서도 정리해야 한다.
+
+해야 할 것이 많은데, 천천히 지금껏 해왔던 것과 같은 방법으로 해보자.
+
+두개의 gaussian이 곱해진 꼴이므로, $\exp$ 내부의 항만 써보면 다음과 같다.
+
+$$
+\begin{equation}
+-\frac{1}{2\sigma^2} (y - {\bf w}^\top {\bf x})^2 - \frac{1}{2\sigma^2}({\bf w} - {\bm \mu}_{\bf w})^\top \sigma^2 \Sigma_{\bf w}^{-1} ({\bf w} - {\bm \mu}_{\bf w})
+\end{equation}
+$$
+
+여기서, 다음을 이용하면 [식 1]을 조금 간단히 할 수 있다.
+
+$$
+\Sigma^{-1}_{\bf w}{\bm \mu}_{\bf w} = \frac{1}{\sigma^2}\sum_{i} y_i {\bf x}_i
+$$
+
+$$
+\begin{equation}
+\begin{align*}
+-\frac{1}{2\sigma^2} \left\{ y^2 - 2y{\bf w}^\top {\bf x} + ({\bf w}^\top {\bf x})^2 +
+{\bf w}^\top \left(\sum_{i} {\bf x}_i{\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0}I  \right) {\bf w} 
+-2{\bf w}^\top \sum_{i}y_i {\bf x}_i
+\right\}
+\end{align*}
+\end{equation}
+$$
+
+먼저 [식 2]에서 ${\bf w}$에 대한 이차형식을 뽑아내자. 일단, 앞의 $-1/2\sigma^2$ 은 지면상 잠깐 쓰지 않겠다.
+
+또한, $\sum_i {\bf x}_i {\bf x}_i^\top = XX^\top$, $\sum_i y_i{\bf x}_i = X{\bf y}$ 로 쓰자. 
+(<Link to="../linreg-freq">Linear Regression (1) - Frequentist</Link> 참고)
+
+$$
+{\bf w}^\top \left( {\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right){\bf w} - 2{\bf w}^\top \left(y{\bf x} + X{\bf y} \right) + y^2
+$$
+
+<Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link> 의 완전제곱식 공식을 참고하면, 다음과 같이 정리된다.
+
+$$
+\begin{equation}
+\underbrace{({\bf w} - 😊)^\top 👹 ({\bf w} - 😊)}_{{}\text{quadratic form of }{\bf w}}  + y^2 - 😊^\top👹😊
+\end{equation}
+$$
+
+단, 여기서 $😊$와 $👹$는 다음과 같다.
+
+$$
+\begin{align*}
+😊 &= \left({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I\right)^{-1}(y{\bf x} + X{\bf y}) 
+\\\\
+👹 &= {\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I
+\end{align*}
+$$
+
+이때 [식 3]에서 ${\bf w}$에 대한 이차형식은 적분하면 상수가 되므로, 뒤의 항만 남게 된다.
+
+뒤의 항을 전개하면 다음과 같다.
+
+$$
+y^2  - (y{\bf x} + X{\bf y})^\top \left( {\bf x}{\bf x}^\top +XX^\top + \frac{\sigma^2}{\sigma_0^2} I \right)^{-1} (y{\bf x} + X{\bf y})
+$$
+
+이 또한 이차식이므로, 완전제곱식으로 바꿀 수 있다. 살짝 전개하면 다음과 같다.
+
+$$
+y^2 \left( 1 - {\bf x}^\top \left( {\bf x}{\bf x}^\top + XX^\top+ \frac{\sigma^2}{\sigma^2_0}I \right) {\bf x}\right) - 2y{\bf x}^\top \left( {\bf x}{\bf x}^\top + XX^\top+ \frac{\sigma^2}{\sigma^2_0}I \right)X{\bf y} + \cdots
+$$
+
+여기에 원래 붙어있던 $-1/2\sigma^2$ 를 곱하고, 이를 정리하면 다음과 같은 완전제곱식이 나온다.
+
+$$
+-\frac{(y - 🐉)^2}{2 🦄}
+$$
+
+Gaussian!
+
+단, 여기서 $🐉$와 $🦄$는 다음과 같다.
+
+$$
+\begin{align*}
+🐉 &= \frac{{\bf x}^\top ( {\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I) ^{-1} X{\bf y}}{1 - {\bf x}^\top ({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I)^{-1} {\bf x}}
+\\\\
+🦄 &= \frac{\sigma^2}{1 - {\bf x}^\top ({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I)^{-1} {\bf x}}
+\end{align*}
+$$
+
+그리고, 이는 $p(y | {\bf x}, {\cal D})$ 의 평균($🐉$)과 분산($🦄$)이다!
+
+### 다시 돌아온 분석 타임
+
+흠… 분석을 해야 하는데, 사실 식이 너무 더럽다 ㅎㅎ. 그래서, 지금 많은 분석을 하기는 힘들고, 다른 선형대수학적 tool들을 이용하여 식을 조금 정리한 뒤에 분석을 해보고자 한다.
+
+그래도, 지금 알 수 있는 것은 분산 ${\rm Var}[y | {\bf x} , \cal D]$ =$🦄$이 항상 $\sigma^2$ 이상이라는 것이다.
+
+(왜냐하면, 분모가 항상 $0$ 이상 $1$ 이하이므로!)
+
+즉, 이는 우리가 아무리 prediction을 잘 해도 원래 model의 error(noise)인 $\sigma^2$ 미만으로의 불확실도로는 prediction할 수 없다는 것이다.
+
+이는 어찌보면 자명하다. 원래의 density보다도 더욱 분산이 적게 예측하는 것은 말이 안되기 때문이다.
+
+### 간소화!
+
+지금의 평균, 분산 식은 너무나도 복잡하다! 특히, 평균이 굉장히 복잡하다. 이를 간단하게 하기 위해서 다음의 유명한 항등식을 소개한다.
+
+> **Woodbury Matrix Identity**
+> 
+> 행렬 $A\in \R^{D\times D},~ C \in \R^{N \times N}, ~U\in \R^{D\times N}, ~ V\in \R^{N \times D}$ 에 대하여 $A, C$ 가 invertible 이면 다음이 성립한다.
+> 
+> 
+> $$
+> (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1} VA^{-1}
+> $$
+> 
+
+$y | {\bf x}, \cal D$ 의 평균과 분산을 보면, 분모가 동일함을 알 수 있다. 따라서, 먼저 **분모**를 보자.
+
+$$
+\begin{equation}
+1 - {\bf x}^\top \left({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} {\bf x}
+\end{equation}
+$$
+
+여기서 $A^{-1} = 1$, $U = {\bf x}^\top$, $C^{-1} = XX^\top + \frac{\sigma^2}{\sigma^2_0} I$, $V = {\bf x}$ 라고 하면, [식 4]는 Woodbury 항등식의 우변과 동일함을 알 수 있다.
+
+따라서, [식 4]는 다음과 같이 변형된다.
+
+$$
+\left( 1+ {\bf x} \left( XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} {\bf x} \right)^{-1}
+$$
+
+여기서 $(XX^\top + \frac{\sigma^2}{\sigma^2_0} I)^{-1}$ 에 항등식을 적용하면 다음과 같으므로:
+
+$$
+\left(XX^\top + \frac{\sigma^2}{\sigma^2_0} I\right)^{-1} = \frac{\sigma^2_0}{\sigma^2}I - \frac{\sigma^4_0}{\sigma^4} X\left( I + \frac{\sigma^2_0}{\sigma^2}X^\top X \right)^{-1} X^\top
+$$
+
+분모인 [식 4]는 최종적으로 다음과 같다.
+
+$$
+\left(1 + \frac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top {\bf x} - {\bf x}^\top X\left( X^\top X +  \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top{\bf x} \right) \right)^{-1}
+$$
+
+이는 스칼라이므로, 결국 inverse는 역수와 동일하다.
+
+즉, **분산**은 다음과 같다.
+
+$$
+\begin{align*}
+{\rm Var}[y | {\bf x}, {\cal D}] &= \sigma^{2} \left(1 + \frac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top {\bf x} - {\bf x}^\top X\left( X^\top X +  \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top{\bf x} \right) \right)\\\\
+&=\color{crimson}{\sigma^2} \color{black}{+} \color{cornflowerblue}{ \sigma^2_0{\bf x}^\top {\bf x} - \sigma^2_0 {\bf x}^\top X \left( X^\top X + \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top {\bf x}}
+
+\end{align*}
+$$
+
+### 다시 돌아온 분석 타임
+
+여기서 <Highlight color={textHighlightRed}>**빨간색 term**</Highlight>과 
+<Highlight color={textHighlightBlue}>**파란색 term**</Highlight>의 합으로 나타낼 수 있다는 점에 주목하자.
+
+<Highlight color={textHighlightRed}>**빨간색 term**</Highlight>을 
+**Aleatoric uncertainty**라고 하며, 이는 underline density function의 uncertainty를 의미한다.
+
+<Highlight color={textHighlightBlue}>**파란색 term**</Highlight>은 
+**Episdemic uncertainty**라고 하며, 이는 data 수에 따른 uncertainty를 의미한다. 
+
+앞서 보았듯이, Aleatoric uncertainty 보다 작게 분산을 만들수는 없다. (직접 Episdemic uncertainty $\ge 0$ 임을 확인해보라!) 만일, Episdemic uncertainty가 $0$ 이라면, 다음과 같은 경우이다.
+
+ 
+
+$$
+X \left( X^\top X + \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X = I
+$$
+
+즉, <Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link> 에서 관찰한 posterior 의 분산과 비슷하게 $N \to \infty$ 인 경우를 의미하는 것이라고 할 수 있다.
+
+좋다. 이렇게 평균도 간소화시켜보자.
+
+### 평균의 간소화
+
+분모는 이미 간소화 시켰으니, **분자**를 간소화 할때이다. 분자는 다음과 같다.
+
+$$
+\begin{equation}
+{\bf x} \left( {\bf x}{\bf x}^\top + XX^\top \frac{}{} + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y}
+\end{equation}
+$$
+
+중간의 inverse를 Woodbury identity를 이용하여 전개하자. $A = XX^\top + \frac{\sigma^2}{\sigma^2_0} I$ , $U = {\bf x}$, $V = {\bf x}^\top$, $C = 1$  이라고 하자. 
+
+항등식의 $(C^{-1} + VA^{-1}U)^{-1}$ 부분은 스칼라기 때문에, 간단히 역수로 표현하면 [식 5]는 다음과 같다.
+
+$$
+{\bf x}^\top \left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y} - \cfrac{{\bf x}^\top \left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1}{\bf x} {\bf x}^\top \left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y} }{1 + {\bf x}^\top {\left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1}} {\bf x}}
+$$
+
+이를 통분(ㄷㄷ)하여 계산하면, 뒷 항의 상당히 긴 분자 부분이 사라진다. 그러면 [식 5]는 다음과 같다.
+
+$$
+\cfrac{{\bf x}^\top \left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y}}{1 + {\bf x}^\top {\left( XX^\top + \cfrac{\sigma^2}{\sigma^2_0}I \right)^{-1}} {\bf x}}
+$$
+
+여기서 $(XX^\top + \frac{\sigma^2}{\sigma^2_0} I)^{-1}$ 에 항등식을 적용하면:
+
+$$
+\begin{equation}
+\cfrac{\cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top X{\bf y} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top X{\bf y} \right)}{ 1 + \cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top {\bf x} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top{\bf x} \right)} 
+\end{equation}
+$$
+
+평균 = 분자 / 분모 이므로, 분자에 분모의 역수를 곱하면 평균을 도출할 수 있다. 
+
+여기서, 원래의 분모의 역수는 [식 6]의 분모와 같으므로, 서로 소거된다.
+
+즉, 평균은 다음과 같다.
+
+$$
+\begin{align*}
+{\mathbb{E}} [y | {\bf x}, {\cal D}] &= \frac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top X{\bf y} - {\bf x}^\top X\left( X^\top X +  \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top X{\bf y} \right) \\
+&= \frac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top - {\bf x}^\top X\left( X^\top X +  \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top  \right)X{\bf y} \\
+&= \frac{\sigma^2_0}{\sigma^2} {\bf x}^\top \left( I - X\left( X^\top X +  \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top  \right)X{\bf y}
+\end{align*}
+$$
+
+마지막 식의 ${\bf x}^\top$ 을 **query point**라고 부른다.
+
+### 조금만, 조금만 더
+
+약간만 더 간소화해보자. Woodbury identity를 계속 이용하면 된다.
+
+$A^{-1} = I$, $U = X$, $V = X^\top$, $C^{-1} = \frac{\sigma^2}{\sigma^2_0}I$ 라고 하면, 평균은 다음과 같이 정리될 수 있다.
+
+$$
+\begin{align*}
+{\mathbb{E}} [y | {\bf x}, {\cal D}] &= \frac{\sigma^2_0}{\sigma^2} {\bf x}^\top \left( I + \frac{\sigma^2_0}{\sigma^2}X X^\top   \right)^{-1} X{\bf y} \\
+&= {\bf x}^\top \left( XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y}
+\end{align*}
+$$
+
+### 다.돌.분.타.
+
+앗! 어디서 많이 본 식이 등장했다!
+
+$$
+\begin{equation}
+{\bf x}^\top \left( XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} X{\bf y}
+\end{equation}
+$$
+
+오! 이것은 Frequentist들이 regularization term을 포함시켜서 계산한 linear regression의 prediction과도 참 닮았다. 또한, 
+<Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link>
+에서의 $\bm \mu_{\bf w}$ 를 이용하여 prediction 한 것으로도 생각할 수 있다.
+
+직관적으로 생각하면, $y | {\bf x}, \cal D$ 의 평균은 가장 density가 높은 값이므로, 가장 그럴싸한 prediction을 의미하고, 이는 가장 그럴싸한 $\bm \mu_{\bf w}$를 이용하여 prediction한 것과 같다.
+
+결국, Frequentist와 Bayesian이 또다시 만났다!
+
+물론, 여기서도 $N$을 포함시켜서 $N$의 변화에 따른 지배적인 term을 확인할 수 있다.
+
+### 여기서 더?
+
+[식 7]을 조금 더 변형시켜서 다른 의미를 도출할 수도 있다. 다음과 같이 $X$를 앞으로 뺄 수 있으므로,
+
+$$
+\left( XX^\top + \frac{\sigma^2}{\sigma^2_0} \right)X = X \left( X^\top X + \frac{\sigma^2}{\sigma^2_0} \right)
+$$
+
+앞에 $(XX^\top + \frac{\sigma^2}{\sigma^2_0})^{-1}$, 뒤에 $(X^\top X + \frac{\sigma^2}{\sigma^2_0})^{-1}$ 을 곱하면 다음과 같다.
+
+$$
+X \left( X^\top X + \frac{\sigma^2}{\sigma^2_0} \right)^{-1} = \left( XX^\top + \frac{\sigma^2}{\sigma^2_0} \right)^{-1} X
+$$
+
+이를 [식 7]에 plugin 하면 다음과 같다.
+
+$$
+[식 ~ 7] = {\bf x}^\top X \left(X^\top X + \frac{\sigma^2}{\sigma^2_0}I \right)^{-1} {\bf y}
+$$
+
+이때, $\gamma = \frac{\sigma^2}{\sigma^2_0}$  이라고 하면 다음과 같이 쓸 수 있다.
+
+$$
+{\bf x}^\top X(X^\top X + \gamma I)^{-1} {\bf y}
+$$
+
+이의 의미는 후에 Gaussian Process 를 다룰때 알게 될 것이다.
+
+<details>
+inverse term을 다시 항등식을 이용하여 전개하고, 뒤의 $X$를 곱한 뒤, 앞으로 꺼내자.
+
+$$
+\begin{align*}
+[식~7] &= {\bf x}^\top \left(\frac{\sigma^2_0}{\sigma^2}I - \frac{\sigma^4_0}{\sigma^4}X \left( I + \frac{\sigma^2_0}{\sigma^2} X^\top X \right)^{-1} X^\top  \right)X{\bf y} \\
+&= {\bf x}^\top X \left(\frac{\sigma^2_0}{\sigma^2}I - \frac{\sigma^4_0}{\sigma^4} \left( I + \frac{\sigma^2_0}{\sigma^2} X^\top X \right)^{-1} X^\top X  \right){\bf y}
+\end{align*}
+$$
+
+여기서 $A^{-1} = \frac{\sigma^2_0}{\sigma^2} I$, $U=  I \in \R^{N \times N}$, $V = X^\top X$, $C^{-1} = I$ 라고 하면 된다.
+</details>
