@@ -1,0 +1,199 @@
+---
+title: Graphical Models & D-separation
+date: "2023-06-20"
+description: "Graphical model을 해석하는 방법인 d-separation에 대해 알아보자."
+tags: ["AI","Mathematics", "Graph theory"]
+categories: "AI - Bayesian Approach"
+sidenotes: [
+  {
+    id: 1,
+    content: "여기서는 음의 상관관계"
+  },
+]
+---
+
+import { Highlight, textHighlightBlue, textHighlightRed, Code } from "../../../src/utils/blogUtils.tsx";
+import { Sidenote } from "../../../src/utils/blogUtils.tsx"
+import { Link } from "gatsby";
+
+## Causal graph
+
+Causal graph는 random variable 간의 **인과관계**(causality)를 나타낸 그래프로써, 무언가 종속성이 있는 시스템을 표현하기 적합하다.
+흔히 DAG(Directed Acyclic Graph) 로 나타낸다.
+
+#### Example
+
+예를 들어, 확률변수 $x_1, x_2, x_3$와 noise $\varepsilon_i \sim {\cal N}(0, \sigma_i^2)$ 에 대하여 다음과 같은 system이 주어졌다고 하자.
+
+$$
+\begin{align*}
+x_1 &= 4 + 2\varepsilon_1 \\
+x_2 &= 3x_1 + 4\varepsilon_2 \\
+x_3 &= 2x_2 + \varepsilon_3
+\end{align*}
+$$
+
+그러면, 이러한 상황을 간단히 다음과 같은 그래프로 표현할 수 있다.
+
+$$
+\begin{CD}
+  x_1 @>>> x_2 @>>> x_3 \\
+  @AAA @AAA @AAA \\
+  \varepsilon_1 @. \varepsilon_2 @. \varepsilon_3
+\end{CD}
+$$
+
+### Decomposition
+
+간단히, 다음과 같은 그래프에서 joint probability $p(x_1, x_2)$ 는 다음과 같이 **분해**(decomposition)될 수 있다.
+
+$$
+\begin{CD}
+x_1 @>>> x_2
+\end{CD}
+$$
+
+$$
+p(x_1, x_2) = p(x_1) p(x_2 | x_1)
+$$
+
+즉, 상위 node의 probability와, 상위 node가 given일 때 하위 node의 conditional probability를 곱한 것이다. 
+Bayesian rule을 생각하면 당연한 결과이다.
+
+그럼, 보다 복잡한 예시를 보자.
+
+$$
+\begin{equation}
+\begin{CD}
+  x_1 @>>> x_3 \\
+  @VVV @VVV \\
+  x_2 @>>> x_5 \\
+  @VVV \\
+  x_4
+\end{CD}
+\end{equation}
+$$
+
+위와 같은 grapical model에서 joint probability $p(x_1, x_2, x_3, x_4, x_5)$이는 다음과 같이 decompose 될 수 있다.
+$$
+p(x_1, x_2, x_3, x_4, x_5) = p(x_1)p(x_2 | x_1) p(x_3 | x_1) | p(x_4 | x_2) p(x_5 | x_2, x_3)
+$$
+
+이러한 분해는 DAG가 주어지면 random variable의 independence와 무관하게 항상 수행할 수 있다는 점을 꼭 기억하자.
+
+### Conditional independence
+
+두 확률변수 $A, B$ 에 대하여 둘이 
+<Highlight color={textHighlightBlue}>**독립**(Marginally independent)</Highlight>이라는 것은 다음이 성립함을 의미한다.
+
+$$
+\begin{align*}
+  & p(A | B) = p(A) \\
+  \Longleftrightarrow \quad& p(A,B) = p(A) p(B)
+\end{align*}
+$$
+
+$A, B$가 독립이면 $A \indep B$ 라고 쓴다.
+
+두 확률변수 $A, B$가 주어진 확률변수 $C$에 대하여 
+<Highlight color={textHighlightBlue}>**조건부 독립**(Conditionally independent)</Highlight>이라는 것은 다음이 성립함을 의미한다.
+$$
+\begin{align*}
+  & p(A | B, C) = p(A | C) \\
+  \Longleftrightarrow \quad& p(A,B | C) = p(A|C) p(B|C)
+\end{align*}
+$$
+
+$A, B$가 given $C$에 대하여 conditionally independent이면 $A \indep B ~|~ C$ 라고 쓴다.
+
+### D-Separation
+
+이러한 conditional independency를 확인하기 위해서는
+앞서 소개한 decomposition rule을 적용하여 실제로 수식적으로 보이는 방법이 있지만, 매번 그렇게 긴 계산을 하는 것은 너무 복잡하다.
+
+따라서, 이러한 수고를 조금이나마 덜어줄 수 있는 '**규칙**'이 있다. 이를 D-separation이라고 한다.
+
+<div style={{width: `100%`, margin:`auto`}}>
+![d-separation](../../image/d-separation.svg)
+</div>
+
+여기서 파랗게 색칠한 node는 given node 이다. 즉, 각 given node가 주어졌을 때, 나머지 node 간의 independency를 나타낸 그림이다.
+
+#### (a) - Causal Chains
+다음과 같은 chain에서 가운데 node가 given이면 나머지 node는 independent 하다.
+
+$$
+\begin{CD}
+  x_1 @>>> {\color{crimson}{x_2}} @>>> x_3
+\end{CD}
+$$
+
+*(proof)*
+
+joint probability가
+$$
+  \begin{align*}
+    p(x_1, x_2, x_3) = p(x_1) p(x_2 | x_1) p(x_3 | x_2)
+  \end{align*}
+$$
+
+이므로, $x_2$가 given일 때 conditional probability는
+$$
+\begin{align*}
+  p(x_1, x_3 | x_2) &= \frac{p(x_1, x_2, x_3)}{p(x_2)} \\
+  &= \frac{p(x_1) p(x_2 | x_1) p(x_3 | x_2)}{p(x_2)} \\
+  &= \frac{p(x_1) p(x_2 | x_1)}{p(x_2)} p(x_3 | x_2) \\
+  &= \frac{p(x_1, x_2)}{p(x_2)} p(x_3 | x_2) \\
+  &= p(x_1 | x_2) p(x_3 | x_2)
+\end{align*}
+$$
+
+따라서 $x_1 \indep x_3 ~|~ x_2$
+
+#### (b) - Common Cause
+다음과 같은 graph에서 같은 원인(cause)를 공유하면, 그 결과는 독립이다.
+
+$$
+\begin{CD}
+  {\color{crimson}{x_1}} @>>> x_3 \\
+  @VVV \\
+  x_2 
+\end{CD}
+$$
+
+*(proof)*
+
+$$
+\begin{align*}
+  p(x_2, x_3 | x_1) &= \frac{p(x_1, x_2, x_3)}{p(x_1)} \\
+  &= \frac{p(x_1) p(x_2 | x_1) p(x_3 | x_2)}{p(x_1)} \\
+  &= p(x_2 | x_1) p(x_3 | x_1)
+\end{align*}
+$$
+
+따라서 $x_2 \indep x_3 ~|~ x_1$
+
+#### (c) - Common Effect
+아마도 셋 중 가장 특이한 녀석일 것이다. 다음과 같은 그래프가 있다.
+
+$$
+\begin{CD}
+  @. x_2 \\
+  @. @VVV \\
+  x_1 @>>> {\color{crimson}{x_3}}
+\end{CD}
+$$
+
+여기서, $x_3$이 **주어지지 않으면** $x_1 \indep x_2$ 이다. 하지만, $x_3$이 주어지면 독립이 아니게 된다.
+
+이는 예시로 이해하는 것이 쉽고 빠르다.
+
+예를 들어 불이 나거나($x_1$) 도둑이 들면($x_2$) 경보기가 울린다($x_3$)고 하자. 
+평상시에는 불이 나는것과 도둑이 드는 것은 독립적이다. 하지만, 어느날 자다가 경보가 울려서 잠이 깼다. ($x_3$가 관측됨)
+그러면 여전히 불이 나는것과 도둑이 드는 것이 독립적일까? 아니다.
+
+만일 불이 나는 것을 확인했다면 도둑이 들었을 확률은 매우 낮아진다. 즉, 불과 도둑 간의 <Sidenote id={1}>relation이 생긴다</Sidenote>는 것이다.
+
+이들을 적절히 이용하면 빠르게 causal graph를 해석할 수 있다.
+
+
