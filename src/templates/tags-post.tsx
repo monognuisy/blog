@@ -14,11 +14,16 @@ const Tags = ({ pageContext, data }) => {
   return (
     <div className="most-outer-wrapper">
       {blogHeader}
-      <div className="global-wrapper">
+      <div className="global-wrapper" data-is-root-path={true}>
         <main>
           
-          <h1>{tagHeader}</h1>
-          <ol style={{ listStyle: `none`}}>
+          <h1 style={{
+            gridColumn: `1 / 3`,
+          }}>{tagHeader}</h1>
+          <ol style={{
+            gridColumn: `1 / 3`, 
+            listStyle: `none`
+          }}>
             {edges.map(({ node }) => {
               const { slug } = node.fields
               const { title } = node.frontmatter

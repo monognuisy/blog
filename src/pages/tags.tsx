@@ -18,11 +18,12 @@ const TagsPage = ({
 }) => (
   <div className="most-outer-wrapper">
     {blogHeader}
-    <div className="global-wrapper">
+    <div className="global-wrapper" data-is-root-path={true}>
       <main>
         <h1>All Tags.</h1>
         <ul 
           style={{
+            gridColumn: `1 / 3`,
             display: `flex`,
             flexWrap: `wrap`,
             justifyContent: `flex-start`,
