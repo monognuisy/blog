@@ -26,11 +26,11 @@ export const blogHeader = (
             <li className="nav-home">
               <Link to="/">HOME</Link>
             </li>
-            {/* <li className="nav-about">
-              <Link to="/">ABOUT</Link>
-            </li> */}
+            <li className="nav-about">
+              <a href="https://monognuisy.github.io/">ABOUT</a>
+            </li>
             <li className="nav-donation">
-              <Link to="https://toss.me/monognuisy/3000">DONATION</Link>
+              <a href="https://toss.me/monognuisy/3000">DONATION</a>
             </li>
           </ul>
         </nav>
@@ -46,10 +46,10 @@ export const blogFooter = (
         © {new Date().getFullYear()} monognuisy
       </li>
       <li className="gh-footer-items gh-footer-contact">
-        <Link to="mailto:ysmsmart1@gmail.com">Contact</Link>
+        <a href="mailto:ysmsmart1@gmail.com">Contact</a>
       </li>
       <li className="gh-footer-items gh-footer-source">
-        <Link to="https://github.com/monognuisy/blog">Site source</Link>
+        <a href="https://github.com/monognuisy/blog">Site source</a>
       </li>
     </ul>
   </footer>
