@@ -6,16 +6,16 @@ module.exports = {
       name: `monognuisy`,
       summary: `studying Computer & Software Science in Hanyang University, Seoul, Korea`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `CS blog by monognuisy`,
     siteUrl: `https://monognuisy.github.io/blog/`,
     // social: {
     //   twitter: ``,
     // },
   },
   plugins: [
-    `gatsby-plugin-advanced-sitemap`,
+    `gatsby-plugin-sitemap`,
+    // `gatsby-plugin-advanced-sitemap`,
     `gatsby-plugin-image`,
-    // `gatsby-plugin-graphql-codegen`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -74,14 +74,6 @@ module.exports = {
               },
             },
           },
-          // {
-          //   resolve: `gatsby-remark-highlight-code`,
-          //   options: {
-          //     terminal: "carbon",
-          //     theme: "one-light",
-          //     lineNumbers: true,
-          //   },
-          // },
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
@@ -96,8 +88,15 @@ module.exports = {
         ],
       },
     },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://monognuisy.github.io/blog',
+        sitemap: 'https://monognuisy.github.io/blog/sitemap-0.xml',
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
+    },
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sharp`,
     // {
     //   resolve: `gatsby-plugin-google-analytics`,
@@ -165,16 +164,10 @@ module.exports = {
         short_name: `monognuisy blog`,
         start_url: `/blog`,
         background_color: `#ffffff`,
-        // This will impact how browsers show your PWA/website
-        // https://css-tricks.com/meta-theme-color-and-trickery/
-        // theme_color: `#663399`,
         display: `minimal-ui`,
         icon: `src/images/logo_trans_squareBlue.webp`, // This path is relative to the root of the site.
       },
     },
     `gatsby-plugin-react-helmet`,
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // `gatsby-plugin-offline`,
   ],
 }
