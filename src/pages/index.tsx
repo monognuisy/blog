@@ -85,26 +85,23 @@ const BlogIndex = ({ location }: PageProps) => {
   const firstElement = posts[0];
   const firstTitle = firstElement.frontmatter.title || firstElement.fields.slug
 
-  if (filteredCategory === `All`) {
-    return (
-      <Layout location={location} title={siteTitle}>
-        <Seo title="All posts" />
-          {postLists(posts)}
-        <Categories data={data} onChangeCategory={filteredCategoryHandler} filteredCategory={filteredCategory} />
-      </Layout>
-    )
-  } 
-  else {
-    const filteredPosts = posts.filter(post => (post.frontmatter.categories === filteredCategory))
-    const seoTitle = `Posts in ${filteredCategory}`
-    return (
-      <Layout location={location} title={siteTitle}>
-        <Seo title={seoTitle} />
-          {postLists(filteredPosts)}
-        <Categories data={data} onChangeCategory={filteredCategoryHandler} filteredCategory={filteredCategory} />
-      </Layout>
-    )
-  }
+  const filteredPosts = (filteredCategory === `All`) 
+                      ? posts
+                      : posts.filter(
+                          post => (post.frontmatter.categories === filteredCategory)
+                        );
+
+  const seoTitle = (filteredCategory === `All`) 
+                 ? `All posts`
+                 : `Posts in ${filteredCategory}`;
+
+  return (
+    <Layout location={location} title={siteTitle}>
+      <Seo title={seoTitle} />
+        {postLists(filteredPosts)}
+      <Categories data={data} onChangeCategory={filteredCategoryHandler} filteredCategory={filteredCategory} />
+    </Layout>
+  )
 }
 
 const postLists = (posts) => {
