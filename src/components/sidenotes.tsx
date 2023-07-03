@@ -10,11 +10,17 @@ type sidenotesRecType = {
   sidenotesRecord: sidenotesType[]
 }
 
+type positionType = {
+  pos: number,
+  content: string,
+}
+
 const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {  
-  const [positions, setPositions] = useState([]);
-  const [docElement, setDocElement] = useState([]);
+  const [positions, setPositions] = useState<positionType[]>([]);
+  const [docElement, setDocElement] = useState<Element[]>([]);
 
   useEffect(() => {
+    // fetch location of element and set y of sidenote same.
     sidenotesRecord?.forEach(e => {
       const key = e.id;
       const ele = document.querySelector(`#sn-${key}`);
@@ -35,21 +41,21 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
   }, [])
 
   sidenotesRecord?.forEach((e, index) => {
+    // consider current and next sidenote simultaneously.
     if (index < positions.length - 1) {
       const currpos = positions[index].pos;
       const nextpos = positions[index + 1].pos;
+
+      // expect the height of current sidenotes.
       const currheight = (Math.ceil(getByte(e.content) * 7.8 / 269))*(24) - 5;
 
+      // if overlapped, adjust position of next element.
       if (currpos + currheight >= nextpos) {
         positions[index + 1].pos = currpos + currheight + 45;
       }
     }
   })
 
-  type positionType = {
-    pos: number,
-    content: string,
-  }
 
   return (
     <div className="sidenotes-wrapper">
@@ -68,11 +74,11 @@ const Sidenotes = ({ sidenotesRecord }: sidenotesRecType) => {
 }
 
 const Note = ({ pos, id, elements, children }) => {
-  const [onhover, setOnhover] = useState(false);
-  const [waiter, setWaiter] = useState(false);
+  const [onhover, setOnhover] = useState<boolean>(false);
+  const [waiter, setWaiter] = useState<boolean>(false);
 
   const primaryHColor = `#fff9db`;
-  const dimmedHColor = `#ffdc5c`
+  const dimmedHColor = `#ffdc5c`;
 
   const mouseEnter = (i) => {
     setOnhover(() => true);
