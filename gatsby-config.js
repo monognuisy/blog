@@ -70,7 +70,10 @@ module.exports = {
                 "\\dd": `{{\\rm d}{#1}}`,
                 "\\norm": `{\\left \\Vert {#1} \\right \\Vert}`,
                 "\\iindep": `{\\perp \\! \\! \\! \\perp}`,
-                "\\indep": `\\mathrel{\\iindep}`
+                "\\indep": `\\mathrel{\\iindep}`,
+                "\\expect": `{\\mathbb{E} \\left[{#1}\\right]}`,
+                "\\vari": `{\\mathrm{Var} \\left[{#1}\\right]}`,
+                "\\cov": `{\\mathrm{Cov} \\left({#1}, {#2}\\right)}`,
               },
             },
           },
@@ -89,12 +92,12 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-robots-txt',
+      resolve: "gatsby-plugin-robots-txt",
       options: {
-        host: 'https://monognuisy.github.io/blog',
-        sitemap: 'https://monognuisy.github.io/blog/sitemap-0.xml',
-        policy: [{ userAgent: '*', allow: '/' }]
-      }
+        host: "https://monognuisy.github.io/blog",
+        sitemap: "https://monognuisy.github.io/blog/sitemap-0.xml",
+        policy: [{ userAgent: "*", allow: "/" }],
+      },
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
