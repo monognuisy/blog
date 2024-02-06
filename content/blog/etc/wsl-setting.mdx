@@ -1,0 +1,168 @@
+---
+title: WSL 설정
+date: "2024-02-06"
+description: "Manjaro linux 를 이용한 WSL 초기 설정"
+tags: ["Programming"]
+categories: "Others"
+sidenotes: []
+---
+
+## 개발환경 설정의 필요성
+
+윈도우는 기본적으로 개발에 친화적이지 않은 OS다. 터미널에서 패키지를 관리하기도 쉽지 않으며, 기본적으로 제공되는 에디터(Notepad)는 상당히 불편하다. 나아가 Visual Studio 로는 C 표준을 지키면서 코딩하는 습관을 기르기에 좋지 않으므로, 리눅스 개발환경을 만들어야 한다.
+
+## WSL 설치
+
+### WSL 설정
+
+다음과 같은 명령어를 `powershell` 에 입력한다.
+
+```bash
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+성공하였으면, **재부팅** 한다.
+
+이후, [다음](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)을 설치하여 리눅스 커널을 업데이트한다.
+
+### Manjaro 설치
+
+[다음](https://github.com/sileshn/ManjaroWSL2/releases/latest) 에서 ManjaroWSL2.zip 을 다운받고, 같은 폴더에 압축을 푼다.
+
+그리고, 다음 명령어를 `powershell` 에서 실행한다.
+
+```powershell
+wsl --set-default-version 2
+```
+
+압축 푼 폴더에 있는 `Manjaro.exe` 를 실행한다.
+
+이후 다시 실행하여 username 과 password 를 설정한다.
+
+### pacman mirror 설정
+
+> 앞으로는 Manjaro에서 명령을 수행하는 것으로 간주한다.
+
+셸에 다음과 같이 입력하여 완료될 때 까지 기다린다.
+
+```bash
+sudo pacman-mirrors --continent
+```
+
+## vscode 설치
+
+[여기](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user)에서 vscode 설치 파일을 받고, 실행하여 설치한다.
+
+이후 Manjaro에서 다음을 입력하여 vscode 가 잘 실행되는지 확인한다.
+
+```bash
+code .
+```
+
+## (Optional) 터미널 꾸미기
+
+### zsh 설치
+
+먼저 `zsh` 을 설치한다.
+
+```bash
+sudo pacman -S zsh
+```
+
+### oh-my-zsh 설치 및 설정
+
+이후 `oh-my-zsh` 를 설치한다.
+
+```bash
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+이후 다음을 입력해 플러그인을 설치한다.
+
+```bash
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+이후 다음을 입력하여 vscode 로 `.zshrc`를 편집한다.
+
+```bash
+code ~/.zshrc
+```
+
+`plugins=(git)`이라고 되어있는 부분을 다음과 같이 수정 후 저장한다.
+
+```bash
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+```
+
+터미널에 다음을 입력해 적용한다.
+
+```bash
+source ~/.zshrc
+```
+
+### powerline 설치 및 설정
+
+터미널에 다음을 입력한다.
+
+```bash
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
+```
+
+이후 터미널을 다시 시작하면 powerlevel10k 를 설정할 수 있다. 수동으로 설정하려면 `p10k configure` 을 입력한다.
+
+(근데 아마 폰트 깨질거임)
+
+> ### **폰트가 깨지는 경우**
+>
+> 높은 확률로, Nerd Font 를 쓰지 않아서 그렇다.
+>
+> [다음](https://www.nerdfonts.com/font-downloads) 링크를 통해 원하는 Nerd Font 를 설치하고, windows terminal 에 적용한다.
+
+## 첫 C 코드 작성
+
+먼저 터미널에 다음 명령어를 입력하여, home 디렉토리 아래에 Code 디렉토리를 만들고 이동한다.
+
+```bash
+cd ~
+mkdir Code
+cd Code
+```
+
+이후 vscode를 연다.
+
+```bash
+code .
+```
+
+`first.c` 를 만들고, 안에 다음과 같이 입력한다.
+
+```c
+#include <stdio.h>
+
+int main() {
+  printf("hello, world!\n");
+  return 0;
+}
+```
+
+`Ctrl + ~` 키를 눌러 터미널을 연 뒤, 다음을 입력하여 컴파일한다.
+
+```bash
+gcc -o first first.c
+```
+
+다음을 입력하여 실행한다.
+
+```bash
+./first
+```
+
+`hello, world!` 가 보인다면 성공이다.
