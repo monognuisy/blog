@@ -1,13 +1,9 @@
-import React, { FC } from "react"
-import { graphql, PageProps } from "gatsby"
-// import { CategoriesQuery } from "graphql-types"
-
-// type CategoriesQuery = { site?: { siteMetadata?: { title?: string | null } | null } | null, allMarkdownRemark: { nodes: Array<{ excerpt?: string | null, fields?: { slug?: string | null } | null, frontmatter?: { date?: any | null, title?: string | null, description?: string | null, categories?: string | null } | null }>, group: Array<{ fieldValue?: string | null, totalCount: number, edges: Array<{ node: { id: string } }> }> } };
-// Catefories:FC<PageProps<CategoriesQuery>>
+import React from "react"
+import { graphql } from "gatsby"
 
 const Categories = ({ data, onChangeCategory, filteredCategory }) => {
   const group = data.allMdx.nodes
-  const categorySet:Set<string> = new Set()
+  const categorySet: Set<string> = new Set()
   group.forEach(prop => {
     categorySet.add(prop.frontmatter.categories)
   });
@@ -30,7 +26,7 @@ const Categories = ({ data, onChangeCategory, filteredCategory }) => {
         >
           All
         </li>
-        {[...categorySet].map((fieldValue: string) => {
+        {Array.from(categorySet).sort().map((fieldValue: string) => {
           // const fieldValue = prop.frontmatter.categories
           return (
             <li
