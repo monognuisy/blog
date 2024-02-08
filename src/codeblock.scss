@@ -1,4 +1,4 @@
-@import "./constants.css";
+@use 'constants';
 
 code[class*="language-"],
 pre[class*="language-"] {
@@ -115,9 +115,9 @@ pre[class*="language-"] {
 
 code.language-text {
   border-radius: 2px !important;
-  padding-left: var(--spacing-1) !important;
-  padding-right: var(--spacing-1) !important;
-  background-color: var(--color-code-background) !important;
-  font-size: var(--fontsize-1);
+  padding-left: constants.$spacing-1 !important;
+  padding-right: constants.$spacing-1 !important;
+  background-color: constants.$color-code-background !important;
+  font-size: constants.$fontSize-1;
   font-weight: 500;
 }

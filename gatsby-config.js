@@ -15,6 +15,7 @@ module.exports = {
   plugins: [
     `gatsby-plugin-sitemap`,
     // `gatsby-plugin-advanced-sitemap`,
+    `gatsby-plugin-sass`,
     `gatsby-plugin-image`,
     {
       resolve: `gatsby-source-filesystem`,
