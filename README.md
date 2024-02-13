@@ -12,4 +12,5 @@
   - [ ] 댓글 수식 기능 활성화
 - [x] code highlighting 개선
 - [ ] css -> styled-components
+  - [x] css -> scss
 - [ ] dark theme 지원
