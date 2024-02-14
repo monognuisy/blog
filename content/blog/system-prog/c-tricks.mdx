@@ -1,0 +1,37 @@
+---
+title: C에서 사용할 수 있는 트릭들.
+date: "2023-11-25"
+description: "때로는 유?용할수도 있는 트릭을 알아보자."
+tags: ["System Programming", "Programming"]
+categories: "System Programming"
+---
+
+## typedef를 이용해보자!
+
+### string in C
+
+다른 high-level 언어에서는 string 이라는 타입을 기본적으로 제공하는 경우가 많다.
+하지만, C에서는 문자열을 어쩔 수 없이 `char` 배열이나 `char` 포인터로 다뤄야 했다.
+
+물론 다음과 같이 구조체를 만들어도 되겠지만 (웬만해서는 더 좋겠지만...),
+```c
+struct String {
+    int len;
+    char* str;
+};
+```
+빠르게 고정된 크기의 문자열을 쓰고 싶다면 다음과 같이 쓰는 것도 고려해보자.
+```c
+#define STR_LEN 50
+
+typedef char string_t[STR_LEN];
+
+int main() {
+    string_t s1 = "hello";
+    // char s1[STR_LEN] = "hello"; 보다 가독성이 높다!
+
+    printf("str: %s\n", s1);
+
+    return 0;
+}
+```
