@@ -13,16 +13,135 @@ sidenotes: []
 아직 질문과 답변 리스트와 각 모듈에 대한 설명이 완성되지는 않았지만, 
 일단은 빠른 배포를 위하여 지금까지의 데이터를 하드코딩 하여 구현하라는 임무를 받게 되었다.
 
+대부분의 프론트 작업이 django 템플릿과 Alpine.js 로 되어있는 것을 보고, 최대한 Alpine 을 사용하고자 하였다.
+그래서 데이터만 담은 html 파일과, 실제 보여지는 html 파일로 나누고 동적으로 데이터를 불러오는 방식으로 구현하였다.
+
 하지만, 프로젝트의 유지 보수성을 위해 회사 사람들과 다음과 같은 기능을 생각하게 되었다.
 
 - markdown 지원
 - 이미지 위치 지정
 - 검색 기능 구현
 
-일단 대부분의 프론트 작업이 Alpine.js 로 되어있는 것을 보고, 최대한 Alpine 을 사용하고자 하였다.
+검색 기능과 같은 경우에는 간단하게 `include` 등을 이용하면 되니 그리 어려울 것 같지는 않았다.
 
-그리하여 내린 첫 번째 해결 방법은 다음과 같았다.
+하지만, 문제는 markdown 이었다. 
+일단 showdown 패키지를 이용하여 markdown string 을 html 로 바꾼 뒤, 그것을 Alpine 의 `x-html` 로 보여주는 방식을 생각했다.
 
-```bash
-FAQ 데이터를 Alpine 에서 동적으로 불러옴 -> 
+### 시도: json + webpack
+
+일단, 기존 코드에서의 데이터를 담는 html 파일은 사실 html이 아닌 json 으로 있어도 충분했다. 즉,
+
+```html
+<script>
+  const faqData = [
+    {
+      tag: '...',
+      category: '...',
+      title: '...',
+      content: '...',
+    },
+    // ...
+  ]
+  const faqMethods = [
+    // ...
+  ]
+
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('faqAlpine', () => ({
+      ...faqData,
+      ...faqMethods,
+    }))
+  })
+</script>
 ```
+
+여기에서 `faqData` 를 json 형태로 관리하는 것이 더욱 좋다고 생각했다. 
+따라서, 이를 json 으로 분리하고, script 태그 내에 있는 것을 그냥 js 파일로 만들기로 하였다.
+
+그런 뒤, webpack 으로 해당 js 파일과 (보여지는) html 파일을 번들링하여 static 파일로 만들었다.
+
+```js
+// faq.js
+
+import showdown from "showdown"
+import faq from "./faq_data.json"
+
+const converter = new showdown.Converter()
+
+const wrapMarkdown = (markdownString) => {
+  const html = converter.makeHtml(markdownString)
+  return `
+    <div class="markdown content">
+      ${html}
+    </div>
+  `
+}
+
+const faqData = {
+  faqCardData: JSON.parse(JSON.stringify(faq)),
+  selectedTag: "",
+  searchQuery: "",
+}
+
+const faqMethods = {
+  // ...
+}
+
+document.addEventListener('alpine:init', () => {  
+  Alpine.data('faqAlpine', () => ({
+    ...faqData,
+    ...faqMethods,
+  }))
+})
+
+window.Alpine = Alpine
+Alpine.start()
+```
+
+```js
+// webpack.config.js
+
+// ...
+module.exports = {
+  entry: {
+    // ...
+    'faq': './<some-path>/faq.js',
+    // ...
+  },
+}
+```
+
+하지만, 여전히 html 파일에서 Alpine 을 사용하여 데이터를 불러오는 것이었기에 static의 의미가 없었다.
+
+게다가 아직 데이터가 완성되지 않았다는 점에서, 준-실시간으로 수정된 데이터를 반영할 수 있도록 Notion과 연동하는 것이 어떻냐는 피드백을 받았다.
+그래서, 일단은 Notion API 를 이용하여 받아온 데이터를 Alpine 으로 보여주는 방식으로 개발을 시작했다. 
+(상당히... 찝찝하고... 무척 돌아가는 듯한 느낌의 방법이었지만, 일단 해보았다)
+
+## 이상한 방법 
+
+일단, 지금까지의 로직은 다음과 같았다. 편의상, FAQ의 질문 부분을 title, 답변 부분을 content 라 하겠다.
+
+1. json 파일의 content 부분에 markdown string 형식으로 데이터를 작성한다. (하드코딩)
+1. js 파일에서는 json 파일을 파싱하고, 이것으로 Alpine data 를 초기화한다.
+1. (Alpine을 쓰는) html 파일에서는 `x-html` 로 보여준다. (showdown 패키지 이용)
+
+여기서 Notion API 를 이용하면 다음과 같은 스텝이 앞에 추가된다.
+
+1. Notion API(`notion-to-md`) 를 이용하여 노션 페이지를 markdown string으로 변환한다.
+1. 이를 content로 가지는 json 파일을 만든다. (이제는 더이상 하드코딩이 아닌!)
+
+오! 뭔가 그럴싸해 보인다. 하지만, 빼먹은 것이 하나 있다면 바로 '**이미지 파일**' 이다.
+
+Notion API 를 이용해서 페이지를 markdown 으로 변환하면, 이미지는 그저 노션의 이미지 링크로 들어간다. 
+이 링크는 기본적으로 만료 시간이 있기 때문에, 이를 다운받아서 static 폴더에 저장할 필요가 있었다.
+
+따라서, 다음과 같은 스텝이 추가된다.
+
+1. 만일 type이 image 라면, 그 링크를 이용하여 이미지를 static에 저장한다.
+2. 그 링크는 받은 static 이미지로 설정한다.
+3. 이를 다시 markdown string으로 변환하고... json으로 만들고... Alpine에서 부르고...
+
+뭔가 이상하지 않은가? 왜 json이 필요하지? 왜 Alpine이 필요하지?
+이쯤되면 그냥 바로 정적인 웹 페이지를 만드는 편이 더 쉬울 것 같았다!
+
+2편에서 계속
