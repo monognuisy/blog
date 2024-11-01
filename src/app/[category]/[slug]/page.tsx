@@ -1,8 +1,10 @@
 import { getAllPostPaths, getPostPath } from '@/lib/getBlogPost';
-import { compileMDX } from 'next-mdx-remote/rsc';
+import { compileMDX, MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import remarkGfm from 'remark-gfm';
 import CustomMDXComponents from '@/app/_components/mdx/CustomMDXComponents';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 type TPostPageProps = {
   params: {
@@ -46,8 +48,8 @@ const PostPage = async ({ params }: TPostPageProps) => {
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [],
+        remarkPlugins: [remarkGfm, remarkMath],
+        rehypePlugins: [rehypeKatex],
       },
     },
     components: CustomMDXComponents,
