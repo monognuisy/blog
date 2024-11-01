@@ -6,6 +6,10 @@ import { serialize } from 'next-mdx-remote/serialize';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 
+const getPostPath = (category: string, slug: string) => {
+  return path.join(postsDirectory, category, `${slug}.mdx`);
+};
+
 /**
  * Return absolute path for every original file of blog post
  */
@@ -66,7 +70,7 @@ const getSortedPostList = () => {
  * Generate post data from category and slug.
  */
 const getPostData = async (category: string, slug: string) => {
-  const filePath = path.join(postsDirectory, category, `${slug}.mdx`);
+  const filePath = getPostPath(category, slug);
   const fileContents = fs.readFileSync(filePath, 'utf8');
 
   const { data, content } = matter(fileContents);
@@ -78,4 +82,4 @@ const getPostData = async (category: string, slug: string) => {
   };
 };
 
-export { getAllPostPaths, getSortedPostList, getPostData };
+export { getPostPath, getAllPostPaths, getSortedPostList, getPostData };

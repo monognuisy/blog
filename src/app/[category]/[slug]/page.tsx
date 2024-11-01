@@ -1,7 +1,8 @@
-import { getAllPostPaths, getPostData } from '@/lib/getBlogPost';
-import { MDXRemote } from 'next-mdx-remote';
+import { getAllPostPaths, getPostPath } from '@/lib/getBlogPost';
+import { compileMDX } from 'next-mdx-remote/rsc';
 import fs from 'fs';
-import path from 'path';
+import remarkGfm from 'remark-gfm';
+import CustomMDXComponents from '@/app/_components/mdx/CustomMDXComponents';
 
 type TPostPageProps = {
   params: {
@@ -10,7 +11,13 @@ type TPostPageProps = {
   };
 };
 
-const postsDirectory = path.join(process.cwd(), 'content/blog');
+type TFrontmatter = {
+  title: string;
+  date: string;
+  description: string;
+  tags: string[];
+  categories: string;
+};
 
 // Note: Need to return `Promise<params[]>` for PostPage
 const generateStaticParams = async () => {
@@ -31,15 +38,25 @@ const generateStaticParams = async () => {
 
 const PostPage = async ({ params }: TPostPageProps) => {
   const { category, slug } = params;
+  const fullPath = getPostPath(category, slug);
+  const postFile = fs.readFileSync(fullPath);
 
-  // TODO: Handle 404
-  const { data, mdxSource } = await getPostData(category, slug);
+  const { content, frontmatter } = await compileMDX<TFrontmatter>({
+    source: postFile,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [],
+      },
+    },
+    components: CustomMDXComponents,
+  });
 
   return (
     <div>
-      <h1>{data.title}</h1>
-      <p>{data.date}</p>
-      <MDXRemote {...mdxSource} />
+      <h1>{frontmatter.title}</h1>
+      {content}
     </div>
   );
 };
