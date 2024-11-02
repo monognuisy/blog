@@ -2,23 +2,16 @@ import { getAllPostPaths, getPostPath } from '@/lib/getBlogPost';
 import { compileMDX, MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import remarkGfm from 'remark-gfm';
-import CustomMDXComponents from '@/app/_components/mdx/CustomMDXComponents';
+import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import { TFrontmatter } from '@/app/_types/post';
 
 type TPostPageProps = {
   params: {
     category: string;
     slug: string;
   };
-};
-
-type TFrontmatter = {
-  title: string;
-  date: string;
-  description: string;
-  tags: string[];
-  categories: string;
 };
 
 // Note: Need to return `Promise<params[]>` for PostPage

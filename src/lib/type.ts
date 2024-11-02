@@ -1,7 +1,7 @@
-type TContentHeader = {
-  id: string,
-} & {
-  [key: string]: any
-}
+import { TFrontmatter } from '@/app/_types/post';
 
-export type {TContentHeader}
+type TContentHeader = {
+  id: string;
+} & TFrontmatter;
+
+export type { TContentHeader };
