@@ -16,8 +16,5 @@ const config: Config = {
     },
   },
   plugins: [],
-  safelist: [
-    { pattern: /bg-\[#.*\]/ }, // 모든 arbitrary 배경색을 safelist로 포함
-  ],
 };
 export default config;

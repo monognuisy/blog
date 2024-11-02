@@ -1,0 +1,70 @@
+@use 'constants';
+
+@import './fonts';
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+// TODO: Handle darkmode
+
+body {
+  color: constants.$color-text;
+  background: constants.$bg-color-primary;
+  font-family: constants.$font-body !important;
+  font-weight: constants.$fontWeight-medium;
+}
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: constants.$fontWeight-bold;
+  margin-top: constants.$spacing-3;
+  margin-bottom: constants.$spacing-3;
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-size: constants.$fontSize-6;
+}
+h2 {
+  font-size: constants.$fontSize-5;
+}
+h3 {
+  font-size: constants.$fontSize-4;
+}
+h4 {
+  font-size: constants.$fontSize-3;
+}
+
+// Custom headings
+.huge {
+  font-size: constants.$fontSize-7;
+}
+
+// Code blocks
+pre {
+  font-family: constants.$fontFamily-mono;
+  padding: constants.$spacing-2;
+  background: constants.$bg-code;
+  margin: constants.$spacing-6 0;
+  border-radius: constants.$rounded-1;
+  overflow-x: auto;
+}
+code {
+  font-family: constants.$fontFamily-mono;
+  padding: constants.$spacing-1;
+  background-color: constants.$bg-code;
+  border-radius: constants.$rounded-1;
+  margin: 0 constants.$spacing-1;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

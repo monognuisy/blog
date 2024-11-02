@@ -6,8 +6,6 @@ const PostList = () => {
 
   const postInfos = getSortedPostList();
 
-  console.log(postInfos);
-
   return (
     <div>
       {postInfos.map(({ id, ...frontmatter }) => (
