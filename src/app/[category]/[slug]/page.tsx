@@ -6,6 +6,7 @@ import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { TFrontmatter } from '@/app/_types/post';
+import rehypePrism from 'rehype-prism-plus';
 
 type TPostPageProps = {
   params: {
@@ -42,17 +43,17 @@ const PostPage = async ({ params }: TPostPageProps) => {
       parseFrontmatter: true,
       mdxOptions: {
         remarkPlugins: [remarkGfm, remarkMath],
-        rehypePlugins: [rehypeKatex],
+        rehypePlugins: [rehypeKatex, rehypePrism],
       },
     },
     components: CustomMDXComponents,
   });
 
   return (
-    <div>
+    <>
       <h1>{frontmatter.title}</h1>
       {content}
-    </div>
+    </>
   );
 };
 

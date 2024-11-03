@@ -1,5 +1,6 @@
 import { getSortedPostList } from '@/lib/getBlogPost';
 import PostCard from './PostCard';
+import Link from 'next/link';
 
 const PostList = () => {
   // TODO: Apply pagination
@@ -8,8 +9,10 @@ const PostList = () => {
 
   return (
     <div>
-      {postInfos.map(({ id, ...frontmatter }) => (
-        <PostCard key={id} frontmatter={frontmatter} />
+      {postInfos.map(({ id, category, slug, ...frontmatter }) => (
+        <Link key={id} href={`/${category}/${slug}`}>
+          <PostCard frontmatter={frontmatter} />
+        </Link>
       ))}
     </div>
   );

@@ -41,15 +41,18 @@ const getSortedPostList = () => {
     const fullNameSplit = fullPath.split('/');
     const category = fullNameSplit[fullNameSplit.length - 2];
     const fileName = fullNameSplit[fullNameSplit.length - 1];
+    const slug = fileName.replace(/\.mdx$/, '');
 
     // Make id by eliminating extensions.
-    const id = `${category}-${fileName.replace(/\.mdx$/, '')}`;
+    const id = `${category}-${slug}`;
 
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const matterResult = matter(fileContents);
 
     return {
       id,
+      category,
+      slug,
       ...matterResult.data,
     };
   }) as TContentHeader[];

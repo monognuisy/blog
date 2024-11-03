@@ -1,0 +1,41 @@
+@use 'constants';
+
+.post-wrapper {
+  p {
+    margin-bottom: constants.$spacing-8;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5em; // 목록의 기본 들여쓰기
+
+    li {
+      margin-bottom: 0.5em; // 항목 간의 간격
+    }
+
+    // 하위 목록의 스타일
+    ul,
+    ol {
+      margin-top: 0.5em;
+      padding-left: 1.5em; // 하위 목록의 추가 들여쓰기
+    }
+  }
+
+  // 특정 스타일을 추가하고 싶다면 예: 원형, 숫자형 목록
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  & > ul,
+  & > ol {
+    margin-bottom: constants.$spacing-8;
+  }
+
+  pre {
+    margin-bottom: constants.$spacing-8;
+  }
+}
