@@ -65,6 +65,14 @@ code {
   margin: 0 constants.$spacing-1;
 }
 
+// Custom classes
+.monospace {
+  font-family: constants.$fontFamily-mono;
+}
+.text-highlight {
+  color: constants.$color-primary !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

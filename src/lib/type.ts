@@ -6,4 +6,9 @@ type TContentHeader = {
   slug: string;
 } & TFrontmatter;
 
-export type { TContentHeader };
+type TBlogURLParam = {
+  category: string;
+  slug: string;
+};
+
+export type { TContentHeader, TBlogURLParam };
