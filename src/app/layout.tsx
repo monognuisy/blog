@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import '../styles/global.scss';
 import 'katex/dist/katex.min.css'; // Apply KaTeX style
+import Header from './_components/Header';
+import Footer from './_components/Footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,7 +16,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <head></head>
+      <body>
+        <Header />
+        <hr />
+        <hr />
+        <section className="max-w-[1200px] mx-auto">
+          {children}
+          <Footer />
+        </section>
+      </body>
     </html>
   );
 }
