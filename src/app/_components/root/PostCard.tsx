@@ -1,5 +1,5 @@
 import { TFrontmatter } from '@/app/_types/post';
-import TagChip from '../common/TagChip';
+import TagChip from '../post/TagChip';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -38,10 +38,6 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
             })}
           </p>
           <p>{description}</p>
-          <div className="flex justify-between">
-            <p></p>
-            <div className="flex gap-2"></div>
-          </div>
         </div>
       </Link>
     </div>

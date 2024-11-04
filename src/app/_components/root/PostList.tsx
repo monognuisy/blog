@@ -1,6 +1,7 @@
 import { getSortedPostList } from '@/lib/getBlogPost';
 import PostCard from './PostCard';
 import Link from 'next/link';
+import PostCardLatest from './PostCardLatest';
 
 const PostList = () => {
   // TODO: Apply pagination
@@ -10,13 +11,8 @@ const PostList = () => {
 
   return (
     <div>
-      {/* <div>
-        <PostCard
-          frontmatter={latestPost}
-          category={latestPost.category}
-          slug={latestPost.slug}
-        />
-      </div> */}
+      <PostCardLatest post={latestPost} />
+      <h1 className="">All Posts ⮟</h1>
       <div className="flex justify-between flex-wrap gap-5">
         {postInfos.slice(1).map(({ id, category, slug, ...frontmatter }) => (
           <PostCard

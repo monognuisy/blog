@@ -11,7 +11,7 @@ const TagChip = ({ tag }: TTagChipProps) => {
       className="text-xs font-semibold rounded-2xl border-2 py-1 px-3 w-fit"
       style={{
         // Is this the best way to handle dynamic color?
-        background: tagBgColor,
+        background: 'transparent',
         borderColor: tagColor,
         color: tagColor,
       }}
