@@ -3,12 +3,11 @@ title: Linear Regression (2) - Bayesian의 방법
 date: "2023-04-30"
 description: "Linear regression의 Training 부분을 Bayesian의 관점에서 해석하자"
 tags: ["AI","Mathematics"]
-categories: "AI - Bayesian Approach"
+categories: "AI"
 ---
 
-import { Highlight, textHighlightBlue, Code } from "../../../src/utils/blogUtils.tsx";
-
 ## 지난 이야기
+
 $$
   y = {\bf x}^\top ({\bf XX^\top } + \gamma {\bf I}) ^{-1} {\bf Xy}
 $$
@@ -16,7 +15,9 @@ $$
 그래서 $\gamma$가 뭔데?
 
 ## Training
+
 ### 들어가기 앞서
+
 복잡한 수식이 많이 등장할 예정. 따라서, **모바일보다는 PC에서 보는 것이 정신적으로도 신체적으로도 훨씬 좋습니다**.
 
 또한, 이를 잘 이해하기 위해서는 **선형대수학**, **다변수 정규분포**, **베이즈 정리**에 대한 이해가 있어야 합니다.
@@ -28,22 +29,22 @@ Bayesian은 그 누구보다도 주관을 사랑하는 사람들이다. 그들�
 
 > 어떠한 사건이 일어날 것이라는 믿음의 정도
 
-?? 정말 이상하다. 
+?? 정말 이상하다.
 
-다소 모호한 감이 있으므로 예시를 들어보면, 어떠한 주사위(6개의 눈이 있는)를 던지는 상황을 가정하자. 
-여기서 한 Bayesian은 주사위의 눈이 1이 나올 확률을 $1/4$로 믿고 있다. 
+다소 모호한 감이 있으므로 예시를 들어보면, 어떠한 주사위(6개의 눈이 있는)를 던지는 상황을 가정하자.
+여기서 한 Bayesian은 주사위의 눈이 1이 나올 확률을 $1/4$로 믿고 있다.
 하지만, 이후 실제로 주사위를 1000번 던졌더니 1이 160번 나왔다고 하자. 그러면, 이 사람은 새로운 관측을 바탕으로 기존의 믿음을 update한다.
 
 조금 더 정확히 말하면, Bayesian은 Frequentist 처럼 하나의 정해진 답(혹은 참값)을 정해 놓은 것이 아닌, 자신의 믿음을 나타내는
 확률 분포를 가지고 있다. 즉, 위의 주사위 예시를 다시 들고 와보면 1의 눈이 1000번 던졌을 때 1번 나올 확률, 2번 나올 확률, ..., 1000번 나올
 확률에 대한 분포를 가지고 있다고 생각하면 된다. 이를 <Highlight>**prior**</Highlight> 라고 한다. \
-이후에, 새로운 관측값 (정확히는 관측한 분포; likelihood) 을 기반으로(주로 곱하여) prior를 update한다. 이렇게 구한 새로운 분포를 
+이후에, 새로운 관측값 (정확히는 관측한 분포; likelihood) 을 기반으로(주로 곱하여) prior를 update한다. 이렇게 구한 새로운 분포를
 <Highlight>**posterior**</Highlight> 라고 한다.
 
 따라서, Bayesian은 prior과 likelihood를 기반으로 posterior를 얻어내어 자신의 믿음을 '참된 분포'에 근접시키는 것이 목표라고 할 수 있겠다.
 
 이렇게 Frequentist들과는 너무 다른 방법으로 세상을 바라보기 때문에, Data를 바라보는 관점도 독특하다.
-이들은 Frequentist가 가장 최적의 parameter의 **값**을 구했던 것과는 대비되게, 최적의 **분포**를 구한다. 
+이들은 Frequentist가 가장 최적의 parameter의 **값**을 구했던 것과는 대비되게, 최적의 **분포**를 구한다.
 
 ### 그래서 왜? 이게 더 좋은가?
 
@@ -66,9 +67,9 @@ $$
 p(y | {\bf w}, {\bf x})  = \frac{1}{\sqrt{2\pi \sigma^2}} \exp \left( - \frac{(y - {\bf w}^\top {\bf x}) ^ 2}{2 \sigma^2} \right)
 $$
 
-##### 😀 잠깐, likelihood란?
+#### 😀 잠깐, likelihood란?
 
-번역하면 '**그럴싸한 정도**'가 되겠다. 즉, 주어진 데이터를 만든 분포의 parameter가 어느정도 적절한지를 알려주는 함수로, 
+번역하면 '**그럴싸한 정도**'가 되겠다. 즉, 주어진 데이터를 만든 분포의 parameter가 어느정도 적절한지를 알려주는 함수로,
 parameter $\theta$에 대하여 ${\cal L}(\theta | {\cal D})$ 로 쓸 수 있다. 이는, 결국 주어진 parameter에 대한
 데이터의 확률 분포로 생각할 수 있으므로, 다음이 성립한다.
 
@@ -97,7 +98,7 @@ $$
 
 <details>
 <summary> 두 번째 등호에 대한 proof</summary>
-    
+
 $p({\bf w} | {\cal D}) = p({\bf w} | {\cal X}, {\cal Y})$ 를 정리하면,
 
 $$
@@ -148,7 +149,7 @@ $$
 
 $$
 \begin{align*}
-p({\bf w} | {\cal D}) &\propto 
+p({\bf w} | {\cal D}) &\propto
 \left( \prod_{i = 1}^N \frac{1}{\sqrt{2 \pi \sigma^2}}\exp \left( -\frac{(y_i - {\bf w}^\top {\bf x}_i)^2}{2 \sigma^2} \right) \right) \frac{1}{\sqrt{2\pi\sigma^2_0} ^D} \exp \left( -\frac{\Vert {\bf w} \Vert^2}{2 \sigma_0^2}\right)
 \\
 &\propto  
@@ -162,20 +163,18 @@ $$
 
 휴— 잠깐 쉬도록 하자.
 
-<div style={{width: `50%`, margin:`auto`}}>
-![짱구](../../image/zzanggu.jpg)
-</div>
+![짱구](zzanggu.jpg)
 
 <br />
 
-농담이 아니라, 조금 쉬면서 식을 천천히 감상해보라는 것이다. 
+농담이 아니라, 조금 쉬면서 식을 천천히 감상해보라는 것이다.
 무식하게 식을 전개하고, 계산하는 것이 아닌, 잠깐 쉬면서 우리의 목표를 확고히 하고, 그로 향하는 더욱 쉬운 길을 찾자는 의미이다.
 
 저 posterior은 무슨 분포일까? 즉, 두 gaussian 함수의 곱은 무슨 함수일까?
 
 gaussian?
 
-왜? 증명할 수 있겠는가? 
+왜? 증명할 수 있겠는가?
 
 #### 완전제곱식 - Perfect Square Form
 

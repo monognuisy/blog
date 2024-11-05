@@ -6,7 +6,7 @@ const Header = () => {
   const logoSize = 36;
 
   return (
-    <header className="flex py-4 max-w-[1200px] px-4 mx-auto">
+    <header className="flex py-4 max-w-[1200px] px-4 mx-auto z-10">
       <section className="flex-grow flex items-center gap-3">
         <a href={'https://monognuisy.github.io'}>
           <Image

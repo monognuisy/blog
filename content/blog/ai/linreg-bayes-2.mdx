@@ -3,11 +3,8 @@ title: Linear Regression (3) - Bayesian의 Prediction
 date: "2023-05-31"
 description: "Linear regression의 Prediction 부분을 Bayesian의 관점에서 해석하자"
 tags: ["AI","Mathematics"]
-categories: "AI - Bayesian Approach"
+categories: "AI"
 ---
-
-import { Highlight, textHighlightBlue, textHighlightRed, Code } from "../../../src/utils/blogUtils.tsx";
-import { Link } from "gatsby";
 
 ## 지난 이야기
 
@@ -24,14 +21,16 @@ $$
 $$
 
 ## Prediction
+
 ### 들어가기 앞서
+
 복잡한 수식이 많이 등장할 예정. 따라서, **모바일보다는 PC에서 보는 것이 정신적으로도 신체적으로도 훨씬 좋습니다**.
 
 또한, 이를 잘 이해하기 위해서는 **선형대수학**, **다변수 정규분포**, **베이즈 정리**에 대한 이해가 있어야 합니다.
 
 ### Predictive Distribution
 
-Training을 마쳤으므로 Prediction을 할 차례다. Bayesian은 하나의 point로 답을 내는 것이 아니라, 일종의 density로 답을 낸다. 
+Training을 마쳤으므로 Prediction을 할 차례다. Bayesian은 하나의 point로 답을 내는 것이 아니라, 일종의 density로 답을 낸다.
 
 새로운 input ${\bf x}$ 와 그로 기대되는 output $y$ 를 도입하자. 그러면, 기존의 data $\cal D$ 와 ${\bf x}$에 대한 $y$ 의 **predictive density**는 다음과 같다.
 
@@ -43,7 +42,7 @@ $$
 
 이렇게 되면, 훌륭한 ${\bf w}$ 들에 기반한 likelihood만 남게 된다.
 
-이를 계산하기 위해, 정적분 내의 식만 전개해보자. 
+이를 계산하기 위해, 정적분 내의 식만 전개해보자.
 
 #### 정적분 내의 식
 
@@ -71,7 +70,7 @@ $$
 \begin{equation}
 \begin{align*}
 -\frac{1}{2\sigma^2} \left\{ y^2 - 2y{\bf w}^\top {\bf x} + ({\bf w}^\top {\bf x})^2 +
-{\bf w}^\top \left(\sum_{i} {\bf x}_i{\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0}I  \right) {\bf w} 
+{\bf w}^\top \left(\sum_{i} {\bf x}_i{\bf x}_i^\top + \frac{\sigma^2}{\sigma^2_0}I  \right) {\bf w}
 -2{\bf w}^\top \sum_{i}y_i {\bf x}_i
 \right\}
 \end{align*}
@@ -80,14 +79,14 @@ $$
 
 먼저 [식 2]에서 ${\bf w}$에 대한 이차형식을 뽑아내자. 일단, 앞의 $-1/2\sigma^2$ 은 지면상 잠깐 쓰지 않겠다.
 
-또한, $\sum_i {\bf x}_i {\bf x}_i^\top = XX^\top$, $\sum_i y_i{\bf x}_i = X{\bf y}$ 로 쓰자. 
-(<Link to="../linreg-freq">Linear Regression (1) - Frequentist</Link> 참고)
+또한, $\sum_i {\bf x}_i {\bf x}_i^\top = XX^\top$, $\sum_i y_i{\bf x}_i = X{\bf y}$ 로 쓰자.
+([Linear Regression (1) - Frequentist](/ai/linreq-freq) 참고)
 
 $$
 {\bf w}^\top \left( {\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I \right){\bf w} - 2{\bf w}^\top \left(y{\bf x} + X{\bf y} \right) + y^2
 $$
 
-<Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link> 의 완전제곱식 공식을 참고하면, 다음과 같이 정리된다.
+[Linear Regression (2) - Bayesian의 Training](/ai/linreg-bayes-1) 의 완전제곱식 공식을 참고하면, 다음과 같이 정리된다.
 
 $$
 \begin{equation}
@@ -99,7 +98,7 @@ $$
 
 $$
 \begin{align*}
-😊 &= \left({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I\right)^{-1}(y{\bf x} + X{\bf y}) 
+😊 &= \left({\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I\right)^{-1}(y{\bf x} + X{\bf y})
 \\\\
 👹 &= {\bf x}{\bf x}^\top + XX^\top + \frac{\sigma^2}{\sigma^2_0}I
 \end{align*}
@@ -156,14 +155,14 @@ $$
 지금의 평균, 분산 식은 너무나도 복잡하다! 특히, 평균이 굉장히 복잡하다. 이를 간단하게 하기 위해서 다음의 유명한 항등식을 소개한다.
 
 > **Woodbury Matrix Identity**
-> 
+>
 > 행렬 $A\in \R^{D\times D},~ C \in \R^{N \times N}, ~U\in \R^{D\times N}, ~ V\in \R^{N \times D}$ 에 대하여 $A, C$ 가 invertible 이면 다음이 성립한다.
-> 
-> 
+>
+>
 > $$
 > (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1} VA^{-1}
 > $$
-> 
+>
 
 $y | {\bf x}, \cal D$ 의 평균과 분산을 보면, 분모가 동일함을 알 수 있다. 따라서, 먼저 **분모**를 보자.
 
@@ -207,24 +206,22 @@ $$
 
 ### 다시 돌아온 분석 타임
 
-여기서 <Highlight color={textHighlightRed}>**빨간색 term**</Highlight>과 
-<Highlight color={textHighlightBlue}>**파란색 term**</Highlight>의 합으로 나타낼 수 있다는 점에 주목하자.
+여기서 <Highlight color='red'>**빨간색 term**</Highlight>과
+<Highlight color='blue'>**파란색 term**</Highlight>의 합으로 나타낼 수 있다는 점에 주목하자.
 
-<Highlight color={textHighlightRed}>**빨간색 term**</Highlight>을 
+<Highlight color='red'>**빨간색 term**</Highlight>을
 **Aleatoric uncertainty**라고 하며, 이는 underline density function의 uncertainty를 의미한다.
 
-<Highlight color={textHighlightBlue}>**파란색 term**</Highlight>은 
-**Episdemic uncertainty**라고 하며, 이는 data 수에 따른 uncertainty를 의미한다. 
+<Highlight color='blue'>**파란색 term**</Highlight>은
+**Episdemic uncertainty**라고 하며, 이는 data 수에 따른 uncertainty를 의미한다.
 
 앞서 보았듯이, Aleatoric uncertainty 보다 작게 분산을 만들수는 없다. (직접 Episdemic uncertainty $\ge 0$ 임을 확인해보라!) 만일, Episdemic uncertainty가 $0$ 이라면, 다음과 같은 경우이다.
-
- 
 
 $$
 X \left( X^\top X + \frac{\sigma^2}{\sigma^2_0} I \right)^{-1} X = I
 $$
 
-즉, <Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link> 에서 관찰한 posterior 의 분산과 비슷하게 $N \to \infty$ 인 경우를 의미하는 것이라고 할 수 있다.
+즉, [Linear Regression (2) - Bayesian의 Training](/ai/linreg-bayes-1) 에서 관찰한 posterior 의 분산과 비슷하게 $N \to \infty$ 인 경우를 의미하는 것이라고 할 수 있다.
 
 좋다. 이렇게 평균도 간소화시켜보자.
 
@@ -238,7 +235,7 @@ $$
 \end{equation}
 $$
 
-중간의 inverse를 Woodbury identity를 이용하여 전개하자. $A = XX^\top + \frac{\sigma^2}{\sigma^2_0} I$ , $U = {\bf x}$, $V = {\bf x}^\top$, $C = 1$  이라고 하자. 
+중간의 inverse를 Woodbury identity를 이용하여 전개하자. $A = XX^\top + \frac{\sigma^2}{\sigma^2_0} I$ , $U = {\bf x}$, $V = {\bf x}^\top$, $C = 1$  이라고 하자.
 
 항등식의 $(C^{-1} + VA^{-1}U)^{-1}$ 부분은 스칼라기 때문에, 간단히 역수로 표현하면 [식 5]는 다음과 같다.
 
@@ -256,11 +253,11 @@ $$
 
 $$
 \begin{equation}
-\cfrac{\cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top X{\bf y} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top X{\bf y} \right)}{ 1 + \cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top {\bf x} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top{\bf x} \right)} 
+\cfrac{\cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top X{\bf y} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top X{\bf y} \right)}{ 1 + \cfrac{\sigma^2_0}{\sigma^2} \left( {\bf x}^\top {\bf x} - {\bf x}^\top X\left( X^\top X +  \cfrac{\sigma^2}{\sigma^2_0} I \right)^{-1} X^\top{\bf x} \right)}
 \end{equation}
 $$
 
-평균 = 분자 / 분모 이므로, 분자에 분모의 역수를 곱하면 평균을 도출할 수 있다. 
+평균 = 분자 / 분모 이므로, 분자에 분모의 역수를 곱하면 평균을 도출할 수 있다.
 
 여기서, 원래의 분모의 역수는 [식 6]의 분모와 같으므로, 서로 소거된다.
 
@@ -299,9 +296,8 @@ $$
 \end{equation}
 $$
 
-오! 이것은 Frequentist들이 regularization term을 포함시켜서 계산한 linear regression의 prediction과도 참 닮았다. 또한, 
-<Link to="../linreg-bayes-1">Linear Regression (2) - Bayesian의 Training</Link>
-에서의 $\bm \mu_{\bf w}$ 를 이용하여 prediction 한 것으로도 생각할 수 있다.
+오! 이것은 Frequentist들이 regularization term을 포함시켜서 계산한 linear regression의 prediction과도 참 닮았다. 또한,
+[Linear Regression (2) - Bayesian의 Training](/ai/linreg-bayes-1) 에서의 $\bm \mu_{\bf w}$ 를 이용하여 prediction 한 것으로도 생각할 수 있다.
 
 직관적으로 생각하면, $y | {\bf x}, \cal D$ 의 평균은 가장 density가 높은 값이므로, 가장 그럴싸한 prediction을 의미하고, 이는 가장 그럴싸한 $\bm \mu_{\bf w}$를 이용하여 prediction한 것과 같다.
 
