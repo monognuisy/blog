@@ -1,0 +1,127 @@
+---
+title: Gaussian Process - Concept
+date: "2023-06-28"
+description: "대표적인 random process인 Gaussian Process에 대해 알아보자."
+tags: ["AI","Mathematics"]
+categories: "AI"
+sidenotes: []
+---
+
+## Random Process?
+
+Gaussian process는 일종의 random process이다. 그렇다면 random process가 무엇일까?
+
+> **Random Process** \
+> 확률변수 $X : \Omega \to \R$ 과 시간 $t \in T$ 에 대하여 다음 집합을 Random Process라고 한다.\
+> $$ \{X(t) : t \in T \} $$
+
+즉, 간단히 말하여 random variable을 시간에 대해서 확장한 것이다. \
+따라서, 어떠한 시간 $t_1$이 주어지면 $X(t_1)$은 random variable이 된다.
+
+반대로, sample space $\Omega$의 원소 $\omega$가 주어지면 이는 시간에 따라서 바뀌는 함수가 된다.
+이를 특별히 **Sample function**, 혹은 **Sample path**라고도 부른다.
+
+$$
+X(\cdot, \omega) : T \to \R
+$$
+
+### Sample path
+
+이러한 sample path의 대표적인 예시 중 하나가 바로 우리 주변에서 쉽게 볼 수 있는 주식 차트이다.
+
+![cover-stock](cover-stock.png)
+
+어떤 한 시점에서 주가는 확률변수[^rv]이다.
+즉, 우리는 시간의 변화에 따른 확률변수값의 변화를 보는 것이며, 하나의 sample path를 보는 것이라고 할 수 있다.
+
+[^rv]: 바로 다음에 어떤 값을 가질지 확률로 정해지기 때문.
+
+## Gaussian Process
+
+Gaussian process는 임의의 시간에서의 확률 변수들을 모아서 선형결합해도 gaussian인 random process를 의미한다. \
+다른 말로는, 임의의 시간대의 확률 변수끼리는 jointly gaussian이라는 것이다.
+
+한 예시로, 다음과 같은 관계식으로 정의되는 random process를 생각할 수 있다.
+$$
+x_{t+1} = ax_t + \varepsilon_t
+$$
+(단, $\varepsilon \sim {\cal N}(0, \sigma^2)$, $a$는 상수)
+
+이렇게 모든 시점에서 jointly gaussian이므로, mean과 covariance를 자연스럽게 떠올릴 수 있다. 그리고 일반적으로
+시간은 무한하기 때문에, 이들을 다음과 같은 **함수**로 나타내면 훨씬 편하다.
+$$
+\begin{aligned}
+  m(t) &= \expect{x_{t}} \\
+  k(t, t') &= \cov{x_t}{x_{t'}} = \expect{x_t x_{t'}} - \expect{x_t} \expect{x_{t'}}
+\end{aligned}
+$$
+
+그러면, 모든 시점을 모아서 만든 $X = (x_0, x_1, \cdots )^\top$ 은 gaussian process이며, 이를 다음과 같이 나타낸다.
+$$
+X \sim {\cal GP}(m(t), k(t, t'))
+$$
+
+혹은, $X$를 **무한 차원**의 multivariate gaussian으로 보고, 다음과 같이 나타낼 수도 있다.
+
+$$
+X \sim {\cal N}({\boldsymbol{\mu}}, \Sigma)
+$$
+
+단, 여기서 $\boldsymbol{\mu}$와 $\Sigma$는 각각 다음과 같다.
+$$
+\begin{aligned}
+  \boldsymbol{\mu} &= (m(0), m(1), \cdots) ^\top \in \R ^\infty \\\\
+  \Sigma &= \begin{pmatrix}
+    k(0, 0) & k(0, 1) & \cdots \\
+    k(1, 0) & k(1, 1) & \cdots \\
+    \vdots & \vdots & \ddots \\
+  \end{pmatrix} \in \R^{\infty \times \infty}
+\end{aligned}
+$$
+
+### Posterior
+
+자, 앞서 말한 주가 이야기로 한번 돌아가보자. 우리는 현재 $t_1, \cdots, t_N$ 시점[^time-stock]에서의 주가를 알고 있다. \
+그리고, 이 주가는 GP를 따른다고 해보자. 그렇다면, 이를 이용하여 임의의 시점 $t$에서의 평균과 분산을 구할 수 있을까?
+
+[^time-stock]: 그 시점들이 연속적일 필요는 없다. 물론, 순서도 상관없다.
+
+관측된 $t_i$ 시점의 주가를 $x(t_i)$ 라고 하자. 그리고 임의의 시점 $t$의 주가를 $x(t)$ 라고 하면,
+구하고자 하는 것은 다음과 같은 확률변수의 분포이다.
+
+$$
+x(t) ~|~ x(t_1), \cdots, x(t_N)
+$$
+
+각각의 $x(t_i)$와 $x(t)$는 모두 gaussian이므로, 구하고자 하는 것 또한 gaussian이다.
+
+여기서 conditional gaussian distribution에 대해 recall 하고 넘어가자.
+
+#### Recall: Conditional Gaussian Distribution
+
+두 multivariate gaussian random variable $\bf x, y$에 대하여 이들의 joint distribution이 다음과 같을 때,
+$$
+\begin{pmatrix}
+  x \\ y
+\end{pmatrix} \sim {\cal N} \left(
+  \begin{pmatrix}
+    \boldsymbol{\mu}_{\bf x} \\
+    \boldsymbol{\mu}_{\bf y}
+  \end{pmatrix}, \begin{pmatrix}
+    \Sigma_{\bf x} & \Sigma_{\bf x y} \\
+    \Sigma_{\bf yx} & \Sigma_{\bf y}
+  \end{pmatrix}
+\right)
+$$
+
+conditional random variable $\bf x | y$ 는 gaussian이고, 그것의 mean과 covariance는 다음과 같다.
+$$
+\begin{aligned}
+  \boldsymbol{\mu}_{\bf x | y} &= \boldsymbol{\mu}_{\bf x} + \Sigma_{\bf xy} \Sigma_{\bf y}^{-1} (\bf y - \boldsymbol{\mu}_{\bf y}) \\
+  \Sigma_{\bf x | y} &= \Sigma_{\bf x} - \Sigma_{\bf xy} \Sigma_{\bf y}^{-1} \Sigma_{\bf yx}
+\end{aligned}
+$$
+
+---
+
+다시 돌아와서,

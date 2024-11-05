@@ -1,0 +1,90 @@
+@use 'constants';
+
+.post-wrapper {
+  line-height: 1.6;
+
+  p,
+  hr {
+    margin-bottom: constants.$spacing-8;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5em; // 목록의 기본 들여쓰기
+
+    li {
+      margin-bottom: 0.5em; // 항목 간의 간격
+    }
+
+    // 하위 목록의 스타일
+    ul,
+    ol {
+      margin-top: 0.5em;
+      padding-left: 1.5em; // 하위 목록의 추가 들여쓰기
+    }
+  }
+
+  // 특정 스타일을 추가하고 싶다면 예: 원형, 숫자형 목록
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  & > ul,
+  & > ol {
+    margin-bottom: constants.$spacing-8;
+  }
+
+  pre {
+    margin-bottom: constants.$spacing-8;
+  }
+
+  .footnotes {
+    border-top: 1px solid rgb(229, 231, 235);
+    padding-top: 2rem;
+
+    h2 {
+      display: none;
+    }
+
+    .data-footnote-backref {
+      color: constants.$color-primary;
+    }
+
+    ol {
+      counter-reset: list;
+    }
+    ol > li {
+      list-style: none;
+      content: '[';
+      display: flex;
+      margin-bottom: 0.5rem;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+    ol > li:before {
+      content: '[' counter(list) ']';
+      counter-increment: list;
+      margin-left: -1.5em;
+      padding-right: 10px;
+      text-align: right;
+    }
+  }
+
+  sup > a {
+    color: constants.$color-primary;
+  }
+  /* Place `[` and `]` around footnote references. */
+  [data-footnote-ref]::before {
+    content: '[';
+  }
+
+  [data-footnote-ref]::after {
+    content: ']';
+  }
+}

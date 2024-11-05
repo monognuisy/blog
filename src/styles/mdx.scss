@@ -1,0 +1,20 @@
+// MDX styling
+
+@use 'constants';
+
+.mdx {
+  &.highlight {
+    padding: 3px;
+    border-radius: 3px;
+
+    &.blue {
+      background-color: constants.$highlight-bg-blue;
+    }
+    &.yellow {
+      background-color: constants.$highlight-bg-yellow;
+    }
+    &.red {
+      background-color: constants.$highlight-bg-red;
+    }
+  }
+}

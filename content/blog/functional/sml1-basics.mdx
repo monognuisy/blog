@@ -4,34 +4,29 @@ date: "2023-05-01"
 description: "대표적인 함수형 언어 Standard ML을 배워보자"
 tags: ["Functional Programming","Standard ML"]
 categories: "Functional Programming"
-sidenotes: [
-    {
-        id: 1,
-        content: "하지만 곧 생략해도 된다는 것을 알게 될 것이다!"
-    }
-]
 ---
 
-import { Sidenote } from "../../../src/utils/blogUtils.tsx"
-
 ## 🖥️ Environment
-앞으로 Standard ML(이하 sml) 코드를 수행하기 위해 [sml/nj](https://www.smlnj.org/) 를 사용할 것이다. 
+
+앞으로 Standard ML(이하 sml) 코드를 수행하기 위해 [sml/nj](https://www.smlnj.org/) 를 사용할 것이다.
 만일, 설치가 어렵거나 불가능하다면 [온라인 인터프리터](https://sosml.org/editor)를 사용할 수도 있다.
 
 python처럼 REPL(Read-Eval-Print-Loop) 을 사용할 수 있어서 편리하다.
 
 ## 🌅 New start!
+
 기존에 C나 Java와 같은 main-stream 언어에 익숙한 사람이라면, sml이라는 언어는 굉장히 이상하게 느껴질 것이다.
 이는, sml이 순수 함수형 언어에 가깝기 때문이다. 즉, 변수는 수정할 수 없고(immutable), 함수는 부작용 없이 first-class로 간주되는 등의 성질을 가지고 있다.
 
 이런 사실만 보고 "sml은 뭔가 불편할 것이다!" 라고 생각하는 사람들이 적지 않을 것이다. 그도 그럴것이, 평소에 습관적으로
-변수를 바꿔왔고, 함수에 여러 부작용을 넣어서 사용했기 때문이다. 이는 그런 사람들이 잘못된 것이 아니라, 프로그래밍의 패러다임이 달라서 발생하는 
+변수를 바꿔왔고, 함수에 여러 부작용을 넣어서 사용했기 때문이다. 이는 그런 사람들이 잘못된 것이 아니라, 프로그래밍의 패러다임이 달라서 발생하는
 어색함, 내지는 생경함이라고 생각한다.
 
-하지만, 생각보다 sml로 프로그램을 짜면 그 독특한 매력에 빠질 것이다. 기존에는 100줄을 넘어가며 만들던 자료구조를 단 몇십줄에 만들 수도 있고, 
+하지만, 생각보다 sml로 프로그램을 짜면 그 독특한 매력에 빠질 것이다. 기존에는 100줄을 넘어가며 만들던 자료구조를 단 몇십줄에 만들 수도 있고,
 불필요한  `if-else` 문을 쓰지 않아도 되는 방법이 있어서 가독성이 높아질 수도 있다.
 
 ### 👶🏻 The very first sml program
+
 백문이 불여일code
 
 ```sml
@@ -43,7 +38,7 @@ val absZ = if z < 0 then (0 - z) else z;
 ```
 
 뭐, 첫인상은 여타 언어와 별반 다르지 않다.
-변수를 선언할 때 쓰이는 키워드가 `val`이고, C에서의 ternary 연산자 (`?:`) 는 `if-then-else`로 쓴다는 것을 알 수 있다. 
+변수를 선언할 때 쓰이는 키워드가 `val`이고, C에서의 ternary 연산자 (`?:`) 는 `if-then-else`로 쓴다는 것을 알 수 있다.
 
 세미콜론은 REPL 환경에서는 한 줄 한 줄씩 실행되므로 붙여야 하지만, 직접 sml 파일로 저장한 뒤, 컴파일 할 때는 쓰지 않아도 된다.
 앞으로는 파일에 쓰는 것을 가정하므로, 세미콜론을 생략할 것이다.
@@ -61,25 +56,28 @@ use "first.sml"
 ```
 
 ### 🌊 Deep dive into first program
+
 sml을 비롯한 프로그래밍 언어들은 기본적으로 한 구문을 해석할 때, **syntax**와 **semantic**을 본다.
 
-**Syntax**는 우리말로 '문법'으로, expression을 쓰는 규칙이다. 
-이를테면, `10 + 20`은 syntactically 올바른 expression 이지만, `10 + `는 그렇지 않다. 
+**Syntax**는 우리말로 '문법'으로, expression을 쓰는 규칙이다.
+이를테면, `10 + 20`은 syntactically 올바른 expression 이지만, `10 +`는 그렇지 않다.
 이외에도, 변수의 이름을 붙이는 규칙 등등이 syntax의 예라고 할 수 있다.
 
 **Semantic**은 크게 두 가지로 나뉘는데, 하나는 **Type checking**이고, 또다른 하나는 **Evaluation**이다. \
-즉, `10 + "hello"`는 Type checking에서 error가 발생할 것이고, `10 + x`는 변수 `x`가 정의되지 않았다면, 
+즉, `10 + "hello"`는 Type checking에서 error가 발생할 것이고, `10 + x`는 변수 `x`가 정의되지 않았다면,
 evaluation에서 error가 발생할 것이다.
 
 SML은 static-type 언어이다. 즉, python 보다는 오히려 C나 C++같이 컴파일 타임에 타입이 결정되는 언어이다. \
 따라서, type checking은 static environment, evaluation은 dynamic environment를 extend 한다고 생각할 수 있다.
 
 ### ❓ What is Expression, then?
-쉽게 말해서, 값이 될 수 있는 것을 expression이라고 한다. sml의 모든 종류의 expression은 
+
+쉽게 말해서, 값이 될 수 있는 것을 expression이라고 한다. sml의 모든 종류의 expression은
 위에서 소개한 syntax, type checking rules, evaluation rules를 가진다.
 
 #### What about `if-then-else`?
-expression `e1`, `e2`, `e3` 에 대해 다음 expression을 보자. 
+
+expression `e1`, `e2`, `e3` 에 대해 다음 expression을 보자.
 
 ```sml
 if e1 then e2 else e3
@@ -89,7 +87,6 @@ if e1 then e2 else e3
 
 - Syntax
   - `if`, `then`, `else`는 sml의 키워드이고, `e1`, `e2`, `e3`는 subexpression이다.
-
 
 - Type-checking
   - `e1`은 무조건 `bool` 이다.
@@ -103,6 +100,7 @@ if e1 then e2 else e3
 이정도 하면, 앞으로는 스스로 이 규칙들을 적용해볼 수 있을 것이다.
 
 ## 📝 Functions
+
 함수형 언어에서 가장 중요한 함수를 다뤄보자. 간단하게, 두 정수를 받아 그것들의 합을 반환하는 함수 `add`는 다음과 같다.
 
 ```sml
@@ -111,12 +109,15 @@ fun add (a: int, b: int) : int =
 ```
 
 눈에 띄는 것은 거추장스러운 `return` 키워드가 없다는 것이다. 이는 수학의 함수에서 굳이 `return`이라는 키워드가 필요 없는것과 비슷하다.
-또한, 위와 같이 <Sidenote id={1}>매개변수와 반환값의 타입을 지정해야 하는 것</Sidenote>은 static type 언어의 특징을 잘 표현한다.
+또한, 위와 같이 매개변수와 반환값의 타입을 지정해야 하는 것[^param-type]은 static type 언어의 특징을 잘 표현한다.
+
+[^param-type]: 하지만 곧 생략해도 된다는 것을 알게 될 것이다!
 
 여기서 함수 `add`의 type은 `(int * int) -> int` 로 추론된다. 여기서 `*`를 multiplication으로 생각하는 사람은 없겠지?!
 그냥 두 인자를 받는다는 것을 저렇게 표현한 것이다.
 
 ## 😀 Others
+
 sml의 연산자는 타 언어와 약간 다른 경우가 있다. 헷갈릴 수 있으니, 잘 알아두자.
 
 ```sml
@@ -128,4 +129,3 @@ x <> 20                     (* x != 20 *)
 
 val y = "hello" ^ "world"   (* string y = concat("hello", "world") *)
 ```
-

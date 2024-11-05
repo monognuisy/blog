@@ -14,13 +14,16 @@ categories: "System Programming"
 하지만, C에서는 문자열을 어쩔 수 없이 `char` 배열이나 `char` 포인터로 다뤄야 했다.
 
 물론 다음과 같이 구조체를 만들어도 되겠지만 (웬만해서는 더 좋겠지만...),
+
 ```c
 struct String {
     int len;
     char* str;
 };
 ```
+
 빠르게 고정된 크기의 문자열을 쓰고 싶다면 다음과 같이 쓰는 것도 고려해보자.
+
 ```c
 #define STR_LEN 50
 

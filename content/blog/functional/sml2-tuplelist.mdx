@@ -4,22 +4,14 @@ date: "2023-05-05"
 description: "sml의 tuple, list, record를 알아보자"
 tags: ["Functional Programming","Standard ML"]
 categories: "Functional Programming"
-sidenotes: [
-  {
-    id: 1,
-    content: "엄밀하게는: 순서가 있고, 중복을 허락하는 유한한 집합"
-  },
-  {
-    id: 2,
-    content: "정확히는 record. 조금 뒤에 나올 것이다."
-  }
-]
 ---
 
-import { Sidenote } from "../../../src/utils/blogUtils.tsx"
 
 ## 🪺 Tuple
-튜플(Tuple)은 <Sidenote id={1}>변수를 고정된 개수만큼 모아둔 것</Sidenote>이다. 변수의 타입은 같을 필요가 없다.
+
+튜플(Tuple)은 변수를 고정된 개수만큼 모아둔 것[^tuple-desc]이다. 변수의 타입은 같을 필요가 없다.
+
+[^tuple-desc]: 엄밀하게는: 순서가 있고, 중복을 허락하는 유한한 집합
 
 ```sml
 val x = (10, false, "hello")
@@ -39,6 +31,7 @@ val y = (10, (20, "hello", 30), true)
 ### Accessing elements of tuple
 
 튜플의 각 원소에 접근하는 방법은 간단하다. `#index`를 사용하면 된다.
+
 ```sml
 val x = (10, (false, 20), "hello")
 
@@ -60,11 +53,15 @@ val x21 = #1 (#2 x)   (* x21 is false *)
 val x21 = #1 #2 x
 (* compiler see this as (#1 #2) x, and this causes type error. *)
 ```
-즉, `#1`의 인자로 `#2`가 온다고 해석하는 것이다. 
-`#1`가 인자로 받기를 기대하는(expecting) 타입은 <Sidenote id={2}>tuple</Sidenote>인데, tuple이 아닌 웬 이상한 함수 `#2`가 와서 
+
+즉, `#1`의 인자로 `#2`가 온다고 해석하는 것이다.
+`#1`가 인자로 받기를 기대하는(expecting) 타입은 tuple[^record]인데, tuple이 아닌 웬 이상한 함수 `#2`가 와서
 type error가 발생하는 것이다. 따라서, sml 코드를 짤 때는 괄호를 잘 써서 연산의 순서를 명시해주자.
 
+[^record]: 정확히는 record. 조금 뒤에 나올 것이다.
+
 ### Function example
+
 int pair (2-tuple)을 받아서 두 원소의 합을 반환하는 함수를 써보자.
 
 ```sml
@@ -73,6 +70,7 @@ fun sumPair (pr: int * int) =
 ```
 
 ## 📄 List
+
 리스트(List)는 **같은 타입**의 원소를 여러개 모아둔 것이다. 크기는 고정되어있지 않기 때문에, 늘릴 수 있다.
 
 ```sml
@@ -82,6 +80,7 @@ val x = [1, 2, 3]
 ```
 
 ### How to 'Build' list?
+
 sml에서는 임의의 타입을 alpha, beta, gamma, ... 라는 이름으로 부르는데, 이를 실제 그리스 문자를 사용해서 표기하기는 어려우므로,
 alpha 대신에 `'a`, beta 대신에 `'b`, ... 이런 표기법을 쓴다. \
 즉, 임의의 타입을 가지는 리스트의 타입은 `'a list` 로 쓴다.
@@ -93,20 +92,22 @@ alpha 대신에 `'a`, beta 대신에 `'b`, ... 이런 표기법을 쓴다. \
 
 예를들어, `1::[2,3,4] = [1,2,3,4]` 이다.
 
-여기서 드는 생각이 꽤 많아야 한다. 대표적으로는, 왜 `::`는 앞에만 붙일 수 있지? `append`같은 것은 없나? 라는 것과, 
+여기서 드는 생각이 꽤 많아야 한다. 대표적으로는, 왜 `::`는 앞에만 붙일 수 있지? `append`같은 것은 없나? 라는 것과,
 도대체 `::` 는 뭐임? 같은 것이 있겠다.
 
-답을 하자면, `append`는 있지만 `::` 같이 근본적으로 '리스트'를 '구성'하지는 않는다. 
+답을 하자면, `append`는 있지만 `::` 같이 근본적으로 '리스트'를 '구성'하지는 않는다.
 그렇다면, `::`이 상당히 특이한 녀석이라는 것인데, 이는 후에 패턴 매칭을 배우면서 자세히 다뤄볼 것이다. \
-일단은, `::` 자체가 일종의 `'a * 'a list -> 'a list` 같은 함수이며, right associative한 infix operator인 것만 알고 있자. 
+일단은, `::` 자체가 일종의 `'a * 'a list -> 'a list` 같은 함수이며, right associative한 infix operator인 것만 알고 있자.
 
 즉, 사실 리스트 `[1,2,3,4]` 는 다음과 같은 방법으로 구성된 것이다.
+
 ```sml
 (* [1,2,3,4] is same as *)
 1 :: 2 :: 3 :: 4 :: []
 ```
 
 ### Accessing lists
+
 어떤 리스트 `xs`에 대하여, 다음과 같은 유용한 함수들을 통해 원소에 접근할 수 있다.
 
 - `null xs`
@@ -164,13 +165,16 @@ fun append (xs: 'a list, ys: 'a list) =
 ```
 
 참고로, 두 리스트를 append 하는 것은 다음과 같은 sml 내장 operator `@`을 이용해서도 할 수 있다.
+
 ```sml
 [1,2,3,4] @ [5,6,7]     (* same with append([1,2,3,4], [5,6,7])
                            which results [1,2,3,4,5,6,7] *)
 ```
 
 ## 🎥 Record
+
 record는 필드와 값을 가진다. 다음 예시 코드를 보자.
+
 ```sml
 val x = {name = "monognuisy", id = 123456}
 
@@ -180,7 +184,9 @@ val x = {name = "monognuisy", id = 123456}
 record는 마치 C의 구조체(`struct`)와도 닮았다.
 
 ### Accessing records
+
 record는 필드의 이름으로 값에 접근할 수 있다. 다음과 같이 말이다.
+
 ```sml
 val x = {name = "monognuisy", id = 123456}
 
@@ -191,9 +197,9 @@ val xid = #id x       (* xid = 123456 *)
 응? 이렇게 보니 마치 '튜플'같다. 실제로, 이 레코드는 튜플과 연관이 있다.
 
 ### Relation between Tuple and Record
-사실, 튜플 `(e1, e2, ..., en)`은 레코드 `{1 = e1, 2 = e2, ..., n = en}`를 조금 다르게 쓴 것이다. 
+
+사실, 튜플 `(e1, e2, ..., en)`은 레코드 `{1 = e1, 2 = e2, ..., n = en}`를 조금 다르게 쓴 것이다.
 즉, 튜플은 '**필드 이름이 숫자인 레코드**' 라는 것이다.
 
 하지만, 필드 이름을 숫자로 하는 것은 가독성에도 나쁜 영향을 끼치고, 튜플이라는 것이 sml에서 워낙 많이 쓰이다 보니
 조금 더 간편하게(?) 쓸 수 있도록 만든 것이다. 이런 것을 **Syntactic sugar** 라고 한다.
-
