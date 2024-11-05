@@ -3,6 +3,7 @@ import '../styles/global.scss';
 import 'katex/dist/katex.min.css'; // Apply KaTeX style
 import Header from './_components/common/Header';
 import Footer from './_components/common/Footer';
+import GoToTopButton from './_components/common/GoToTopButton';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,14 +18,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body>
+      <body className="min-h-[100vh]">
         <Header />
         <hr />
         <hr />
-        <section className="max-w-[1200px] px-4 mx-auto">
+        <section className="max-w-[1200px] px-4 mx-auto mb-auto h-full">
           {children}
-          <Footer />
         </section>
+        <GoToTopButton />
+        <Footer />
       </body>
     </html>
   );

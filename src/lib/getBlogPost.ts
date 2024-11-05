@@ -3,6 +3,7 @@ import matter from 'gray-matter';
 import fs from 'fs';
 import { TContentHeader } from './type';
 import { serialize } from 'next-mdx-remote/serialize';
+import { ascendingSortFn } from './function';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 
@@ -30,11 +31,16 @@ const getAllPostPaths = () => {
   return fileNames;
 };
 
+const getAllCategories = () => {
+  const categories = fs.readdirSync(postsDirectory);
+  return categories;
+};
+
 // TODO: Optimize for pagination.
 /**
  * Return list of all blog posts' data
  */
-const getSortedPostList = () => {
+const getSortedPostList = (sortFn = ascendingSortFn) => {
   const fileNames = getAllPostPaths();
 
   const contents = fileNames.map((fullPath) => {
@@ -58,13 +64,40 @@ const getSortedPostList = () => {
   }) as TContentHeader[];
 
   // Sort posts in ascending order.
-  const sortedContents = contents.toSorted((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+  const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));
+
+  return sortedContents;
+};
+
+const getSortedPostListByCategory = (
+  category: string,
+  sortFn = ascendingSortFn,
+) => {
+  const allCategories = getAllCategories();
+  if (!allCategories.includes(category)) {
+    return [];
+  }
+
+  const categoryPath = path.join(postsDirectory, category);
+  const fileNames = fs.readdirSync(categoryPath);
+
+  const contents = fileNames.map((fileName) => {
+    const slug = fileName.replace(/\.mdx$/, '');
+    const fullPath = path.join(categoryPath, fileName);
+
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const matterResult = matter(fileContents);
+
+    return {
+      id: `${category}-${slug}`,
+      category,
+      slug,
+      ...matterResult.data,
+    };
+  }) as TContentHeader[];
+
+  // Sort posts in ascending order.
+  const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));
 
   return sortedContents;
 };
@@ -85,4 +118,11 @@ const getPostData = async (category: string, slug: string) => {
   };
 };
 
-export { getPostPath, getAllPostPaths, getSortedPostList, getPostData };
+export {
+  getPostPath,
+  getAllPostPaths,
+  getAllCategories,
+  getSortedPostList,
+  getSortedPostListByCategory,
+  getPostData,
+};

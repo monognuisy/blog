@@ -1,7 +1,8 @@
 import { TFrontmatter } from '@/app/_types/post';
-import TagChip from '../post/TagChip';
+import TagChip from './TagChip';
 import Link from 'next/link';
 import Image from 'next/image';
+import TagList from './TagList';
 
 type TPostCardProps = {
   frontmatter: TFrontmatter;
@@ -23,11 +24,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
               className="rounded-2xl object-cover"
             />
           </div>
-          <div className="flex gap-2">
-            {tags.map((tag) => (
-              <TagChip key={tag} tag={tag} />
-            ))}
-          </div>
+          <TagList tags={tags} />
           <h3 className="mb-1 text-2xl">{title}</h3>
           <p className="text-xs mb-4 text-gray-400">
             <b className="text-black">{categories}</b> -{' '}

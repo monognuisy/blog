@@ -1,12 +1,9 @@
-import Image from 'next/image';
-import PostList from '@/app/_components/root/PostList';
-import GoToTopButton from './_components/common/GoToTopButton';
+import PostList from '@/app/_components/post/PostList';
 
 export default function Home() {
   return (
-    <main className="">
+    <main className="h-full">
       <PostList />
-      <GoToTopButton />
     </main>
   );
 }
