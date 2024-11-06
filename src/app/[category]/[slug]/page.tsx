@@ -9,6 +9,7 @@ import { TFrontmatter } from '@/app/_types/post';
 import rehypePrism from 'rehype-prism-plus';
 import Image from 'next/image';
 import TagList from '@/app/_components/post/TagList';
+import { mathMacros } from '@/lib/constants';
 
 type TPostPageProps = {
   params: {
@@ -45,7 +46,15 @@ const PostPage = async ({ params }: TPostPageProps) => {
       parseFrontmatter: true,
       mdxOptions: {
         remarkPlugins: [remarkGfm, remarkMath],
-        rehypePlugins: [rehypeKatex, rehypePrism],
+        rehypePlugins: [
+          [
+            rehypeKatex,
+            {
+              macros: mathMacros,
+            },
+          ],
+          rehypePrism,
+        ],
       },
     },
     components: CustomMDXComponents(category, slug),
