@@ -3,6 +3,17 @@
 .post-wrapper {
   line-height: 1.6;
 
+  a {
+    &:not(.link-card) {
+      color: constants.$color-primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
   p,
   hr {
     margin-bottom: constants.$spacing-8;

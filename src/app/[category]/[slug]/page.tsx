@@ -75,10 +75,10 @@ const PostPage = async ({ params }: TPostPageProps) => {
           />
           <div className="w-full grid grid-rows-[2fr_1fr]">
             <div></div>
-            <div className="w-full  bg-white/50 shadow-lg backdrop-blur-sm px-6 py-6">
+            <div className="w-full  bg-white/50 shadow-lg backdrop-blur-sm px-12 py-6">
               <TagList tags={tags} />
               <h1 className="huge mt-0">{title}</h1>
-              <p className="text-xs mb-4 text-gray-700">
+              <p className="text-sm mb-4 text-gray-700">
                 <b className="text-black">{categories}</b> -{' '}
                 {new Date(date).toLocaleDateString('en-US', {
                   year: 'numeric',

@@ -1,5 +1,6 @@
 import { MDXProvider } from '@mdx-js/react';
 import Image from 'next/image';
+import LinkCard from './LinkCard';
 
 type THighlightProps = {
   color: 'blue' | 'red' | 'yellow';
@@ -35,6 +36,7 @@ const CustomMDXComponents = (
     </>
   ),
   Highlight,
+  LinkCard,
 });
 
 export default CustomMDXComponents;
