@@ -34,17 +34,28 @@ const SearchBar = () => {
 
   return (
     <>
-      <div>
+      <div className="relative flex items-center">
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-300 rounded-md p-2"
+          className="border border-gray-300 rounded-md p-2 w-[300px]"
           onFocus={(e) => e.preventDefault()}
           onClick={(e) => {
             toggleModalOpen();
             e.preventDefault();
           }}
         />
+        <div className="flex gap-2 absolute right-2">
+          <div className="rounded text-xs bg-slate-200 p-1 px-2 monospace font-semibold text-slate-500">
+            ctrl
+          </div>
+          <div className="rounded text-xs bg-slate-200 p-1 px-2 monospace font-semibold text-slate-500">
+            shift
+          </div>
+          <div className="rounded text-xs bg-slate-200 p-1 px-2 monospace font-semibold text-slate-500">
+            K
+          </div>
+        </div>
       </div>
 
       {isModalOpen && (
