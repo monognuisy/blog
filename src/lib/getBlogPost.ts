@@ -4,6 +4,7 @@ import fs from 'fs';
 import { TContentHeader } from './type';
 import { serialize } from 'next-mdx-remote/serialize';
 import { ascendingSortFn } from './function';
+import { TFrontmatter } from '@/app/_types/post';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 
@@ -105,16 +106,20 @@ const getSortedPostListByCategory = (
 /**
  * Generate post data from category and slug.
  */
-const getPostData = async (category: string, slug: string) => {
+const getPostData = (category: string, slug: string) => {
   const filePath = getPostPath(category, slug);
   const fileContents = fs.readFileSync(filePath, 'utf8');
 
-  const { data, content } = matter(fileContents);
-  const mdxSource = await serialize(content);
+  const data = matter(fileContents);
+
+  const frontmatter = data.data as TFrontmatter;
+  const content = data.content;
+
+  // const mdxSource = await serialize(content);
 
   return {
-    data,
-    mdxSource,
+    frontmatter,
+    content,
   };
 };
 

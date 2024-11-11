@@ -14,7 +14,7 @@ const Comment = () => {
         scriptElement.setAttribute('src', 'https://utteranc.es/client.js');
         scriptElement.setAttribute(
           'repo',
-          'monognuisy/blog-utterances-comments',
+          process.env.NEXT_PUBLIC_COMMENT_REPO || '',
         );
         scriptElement.setAttribute('issue-term', 'pathname');
         scriptElement.setAttribute('label', '✨💬✨');
