@@ -10,6 +10,7 @@ import rehypePrism from 'rehype-prism-plus';
 import Image from 'next/image';
 import TagList from '@/app/_components/post/TagList';
 import { mathMacros } from '@/lib/constants';
+import Comment from '@/app/_components/utterance/Comment';
 
 type TPostPageProps = {
   params: {
@@ -97,6 +98,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
       >
         {content}
       </div>
+      <Comment />
     </>
   );
 };
