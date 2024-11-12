@@ -1,8 +1,8 @@
 import { TContentHeader } from '@/lib/type';
 import Image from 'next/image';
 import Link from 'next/link';
-import TagChip from './TagChip';
 import TagList from './TagList';
+import { basePath } from '@/../next.config.mjs';
 
 type TPostCardLatestProps = {
   post: TContentHeader;
@@ -21,7 +21,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
           }}
         >
           <Image
-            src={'/images/sample-bg.webp'}
+            src={`${basePath}/images/sample-bg.webp`}
             alt={`Cover image of latest post`}
             fill
             className="rounded-2xl object-cover z-[-1]"

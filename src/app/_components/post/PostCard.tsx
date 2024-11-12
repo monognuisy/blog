@@ -1,8 +1,8 @@
 import { TFrontmatter } from '@/app/_types/post';
-import TagChip from './TagChip';
 import Link from 'next/link';
 import Image from 'next/image';
 import TagList from './TagList';
+import { basePath } from '@/../next.config.mjs';
 
 type TPostCardProps = {
   frontmatter: TFrontmatter;
@@ -18,7 +18,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
         <div>
           <div className="relative w-full aspect-video mb-5">
             <Image
-              src={'/images/sample-bg.webp'}
+              src={`${basePath}/images/sample-bg.webp`}
               alt={`Cover image of ${slug}`}
               fill
               className="rounded-2xl object-cover"

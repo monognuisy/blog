@@ -1,6 +1,7 @@
 import { MDXProvider } from '@mdx-js/react';
 import Image from 'next/image';
 import LinkCard from './LinkCard';
+import { basePath } from '@/../next.config.mjs';
 
 type THighlightProps = {
   color: 'blue' | 'red' | 'yellow';
@@ -26,7 +27,7 @@ const CustomMDXComponents = (
         <Image
           {...props}
           alt={props.alt || ''}
-          src={`/images/post/${category}/${slug}/${props.src}`}
+          src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
           width={0}
           height={0}
           sizes="100vw"

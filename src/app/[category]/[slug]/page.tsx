@@ -12,6 +12,7 @@ import TagList from '@/app/_components/post/TagList';
 import { mathMacros } from '@/lib/constants';
 import Comment from '@/app/_components/utterance/Comment';
 import { Metadata } from 'next';
+import { basePath } from '@/../next.config.mjs';
 
 type TPostPageProps = {
   params: {
@@ -98,7 +99,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
         <div className="w-full h-[80%] overflow-hidden">
           <div className="absolute left-0 w-full">
             <Image
-              src={'/images/sample-bg.webp'}
+              src={`${basePath}/images/sample-bg.webp`}
               alt={`Cover image of latest post`}
               fill
               sizes="100%"

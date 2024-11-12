@@ -73,3 +73,9 @@ $rounded-1: 0.25rem;
 $highlight-bg-blue: #aff0ef;
 $highlight-bg-yellow: #ffb8bb;
 $highlight-bg-red: #fff9db;
+
+$font-path-prefix: '';
+
+@if env(NODE_ENV) == production {
+  $font-path-prefix: '/blog';
+}

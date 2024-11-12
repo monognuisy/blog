@@ -1,12 +1,14 @@
 {
   "name": "monognuisy-blog",
+  "homepage": "https://monognuisy.github.io/blog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -39,6 +41,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "gh-pages": "^6.2.0",
     "postcss": "^8",
     "sass": "^1.80.6",
     "tailwindcss": "^3.4.1",
