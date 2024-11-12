@@ -2,6 +2,7 @@ import { TContentHeader } from '@/lib/type';
 import TagList from './TagList';
 import Image from 'next/image';
 import Link from 'next/link';
+import { basePath } from '@/../next.config.mjs';
 
 type TCategoryPostCardProps = {
   post: TContentHeader;
@@ -31,7 +32,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
       <div className="flex-grow flex flex-col gap-4">
         <div className="relative w-full aspect-video">
           <Image
-            src={'/images/sample-bg.webp'}
+            src={`${basePath}/images/sample-bg.webp`}
             alt={`Cover image of ${title}`}
             fill
             sizes="100%"

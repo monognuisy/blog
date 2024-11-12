@@ -5,3 +5,10 @@ export type TFrontmatter = {
   tags: string[];
   categories: string;
 };
+
+export type TMetadata = {
+  title: string;
+  description: string;
+  image: string;
+  siteName: string;
+};
