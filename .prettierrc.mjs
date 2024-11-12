@@ -1,0 +1,16 @@
+export default {
+  arrowParens: 'avoid',
+  endOfLine: 'auto',
+  htmlWhitespaceSensitivity: 'css',
+  jsxSingleQuote: false,
+  printWidth: 80,
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: 'all',
+  useTabs: false,
+  filepath: '',
+  rangeStart: 0,
+  requirePragma: false,
+  insertPragma: false,
+};
