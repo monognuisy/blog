@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 const isProduction = process.env.NODE_ENV === 'production';
-const basePath = isProduction ? '/blog' : '';
+const basePath = '';
 
 const nextConfig = {
   basePath,
-  output: 'export',
 
   images: {
     remotePatterns: [
@@ -14,7 +13,6 @@ const nextConfig = {
         pathname: '/**/*',
       },
     ],
-    unoptimized: true,
   },
 
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
