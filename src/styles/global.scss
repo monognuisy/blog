@@ -66,6 +66,11 @@ code {
   margin: 0 constants.$spacing-1;
 }
 
+// Equations
+.katex-display {
+  overflow: auto hidden;
+}
+
 // Custom classes
 .monospace {
   font-family: constants.$fontFamily-mono;
