@@ -3,6 +3,7 @@ import SearchBar from '../header/SearchBar';
 import SlugPath from '../header/SlugPath';
 import { basePath } from '@/../next.config.mjs';
 import Link from 'next/link';
+import ScrollProgressBar from '../header/ScrollProgressBar';
 
 const Header = () => {
   const logoSize = 28;
@@ -25,8 +26,7 @@ const Header = () => {
           <SearchBar />
         </section>
       </div>
-      <hr />
-      <hr />
+      <ScrollProgressBar />
     </header>
   );
 };
