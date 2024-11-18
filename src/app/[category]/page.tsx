@@ -4,11 +4,31 @@ import {
 } from '@/lib/getBlogPost';
 import CategoryPostCard from '../_components/post/CategoryPostCard';
 import PostCard from '../_components/post/PostCard';
+import { Metadata } from 'next';
 
 type TCategoryPageProps = {
   params: {
     category: string;
   };
+};
+
+const generateMetadata = async ({ params }: TCategoryPageProps) => {
+  const { category } = params;
+  const contents = getSortedPostListByCategory(category);
+  const categoryName = contents[0].categories;
+
+  const title = `${categoryName}`;
+  const description = `${categoryName} posts`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${process.env.NEXT_PUBLIC_URI}/${category}`,
+    },
+  } satisfies Metadata;
 };
 
 const generateStaticParams = async () => {
@@ -49,4 +69,4 @@ const CategoryPage = ({ params }: TCategoryPageProps) => {
 };
 
 export default CategoryPage;
-export { generateStaticParams };
+export { generateStaticParams, generateMetadata };
