@@ -92,11 +92,13 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <PostTitle post={frontmatter} />
-        <div className="post-wrapper bg-white mt-[100dvh] ">
-          <div className="relative mx-auto pt-20 max-w-[768px] px-4">
-            <div className="">{content}</div>
-            <Comment />
+        <div className="relative">
+          <PostTitle post={frontmatter} />
+          <div className="post-wrapper bg-white mt-[100dvh] ">
+            <div className="relative mx-auto pt-20 max-w-[768px] px-4">
+              <div className="">{content}</div>
+              <Comment />
+            </div>
           </div>
         </div>
       </>

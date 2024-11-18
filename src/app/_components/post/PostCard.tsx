@@ -13,7 +13,7 @@ type TPostCardProps = {
 const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
   const { title, date, description, tags, categories } = frontmatter;
   return (
-    <div className="my-6 flex-1 min-w-[32%]">
+    <div className="my-6 flex-1 min-w-full md:min-w-[32%] md:first:hidden">
       <Link href={`/${category}/${slug}`}>
         <div>
           <div className="relative w-full aspect-video mb-5">
@@ -21,6 +21,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
               src={`${basePath}/images/sample-bg.webp`}
               alt={`Cover image of ${slug}`}
               fill
+              sizes="100%"
               className="rounded-2xl object-cover"
             />
           </div>

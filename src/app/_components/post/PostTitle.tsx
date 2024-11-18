@@ -23,7 +23,7 @@ const PostTitle = ({ post }: TPostTitleProps) => {
           <div className="w-full bg-white/50 shadow-lg backdrop-blur-sm py-16">
             <div className="max-w-[1200px] mx-auto px-4">
               <TagList tags={tags} />
-              <h1 className="huge mt-0">{title}</h1>
+              <h1 className="lg:text-[3.5rem] mt-0">{title}</h1>
               <p
                 className="text-sm text-gray-700"
                 style={{

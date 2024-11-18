@@ -30,7 +30,7 @@ const CustomMDXComponents = (
           src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
           width={0}
           height={0}
-          sizes="100vw"
+          sizes="100%"
           className="w-full h-auto mx-auto"
         />
       )}

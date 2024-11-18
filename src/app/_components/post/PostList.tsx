@@ -12,9 +12,9 @@ const PostList = () => {
   return (
     <div>
       <PostCardLatest post={latestPost} />
-      <h1 className="mt-12">All Posts 🡫</h1>
+      <h1 className="text-[2rem] md:text-[3rem] mt-12">All Posts 🡫</h1>
       <div className="flex justify-between flex-wrap gap-5">
-        {postInfos.slice(1).map(({ id, category, slug, ...frontmatter }) => (
+        {postInfos.map(({ id, category, slug, ...frontmatter }) => (
           <PostCard
             key={id}
             frontmatter={frontmatter}
