@@ -15,7 +15,7 @@ const nextConfig = {
     ],
   },
 
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['next-mdx-remote'],
 };
 

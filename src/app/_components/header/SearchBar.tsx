@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SearchBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,11 +35,11 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="relative flex items-center">
+      <div className="relative items-center hidden md:flex">
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-300 rounded-md p-2 w-[300px]"
+          className="text-sm border border-gray-300 rounded-md p-2 w-[300px]"
           onFocus={(e) => e.preventDefault()}
           onClick={(e) => {
             toggleModalOpen();
@@ -57,43 +58,53 @@ const SearchBar = () => {
           </div>
         </div>
       </div>
+      <div className="md:hidden">
+        <button onClick={toggleModalOpen}>
+          <SearchIcon style={{ fontSize: '24px', color: 'gray' }} />
+        </button>
+      </div>
 
+      {/* 모달, 검색 패널 */}
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-10"
+          className="fixed top-0 left-0 w-dvw h-dvh bg-black/50 flex justify-center items-center z-10"
           onClick={toggleModalOpen}
         >
-          <div
-            className="w-[600px] h-[500px] rounded-md bg-white mx-auto shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <input
-              type="text"
-              placeholder="Search or Type Commands"
-              className="border-b-2 rounded-md rounded-b-none p-4 w-full text-xl"
-              autoFocus
-            />
-            <div className="overflow-y-auto p-4">
-              <div className="text-gray-500">
-                <p className="mb-4">
-                  <b>Commands List</b>
-                </p>
-                <ul>
-                  <li className="list-none mb-2">
-                    <code>{`ls <directory>`}</code> - list posts in a directory
-                  </li>
-                  <li className="list-none mb-2">
-                    <code>{`cd <directory>`}</code> - change directory
-                  </li>
-                  <li className="list-none mb-2">
-                    <code>{`ls <directory>`}</code> - list posts in a directory
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="mb-4">
-                  <b>Recently Viewed Posts</b>
-                </p>
+          <div className="w-[600px] h-[500px] mx-auto px-4">
+            <div
+              className="w-full h-full rounded-md bg-white mx-auto shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <input
+                type="text"
+                placeholder="Search or Type Commands"
+                className="border-b-2 rounded-md rounded-b-none p-4 w-full text-xl"
+                autoFocus
+              />
+              <div className="overflow-y-auto p-4">
+                <div className="text-gray-500">
+                  <p className="mb-4">
+                    <b>Commands List</b>
+                  </p>
+                  <ul>
+                    <li className="list-none mb-2">
+                      <code>{`ls <directory>`}</code> - list posts in a
+                      directory
+                    </li>
+                    <li className="list-none mb-2">
+                      <code>{`cd <directory>`}</code> - change directory
+                    </li>
+                    <li className="list-none mb-2">
+                      <code>{`ls <directory>`}</code> - list posts in a
+                      directory
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="mb-4">
+                    <b>Recently Viewed Posts</b>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

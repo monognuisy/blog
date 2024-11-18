@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 const SlugPath = () => {
-  const { category, slug } = useParams<TBlogURLParam>();
+  const { category, slug } = useParams() as TBlogURLParam;
 
   const isRoot = !category && !slug;
   const isCategory = !!category && !slug;
@@ -14,18 +14,7 @@ const SlugPath = () => {
   const fontWeight = (bool: boolean) => (bool ? 'bold' : 'normal');
 
   return (
-    <div className="text-2xl tracking-tight">
-      <Link href="/">
-        <span
-          className={'cursor-pointer ' + (isRoot ? `text-highlight` : '')}
-          style={{
-            fontWeight: fontWeight(isRoot),
-            color: 'gray',
-          }}
-        >
-          / blog{' '}
-        </span>
-      </Link>
+    <div className="text-md md:text-xl tracking-tight">
       {category && (
         <Link href={`/${category}`}>
           <span

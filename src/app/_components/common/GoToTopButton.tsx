@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const GoToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,11 +33,11 @@ const GoToTopButton = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed right-[50px] bottom-[50px] rounded-full 
-            border-2 w-[50px] h-[50px] flex justify-center items-center 
+          className="fixed right-[24px] bottom-[24px] md:right-[48px] md:bottom-[48px] rounded-full 
+            border-2 w-[32px] h-[32px] md:w-[48px] md:h-[48px] flex justify-center items-center 
             bg-white shadow-lg text-xl"
         >
-          🡩
+          <ArrowUpwardIcon className="text-xl md:text-2xl" />
         </button>
       )}
     </>
