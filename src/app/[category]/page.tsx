@@ -24,7 +24,7 @@ const CategoryPage = ({ params }: TCategoryPageProps) => {
   const categoryName = contents[0].categories;
 
   return (
-    <div>
+    <div className="max-w-[1200px] mx-auto mt-[90px]">
       <h1 className="my-12">Posts in {`"${categoryName}"`}</h1>
       <div className="border-l flex flex-col gap-12 ">
         {contents.map((post) => (

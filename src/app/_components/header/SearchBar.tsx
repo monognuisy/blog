@@ -38,7 +38,7 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-300 rounded-md p-2 w-[300px]"
+          className="text-sm border border-gray-300 rounded-md p-2 w-[300px]"
           onFocus={(e) => e.preventDefault()}
           onClick={(e) => {
             toggleModalOpen();
@@ -60,7 +60,7 @@ const SearchBar = () => {
 
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-10"
+          className="fixed top-0 left-0 w-dvw h-dvh bg-black/50 flex justify-center items-center z-10"
           onClick={toggleModalOpen}
         >
           <div

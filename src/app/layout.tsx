@@ -34,9 +34,7 @@ export default function RootLayout({
       <body className="min-h-[100vh]">
         <QueryProvider>
           <Header />
-          <hr />
-          <hr />
-          <section className="max-w-[1200px] px-4 mx-auto mb-auto h-full">
+          <section className="w-full mx-auto mb-auto h-full">
             {children}
           </section>
           <GoToTopButton />

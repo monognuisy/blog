@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="h-full">
+    <main className="h-full max-w-[1200px] mx-auto px-4 mt-[90px]">
       <PostList />
     </main>
   );
