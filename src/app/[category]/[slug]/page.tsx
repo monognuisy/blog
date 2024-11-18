@@ -81,6 +81,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
               rehypeKatex,
               {
                 macros: mathMacros,
+                strict: false,
               },
             ],
             rehypePrism,
