@@ -11,7 +11,7 @@ const PostTitle = ({ post, image }: TPostTitleProps) => {
   const { title, date, categories, tags } = post;
 
   return (
-    <div className="w-full overflow-hidden fixed top-0 left-0 h-dvh -z-10">
+    <div className="w-full overflow-hidden fixed top-0 left-0 h-vh -z-10">
       <div className="absolute left-0 w-full h-full">
         <Image
           src={image}
