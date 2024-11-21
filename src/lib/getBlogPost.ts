@@ -123,6 +123,18 @@ const getPostData = (category: string, slug: string) => {
   };
 };
 
+export const getAdjacentPosts = (category: string, slug: string) => {
+  const posts = getSortedPostList();
+  const currentIndex = posts.findIndex(
+    (post) => post.slug === slug && post.category === category,
+  );
+
+  return {
+    prev: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null,
+    next: currentIndex > 0 ? posts[currentIndex - 1] : null,
+  };
+};
+
 export {
   getPostPath,
   getAllPostPaths,

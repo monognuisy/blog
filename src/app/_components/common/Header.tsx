@@ -12,7 +12,7 @@ const Header = () => {
     <header className="w-full bg-white/50 shadow-lg backdrop-blur-md fixed top-0 left-0 z-20">
       <div className="flex py-3 max-w-[1200px] px-4 mx-auto">
         <section className="flex-grow flex items-center gap-3">
-          <Link href={'/'}>
+          <Link href={'/'} style={{ minWidth: logoSize, minHeight: logoSize }}>
             <Image
               src={`${basePath}/images/logo.webp`}
               alt="Logo"
