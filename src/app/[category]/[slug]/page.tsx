@@ -1,4 +1,9 @@
-import { getAllPostPaths, getPostData, getPostPath } from '@/lib/getBlogPost';
+import {
+  getAllPostPaths,
+  getPostData,
+  getPostPath,
+  getAdjacentPosts,
+} from '@/lib/getBlogPost';
 import { compileMDX } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import remarkGfm from 'remark-gfm';
@@ -11,6 +16,7 @@ import { mathMacros } from '@/lib/constants';
 import Comment from '@/app/_components/utterance/Comment';
 import { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
+import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
 
 type TPostPageProps = {
   params: {
@@ -91,17 +97,16 @@ const PostPage = async ({ params }: TPostPageProps) => {
       components: CustomMDXComponents(category, slug),
     });
 
+    const { prev, next } = getAdjacentPosts(category, slug);
+
     return (
       <>
         <div className="relative bg-white">
-          <PostTitle
-            post={frontmatter}
-            // image={`/images/cover/${category}/${slug}.webp`}
-            image={`/images/sample-bg.webp`}
-          />
+          <PostTitle post={frontmatter} image={`/images/sample-bg.webp`} />
           <div className="post-wrapper bg-white mt-[100dvh]">
             <div className="relative mx-auto pt-20 max-w-[768px] px-4">
               <div className="">{content}</div>
+              <AdjacentPostLinks prev={prev} next={next} />
               <Comment />
             </div>
           </div>
@@ -114,4 +119,5 @@ const PostPage = async ({ params }: TPostPageProps) => {
 };
 
 export { generateStaticParams, generateMetadata };
+
 export default PostPage;
