@@ -67,7 +67,7 @@ const SearchBar = () => {
       {/* 모달, 검색 패널 */}
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 w-dvw h-vh bg-black/50 flex justify-center items-center z-10"
+          className="fixed top-0 left-0 w-dvw h-[100vh] bg-black/50 flex justify-center items-center z-10"
           onClick={toggleModalOpen}
         >
           <div className="w-[600px] h-[500px] mx-auto px-4">
