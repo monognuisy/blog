@@ -5,15 +5,29 @@ import Header from './_components/common/Header';
 import Footer from './_components/common/Footer';
 import GoToTopButton from './_components/common/GoToTopButton';
 import QueryProvider from './_providers/QueryProvider';
-import { basePath } from '@/../next.config.mjs';
 
 export const metadata: Metadata = {
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
   icons: {
-    icon: `${basePath}/icons/favicon-32x32`,
-    shortcut: `${basePath}/icons/favicon.ico`,
-    apple: `${basePath}/icons/apple-touch-icon.png`,
+    icon: `/icons/favicon-32x32`,
+    shortcut: `/icons/favicon.ico`,
+    apple: `/icons/apple-touch-icon.png`,
+  },
+  openGraph: {
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    url: `${process.env.NEXT_PUBLIC_URI}`,
+    siteName: 'monognuisy blog',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: `/images/cover/blog-cover.webp`,
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 };
 
@@ -25,11 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href={`${basePath}/icons/favicon.ico`} sizes="any" />
-        <link
-          rel="apple-touch-icon"
-          href={`${basePath}/icons/apple-touch-icon.png`}
-        />
+        <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
+        <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
       </head>
       <body className="min-h-[100vh]">
         <QueryProvider>
