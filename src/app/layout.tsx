@@ -42,7 +42,7 @@ export default function RootLayout({
         <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
         <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
       </head>
-      <body className="min-h-[100vh]">
+      <body className="">
         <QueryProvider>
           <Header />
           <section className="w-full mx-auto mb-auto h-full">

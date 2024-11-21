@@ -58,7 +58,7 @@ const SearchBar = () => {
           </div>
         </div>
       </div>
-      <div className="md:hidden">
+      <div className="md:hidden flex items-center">
         <button onClick={toggleModalOpen}>
           <SearchIcon style={{ fontSize: '24px', color: 'gray' }} />
         </button>

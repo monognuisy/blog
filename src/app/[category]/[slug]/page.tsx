@@ -93,9 +93,13 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <div className="relative">
-          <PostTitle post={frontmatter} />
-          <div className="post-wrapper bg-white mt-[100dvh] ">
+        <div className="relative bg-white">
+          <PostTitle
+            post={frontmatter}
+            // image={`/images/cover/${category}/${slug}.webp`}
+            image={`/images/sample-bg.webp`}
+          />
+          <div className="post-wrapper bg-white mt-[100dvh]">
             <div className="relative mx-auto pt-20 max-w-[768px] px-4">
               <div className="">{content}</div>
               <Comment />
