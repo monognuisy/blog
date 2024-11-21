@@ -103,7 +103,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
       <>
         <div className="relative bg-white">
           <PostTitle post={frontmatter} image={`/images/sample-bg.webp`} />
-          <div className="post-wrapper bg-white mt-[100dvh]">
+          <div className="post-wrapper bg-white mt-[100vh]">
             <div className="relative mx-auto pt-20 max-w-[768px] px-4">
               <div className="">{content}</div>
               <AdjacentPostLinks prev={prev} next={next} />
