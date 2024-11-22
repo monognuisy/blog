@@ -11,8 +11,8 @@ const PostList = () => {
   return (
     <div>
       <PostCardLatest post={latestPost} />
-      <h1 className="text-[2rem] md:text-[3rem] mt-12">All Posts</h1>
-      <div className="flex justify-between flex-wrap gap-5">
+      <h1 className="text-[2rem] md:text-[3rem] mt-8 md:mt-12">All Posts</h1>
+      <div className="flex justify-between flex-wrap gap-0 md:gap-5">
         {postInfos.map(({ id, category, slug, ...frontmatter }) => (
           <PostCard
             key={id}
