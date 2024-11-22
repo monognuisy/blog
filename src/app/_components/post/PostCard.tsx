@@ -1,8 +1,7 @@
 import { TFrontmatter } from '@/app/_types/post';
 import Link from 'next/link';
-import Image from 'next/image';
 import TagList from './TagList';
-import { basePath } from '@/../next.config.mjs';
+import CardImage from './CardImage';
 
 type TPostCardProps = {
   frontmatter: TFrontmatter;
@@ -11,17 +10,15 @@ type TPostCardProps = {
 };
 
 const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
-  const { title, date, description, tags, categories } = frontmatter;
+  const { title, date, description, tags, categories, cover } = frontmatter;
   return (
     <div className="my-6 flex-1 min-w-full md:min-w-[32%] md:first:hidden">
       <Link href={`/${category}/${slug}`}>
         <div>
           <div className="relative w-full aspect-video mb-5">
-            <Image
-              src={`${basePath}/images/sample-bg.webp`}
+            <CardImage
+              cover={cover}
               alt={`Cover image of ${slug}`}
-              fill
-              sizes="100%"
               className="rounded-2xl object-cover"
             />
           </div>

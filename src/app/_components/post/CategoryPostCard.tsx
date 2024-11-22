@@ -1,15 +1,14 @@
 import { TContentHeader } from '@/lib/type';
 import TagList from './TagList';
-import Image from 'next/image';
 import Link from 'next/link';
-import { basePath } from '@/../next.config.mjs';
+import CardImage from './CardImage';
 
 type TCategoryPostCardProps = {
   post: TContentHeader;
 };
 
 const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
-  const { title, description, date, tags } = post;
+  const { title, description, date, tags, cover } = post;
   return (
     <div className="flex gap-10">
       <header className="sticky top-0 flex flex-col pl-6 w-[400px] will-change-transform h-min">
@@ -31,11 +30,9 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
       </header>
       <div className="flex-grow flex flex-col gap-4">
         <div className="relative w-full aspect-video">
-          <Image
-            src={`${basePath}/images/sample-bg.webp`}
+          <CardImage
+            cover={cover}
             alt={`Cover image of ${title}`}
-            fill
-            sizes="100%"
             className="rounded-2xl object-cover"
           />
         </div>

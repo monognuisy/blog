@@ -1,15 +1,15 @@
 import { TContentHeader } from '@/lib/type';
-import Image from 'next/image';
 import Link from 'next/link';
 import TagList from './TagList';
-import { basePath } from '@/../next.config.mjs';
+import CardImage from './CardImage';
 
 type TPostCardLatestProps = {
   post: TContentHeader;
 };
 
 const PostCardLatest = ({ post }: TPostCardLatestProps) => {
-  const { title, date, description, categories, tags, slug, category } = post;
+  const { title, date, description, categories, tags, slug, category, cover } =
+    post;
 
   return (
     <div className="my-6 hidden md:block">
@@ -20,11 +20,9 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
             aspectRatio: '8 / 5',
           }}
         >
-          <Image
-            src={`${basePath}/images/sample-bg.webp`}
+          <CardImage
+            cover={cover}
             alt={`Cover image of latest post`}
-            fill
-            sizes="100%"
             className="rounded-2xl object-cover z-[-1]"
           />
           <div className="w-full h-full grid grid-rows-[2fr_1fr]">

@@ -1,23 +1,20 @@
 import { TFrontmatter } from '@/app/_types/post';
-import Image from 'next/image';
 import TagList from './TagList';
+import CardImage from './CardImage';
 
 type TPostTitleProps = {
   post: TFrontmatter;
-  image: string;
 };
 
-const PostTitle = ({ post, image }: TPostTitleProps) => {
-  const { title, date, categories, tags } = post;
+const PostTitle = ({ post }: TPostTitleProps) => {
+  const { title, date, categories, tags, cover } = post;
 
   return (
     <div className="w-full overflow-hidden fixed top-0 left-0 h-[100vh] -z-10">
       <div className="absolute left-0 w-full h-full">
-        <Image
-          src={image}
+        <CardImage
+          cover={cover}
           alt={`Cover image of latest post`}
-          fill
-          sizes="100%"
           className="object-cover"
         />
         <div className="relative flex flex-col justify-end w-full h-full z-[2]">

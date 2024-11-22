@@ -4,6 +4,7 @@ export type TFrontmatter = {
   description: string;
   tags: string[];
   categories: string;
+  cover?: string;
 };
 
 export type TMetadata = {
