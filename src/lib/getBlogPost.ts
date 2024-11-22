@@ -44,25 +44,29 @@ const getAllCategories = () => {
 const getSortedPostList = (sortFn = ascendingSortFn) => {
   const fileNames = getAllPostPaths();
 
-  const contents = fileNames.map((fullPath) => {
-    const fullNameSplit = fullPath.split('/');
-    const category = fullNameSplit[fullNameSplit.length - 2];
-    const fileName = fullNameSplit[fullNameSplit.length - 1];
-    const slug = fileName.replace(/\.mdx$/, '');
+  const contents = fileNames
+    .map((fullPath) => {
+      const fullNameSplit = fullPath.split('/');
+      const category = fullNameSplit[fullNameSplit.length - 2];
+      const fileName = fullNameSplit[fullNameSplit.length - 1];
+      const slug = fileName.replace(/\.mdx$/, '');
 
-    // Make id by eliminating extensions.
-    const id = `${category}-${slug}`;
+      // Make id by eliminating extensions.
+      const id = `${category}-${slug}`;
 
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const matterResult = matter(fileContents);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const matterResult = matter(fileContents);
 
-    return {
-      id,
-      category,
-      slug,
-      ...matterResult.data,
-    };
-  }) as TContentHeader[];
+      return {
+        id,
+        category,
+        slug,
+        ...matterResult.data,
+      } as TContentHeader;
+    })
+    .filter((post) => {
+      return !post.draft;
+    });
 
   // Sort posts in ascending order.
   const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));
@@ -82,20 +86,24 @@ const getSortedPostListByCategory = (
   const categoryPath = path.join(postsDirectory, category);
   const fileNames = fs.readdirSync(categoryPath);
 
-  const contents = fileNames.map((fileName) => {
-    const slug = fileName.replace(/\.mdx$/, '');
-    const fullPath = path.join(categoryPath, fileName);
+  const contents = fileNames
+    .map((fileName) => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      const fullPath = path.join(categoryPath, fileName);
 
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const matterResult = matter(fileContents);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const matterResult = matter(fileContents);
 
-    return {
-      id: `${category}-${slug}`,
-      category,
-      slug,
-      ...matterResult.data,
-    };
-  }) as TContentHeader[];
+      return {
+        id: `${category}-${slug}`,
+        category,
+        slug,
+        ...matterResult.data,
+      } as TContentHeader;
+    })
+    .filter((post) => {
+      return !post.draft;
+    });
 
   // Sort posts in ascending order.
   const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));

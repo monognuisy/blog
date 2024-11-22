@@ -5,6 +5,7 @@ export type TFrontmatter = {
   tags: string[];
   categories: string;
   cover?: string;
+  draft?: boolean;
 };
 
 export type TMetadata = {
