@@ -57,7 +57,8 @@ pre[class*='language-'] {
 
   color: #383a42; /* base00 */
   text-align: left;
-  white-space: pre-wrap;
+  // white-space: pre-wrap;
+  white-space: no-wrap;
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
