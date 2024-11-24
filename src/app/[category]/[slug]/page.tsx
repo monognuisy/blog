@@ -30,19 +30,23 @@ const generateMetadata = async ({ params }: TPostPageProps) => {
 
   try {
     const { frontmatter } = getPostData(category, slug);
-    const imgPath = `/images/cover/${category}/${slug}.webp`;
+    const { title, description, cover } = frontmatter;
+    const imgPath = cover
+      ? `${process.env.NEXT_PUBLIC_URI}/images/cover/${cover}.webp`
+      : `${process.env.NEXT_PUBLIC_URI}/images/cover/blog-cover.webp`;
+    const url = `${process.env.NEXT_PUBLIC_URI}/${category}/${slug}`;
 
     return {
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title,
+      description,
       openGraph: {
-        title: frontmatter.title,
-        description: frontmatter.description,
+        title,
+        description,
         type: 'article',
-        url: `{process.env.NEXT_PUBLIC_URI}/${category}/${slug}`,
+        url,
         images: {
           url: imgPath,
-          alt: frontmatter.title,
+          alt: title,
         },
       },
     } satisfies Metadata;
