@@ -9,6 +9,9 @@ import QueryProvider from './_providers/QueryProvider';
 export const metadata: Metadata = {
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
+  verification: {
+    google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
+  },
   icons: {
     icon: `/icons/favicon-32x32`,
     shortcut: `/icons/favicon.ico`,
