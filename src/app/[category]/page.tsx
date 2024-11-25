@@ -15,7 +15,7 @@ type TCategoryPageProps = {
 const generateMetadata = async ({ params }: TCategoryPageProps) => {
   const { category } = params;
   const contents = getSortedPostListByCategory(category);
-  const categoryName = contents[0].categories;
+  const categoryName = contents?.[0]?.categories ?? category;
 
   const title = `${categoryName}`;
   const description = `${categoryName} posts`;
@@ -42,7 +42,7 @@ const CategoryPage = ({ params }: TCategoryPageProps) => {
   const { category } = params;
   const contents = getSortedPostListByCategory(category);
 
-  const categoryName = contents[0].categories;
+  const categoryName = contents?.[0]?.categories ?? category;
 
   return (
     <div className="max-w-[1200px] mx-auto mt-[90px] px-4">
