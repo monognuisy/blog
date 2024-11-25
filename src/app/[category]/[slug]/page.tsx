@@ -44,6 +44,7 @@ const generateMetadata = async ({ params }: TPostPageProps) => {
         description,
         type: 'article',
         url,
+        siteName: 'monognuisy blog',
         images: {
           url: imgPath,
           alt: title,

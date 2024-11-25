@@ -27,6 +27,14 @@ const generateMetadata = async ({ params }: TCategoryPageProps) => {
       title,
       description,
       url: `${process.env.NEXT_PUBLIC_URI}/${category}`,
+      siteName: 'monognuisy blog',
+      images: [
+        {
+          url: `/images/cover/blog-cover.webp`,
+          width: 1200,
+          height: 630,
+        },
+      ],
     },
   } satisfies Metadata;
 };
