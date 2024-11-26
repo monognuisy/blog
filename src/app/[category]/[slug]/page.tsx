@@ -4,15 +4,9 @@ import {
   getPostPath,
   getAdjacentPosts,
 } from '@/lib/getBlogPost';
-import { compileMDX } from 'next-mdx-remote/rsc';
 import fs from 'fs';
-import remarkGfm from 'remark-gfm';
 import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import { TFrontmatter } from '@/app/_types/post';
-import rehypePrism from 'rehype-prism-plus';
-import { mathMacros } from '@/lib/constants';
 import Comment from '@/app/_components/utterance/Comment';
 import { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
@@ -91,9 +85,9 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <div className="relative bg-white">
+        <div className="relative ">
           <PostTitle post={frontmatter} />
-          <div className="post-wrapper bg-white mt-[100vh]">
+          <div className="post-wrapper bg-white translate-y-[100vh]">
             <div className="relative mx-auto pt-20 max-w-[768px] px-4">
               <div className="">{content}</div>
               <AdjacentPostLinks prev={prev} next={next} />

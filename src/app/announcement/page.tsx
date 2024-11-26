@@ -12,7 +12,7 @@ const AnnouncementPage = () => {
   const announcements = getSortedAnnouncement();
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 mt-[90px]">
+    <div className="max-w-[1200px] mx-auto px-4  ">
       <h1 className="text-[2rem] md:text-[3rem] mt-8 md:mt-12">
         Announcements
       </h1>

@@ -53,7 +53,7 @@ const CategoryPage = ({ params }: TCategoryPageProps) => {
   const categoryName = contents?.[0]?.categories ?? category;
 
   return (
-    <div className="max-w-[1200px] mx-auto mt-[90px] px-4">
+    <div className="max-w-[1200px] mx-auto   px-4">
       <h1 className="my-2 md:my-12 text-[2rem] md:text-[2.5rem]">
         Posts in {`"${categoryName}"`}
       </h1>
