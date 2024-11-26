@@ -44,14 +44,26 @@
     list-style-type: decimal;
   }
 
-  & > ul,
-  & > ol {
+  &>ul,
+  &>ol {
     margin-bottom: constants.$spacing-8;
   }
 
   pre {
     margin-bottom: constants.$spacing-8;
   }
+
+  // Caption
+  p:has(>img+em) {
+    text-align: center;
+    font-size: 0.8rem;
+
+    em {
+      font-style: normal;
+      color: gray;
+    }
+  }
+
 
   .footnotes {
     border-top: 1px solid rgb(229, 231, 235);
@@ -68,7 +80,8 @@
     ol {
       counter-reset: list;
     }
-    ol > li {
+
+    ol>li {
       list-style: none;
       content: '[';
       display: flex;
@@ -78,7 +91,8 @@
         margin-bottom: 0;
       }
     }
-    ol > li:before {
+
+    ol>li:before {
       content: '[' counter(list) ']';
       counter-increment: list;
       margin-left: -1.5em;
@@ -87,9 +101,10 @@
     }
   }
 
-  sup > a {
+  sup>a {
     color: constants.$color-primary;
   }
+
   /* Place `[` and `]` around footnote references. */
   [data-footnote-ref]::before {
     content: '[';
