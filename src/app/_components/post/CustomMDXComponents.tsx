@@ -2,6 +2,7 @@ import { MDXProvider } from '@mdx-js/react';
 import Image from 'next/image';
 import LinkCard from './LinkCard';
 import { basePath } from '@/../next.config.mjs';
+import Pre, { TPreProps } from './codeblock/Pre';
 
 type THighlightProps = {
   color: 'blue' | 'red' | 'yellow';
@@ -39,6 +40,7 @@ const CustomMDXComponents = (
       )}
     </>
   ),
+  pre: (props) => <Pre {...(props as TPreProps)} />,
   Highlight,
   LinkCard,
 });

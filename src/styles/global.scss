@@ -81,6 +81,10 @@ code {
   color: constants.$color-primary !important;
 }
 
+.copy-button {
+  font-family: constants.$fontFamily-sans;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

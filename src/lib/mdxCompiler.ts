@@ -5,6 +5,10 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { mathMacros } from './constants';
 import rehypePrism from 'rehype-prism-plus';
+import {
+  rehypeCodePostProcess,
+  rehypeCodePreProcess,
+} from './plugins/rehype-pre-raw';
 
 type TCustomMDXOptions = {
   source: MDXRemoteProps['source'];
@@ -18,6 +22,7 @@ const customMDX = <T>({ source, options, components }: TCustomMDXOptions) => {
     mdxOptions: {
       remarkPlugins: [remarkGfm, remarkMath],
       rehypePlugins: [
+        rehypeCodePreProcess,
         [
           rehypeKatex,
           {
@@ -26,6 +31,7 @@ const customMDX = <T>({ source, options, components }: TCustomMDXOptions) => {
           },
         ],
         rehypePrism,
+        rehypeCodePostProcess,
       ],
     },
   } satisfies MDXRemoteProps['options'];
