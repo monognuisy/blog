@@ -12,7 +12,7 @@ type TPostCardProps = {
 const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
   const { title, date, description, tags, categories, cover } = frontmatter;
   return (
-    <div className="my-6 flex-1 min-w-full md:min-w-[32%] md:first:hidden">
+    <div className="my-6 min-w-full md:min-w-[32%] md:first:hidden">
       <Link href={`/${category}/${slug}`}>
         <div>
           <div className="relative w-full aspect-video mb-5">

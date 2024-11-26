@@ -2,6 +2,7 @@ import { MDXProvider } from '@mdx-js/react';
 import Image from 'next/image';
 import LinkCard from './LinkCard';
 import { basePath } from '@/../next.config.mjs';
+import Pre, { TPreProps } from './codeblock/Pre';
 
 type THighlightProps = {
   color: 'blue' | 'red' | 'yellow';
@@ -24,18 +25,22 @@ const CustomMDXComponents = (
   img: (props) => (
     <>
       {props.src && (
-        <Image
-          {...props}
-          alt={props.alt || ''}
-          src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
-          width={0}
-          height={0}
-          sizes="100%"
-          className="w-full h-auto mx-auto"
-        />
+        <>
+          <Image
+            {...props}
+            alt={props.alt || ''}
+            src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
+            width={0}
+            height={0}
+            sizes="100%"
+            className="w-full h-auto mx-auto"
+          />
+          <em className="inline-block mt-2">{props.alt}</em>
+        </>
       )}
     </>
   ),
+  pre: (props) => <Pre {...(props as TPreProps)} />,
   Highlight,
   LinkCard,
 });

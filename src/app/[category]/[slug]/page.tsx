@@ -17,6 +17,7 @@ import Comment from '@/app/_components/utterance/Comment';
 import { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
 import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
+import customMDX from '@/lib/mdxCompiler';
 
 type TPostPageProps = {
   params: {
@@ -81,24 +82,8 @@ const PostPage = async ({ params }: TPostPageProps) => {
   try {
     const postFile = fs.readFileSync(fullPath);
 
-    const { content, frontmatter } = await compileMDX<TFrontmatter>({
+    const { content, frontmatter } = await customMDX<TFrontmatter>({
       source: postFile,
-      options: {
-        parseFrontmatter: true,
-        mdxOptions: {
-          remarkPlugins: [remarkGfm, remarkMath],
-          rehypePlugins: [
-            [
-              rehypeKatex,
-              {
-                macros: mathMacros,
-                strict: false,
-              },
-            ],
-            rehypePrism,
-          ],
-        },
-      },
       components: CustomMDXComponents(category, slug),
     });
 
