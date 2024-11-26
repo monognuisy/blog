@@ -4,6 +4,7 @@
 @import './codeblock';
 @import './blog';
 @import './mdx';
+@import './katex';
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
@@ -34,12 +35,15 @@ h6 {
 h1 {
   font-size: constants.$fontSize-6;
 }
+
 h2 {
   font-size: constants.$fontSize-5;
 }
+
 h3 {
   font-size: constants.$fontSize-4;
 }
+
 h4 {
   font-size: constants.$fontSize-3;
 }
@@ -58,6 +62,7 @@ pre {
   border-radius: constants.$rounded-1;
   overflow-x: auto;
 }
+
 code {
   font-family: constants.$fontFamily-mono;
   padding: constants.$spacing-1;
@@ -66,15 +71,12 @@ code {
   margin: 0 constants.$spacing-1;
 }
 
-// Equations
-.katex-display {
-  overflow: auto hidden;
-}
 
 // Custom classes
 .monospace {
   font-family: constants.$fontFamily-mono;
 }
+
 .text-highlight {
   color: constants.$color-primary !important;
 }

@@ -1,0 +1,7 @@
+.katex-display {
+  overflow: auto hidden;
+
+  .katex {
+    width: calc(100% - 2px);
+  }
+}
