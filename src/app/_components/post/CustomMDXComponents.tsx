@@ -24,15 +24,18 @@ const CustomMDXComponents = (
   img: (props) => (
     <>
       {props.src && (
-        <Image
-          {...props}
-          alt={props.alt || ''}
-          src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
-          width={0}
-          height={0}
-          sizes="100%"
-          className="w-full h-auto mx-auto"
-        />
+        <>
+          <Image
+            {...props}
+            alt={props.alt || ''}
+            src={`${basePath}/images/post/${category}/${slug}/${props.src}`}
+            width={0}
+            height={0}
+            sizes="100%"
+            className="w-full h-auto mx-auto"
+          />
+          <em className="inline-block mt-2">{props.alt}</em>
+        </>
       )}
     </>
   ),

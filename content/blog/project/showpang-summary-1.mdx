@@ -27,7 +27,6 @@ python의 pretty_midi 모듈을 이용해서 midi 파일을 만드는 방식으�
 #### 멜로디 패턴 확률모형 제작
 
 ![멜로디 패턴](melody-pattern.png)
-*멜로디 패턴*
 
 먼저, 주어진 장르, 무드에 따라 `randomness` 라는 값을 변화시켜서 멜로디의 규칙성을 조절했다.
 
@@ -72,7 +71,6 @@ def _make_probability_distribution(self):
 ### FastAPI 서버 구축 및 연동
 
 ![FastAPI 서버](fastapi-server.png)
-*FastAPI 서버*
 
 spring 벡엔드 서버에서 음악 생성 요청을 받고, 생성된 음악을 응답해야 했기 때문에 FastAPI 서버를 구축했다.
 
@@ -107,7 +105,6 @@ spring 벡엔드 서버에서 음악 생성 요청을 받고, 생성된 음악�
 AWS 의 cloudfront 에는 presigned url 기능이 있는데, 이를 활용하면 s3의 데이터에 일정 시간만 접근할 수 있는 url 을 만들 수 있다. 하지만, 접근한 횟수 기반으로 요청을 제한하는 기능은 없었다. 따라서, 외부 redis 서버를 이용해서 해당 url 을 해싱하여 캐싱하는 방법을 사용했다. (마치 분산 락 처럼?) 대략적인 워크플로우는 다음과 같다.
 
 ![presigned url 워크플로우](presigned-url.png)
-*presigned url 워크플로우*
 
 1. 유저가 음악 플레이리스트 파일을 요청한다
 2. Cloudfront 에 붙은 Lambda@Edge 에서 요청된 주소를 해싱한다.
@@ -129,7 +126,6 @@ redis 에 저장할때는 timeout 을 걸어주어 일정 시간이 지나면 �
 따라서, 배포를 위해 **github actions 에서 도커 이미지를 빌드**하고, 이후 ec2 에서는 **이미지를 풀** 받는 방식으로 개발했다.
 
 ![github actions로 구성한 CI/CD](github-actions.png)
-*github actions로 구성한 CI/CD*
 
 추후에 테스트도 붙여서 보다 괜찮은 CI/CD 파이프라인을 구축할 계획이다.
 
@@ -186,7 +182,6 @@ CMD ["node", "server.js"]
 ```
 
 ![프론트엔드 도커 이미지 다이어트](docker-image-size.png)
-*프론트엔드 도커 이미지 다이어트*
 
 이렇게 Dockerfile 을 바꿈으로써 이미지 크기가 줄어들었고, 도커허브에 푸시/풀 하는 시간이 줄어들어서 전체적인 배포 시간이 단축되었다!
 
@@ -199,7 +194,6 @@ python 외에도 ffmpeg, fluidsynth 같은 **외부 프로그램**을 사용했�
 따라서, 먼저 python, ffmpeg, fluidsynth 가 있는 이미지(크게 수정되지 않으므로)를 준비하고, 이를 매 배포마다 풀 받아서 여기에 필요한 모듈과, 변경된 코드를 올리는 방식으로 수정했다.
 
 ![도커라이징 속도 개선](docker-image-speed.png)
-*도커라이징 속도 개선*
 
 결과적으로 배포에 걸리는 시간이 많이 단축되었다!
 
