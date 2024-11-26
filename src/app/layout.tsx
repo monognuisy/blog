@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
   },
   icons: {
-    icon: `/icons/favicon-32x32`,
+    icon: `/icons/favicon-32x32.png`,
     shortcut: `/icons/favicon.ico`,
     apple: `/icons/apple-touch-icon.png`,
   },
