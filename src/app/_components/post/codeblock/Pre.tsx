@@ -1,4 +1,6 @@
-import { DetailedHTMLProps, HTMLAttributes } from 'react';
+'use client';
+
+import { DetailedHTMLProps, HTMLAttributes, useState } from 'react';
 import CopyButton from './CopyButton';
 
 export type TPreProps = DetailedHTMLProps<
@@ -9,10 +11,19 @@ export type TPreProps = DetailedHTMLProps<
 };
 
 const Pre = ({ raw, children, ...props }: TPreProps) => {
+  const [isCodeClicked, setIsCodeClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsCodeClicked(true);
+    setTimeout(() => {
+      setIsCodeClicked(false);
+    }, 5000);
+  };
+
   return (
-    <pre {...props} style={{ position: 'relative' }}>
+    <pre {...props} style={{ position: 'relative' }} onClick={handleClick}>
       {children}
-      <CopyButton raw={raw} />
+      {isCodeClicked && <CopyButton raw={raw} />}
     </pre>
   );
 };
