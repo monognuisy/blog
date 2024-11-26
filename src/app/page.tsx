@@ -12,7 +12,7 @@ export default function Home() {
   const recentAnnouncements = getRecentAnnouncements();
 
   return (
-    <main className="h-full max-w-[1200px] mx-auto px-4 mt-[90px]">
+    <main className="h-full max-w-[1200px] mx-auto px-4  ">
       {recentAnnouncements.map((announcement) => (
         <AnnouncementCard announcement={announcement} key={announcement.id} />
       ))}

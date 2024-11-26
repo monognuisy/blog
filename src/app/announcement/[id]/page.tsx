@@ -32,7 +32,7 @@ const AnnouncementPage = async ({ params }: TAnnouncementPageProps) => {
   return (
     <>
       <div className="post-wrapper bg-white">
-        <div className="relative mx-auto pt-20 max-w-[768px] px-4">
+        <div className="relative mx-auto pt-10 max-w-[768px] px-4">
           <div>
             <h1>{frontmatter.title}</h1>
             <p>{frontmatter.date}</p>
