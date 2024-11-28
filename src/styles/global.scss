@@ -12,6 +12,15 @@
 
 // TODO: Handle darkmode
 
+:root {
+  --color-primary: #0066ff;
+}
+
+.dark {
+  --color-primary: #ffd000;
+  --bg: #1e1e1e;
+}
+
 body {
   color: constants.$color-text;
   background: constants.$bg-color-primary;
@@ -57,7 +66,6 @@ h4 {
 pre {
   font-family: constants.$fontFamily-mono;
   padding: constants.$spacing-2;
-  background: constants.$bg-code;
   margin: constants.$spacing-6 0;
   border-radius: constants.$rounded-1;
   overflow-x: auto;
@@ -66,11 +74,9 @@ pre {
 code {
   font-family: constants.$fontFamily-mono;
   padding: constants.$spacing-1;
-  background-color: constants.$bg-code;
   border-radius: constants.$rounded-1;
   margin: 0 constants.$spacing-1;
 }
-
 
 // Custom classes
 .monospace {
@@ -78,7 +84,17 @@ code {
 }
 
 .text-highlight {
-  color: constants.$color-primary !important;
+  color: var(--color-primary) !important;
+}
+
+.category-dot {
+  box-shadow: 0 0 0 4px #00000011, 0 0 0 8px white;
+}
+
+.dark {
+  .category-dot {
+    box-shadow: 0 0 0 4px #ffffff11, 0 0 0 8px var(--bg);
+  }
 }
 
 .copy-button {

@@ -47,12 +47,14 @@ export default function RootLayout({
       </head>
       <body className="">
         <QueryProvider>
-          <Header />
-          <section className="w-full mx-auto mb-auto h-full">
-            {children}
-          </section>
-          <GoToTopButton />
-          <Footer />
+          <div className="min-h-[100dvh] dark:bg-dark-bg dark:text-dark-text">
+            <Header />
+            <section className="dark:bg-dark-bg w-full mx-auto mb-auto h-full">
+              {children}
+            </section>
+            <GoToTopButton />
+            <Footer />
+          </div>
         </QueryProvider>
       </body>
     </html>

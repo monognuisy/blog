@@ -13,12 +13,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
     <div className="flex gap-10">
       <header className="sticky top-0 flex flex-col pl-6 w-[400px] will-change-transform h-min">
         <div className="relative">
-          <div
-            className="absolute left-[-28px] top-[8px] aspect-square rounded-full w-2 bg-black"
-            style={{
-              boxShadow: '0 0 0 4px #00000011, 0 0 0 8px white',
-            }}
-          ></div>
+          <div className="absolute left-[-28px] top-[8px] aspect-square rounded-full w-2 bg-black dark:bg-dark-text category-dot"></div>
           {new Date(date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
