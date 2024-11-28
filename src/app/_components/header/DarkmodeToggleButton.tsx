@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const DarkmodeToggleButton = () => {
   const [isDarkmode, setIsDarkmode] = useState(false);
@@ -28,7 +30,15 @@ const DarkmodeToggleButton = () => {
     console.log('changed!');
   };
 
-  return <button onClick={toggleDarkmode}>{isDarkmode ? '🌞' : '🌚'}</button>;
+  return (
+    <div className="flex items-center">
+      {isDarkmode ? (
+        <LightModeIcon onClick={toggleDarkmode} />
+      ) : (
+        <DarkModeIcon onClick={toggleDarkmode} />
+      )}
+    </div>
+  );
 };
 
 export default DarkmodeToggleButton;

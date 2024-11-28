@@ -22,7 +22,7 @@ const Header = () => {
               className="block dark:hidden"
             />
             <Image
-              src={`${basePath}/images/logo.webp`}
+              src={`${basePath}/images/logo-dark.webp`}
               alt="Logo"
               width={logoSize}
               height={logoSize}
