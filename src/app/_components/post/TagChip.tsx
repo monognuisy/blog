@@ -8,7 +8,7 @@ const TagChip = ({ tag }: TTagChipProps) => {
 
   return (
     <p
-      className="text-xs font-semibold rounded-2xl border-2 py-1 px-3 w-fit"
+      className="text-xs font-semibold rounded-2xl border-2 py-1 px-3 w-fit dark:border-primary-dark dark:text-primary-dark"
       style={{
         // Is this the best way to handle dynamic color?
         background: 'transparent',

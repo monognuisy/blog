@@ -24,8 +24,8 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
           </div>
           <TagList tags={tags} />
           <h3 className="mb-1 text-2xl">{title}</h3>
-          <p className="text-xs mb-4 text-gray-400">
-            <b className="text-black">{categories}</b> -{' '}
+          <p className="text-xs mb-4 text-gray-500 dark:text-gray-400">
+            <b>{categories}</b> -{' '}
             {new Date(date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',

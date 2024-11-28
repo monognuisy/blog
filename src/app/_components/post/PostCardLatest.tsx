@@ -23,17 +23,17 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
           <CardImage
             cover={cover}
             alt={`Cover image of latest post`}
-            className="rounded-2xl object-cover z-[-1]"
+            className="rounded-2xl object-cover z-[0]"
           />
           <div className="w-full h-full grid grid-rows-[2fr_1fr]">
             <div></div>
-            <div className="w-full h-full bg-white/50 shadow-lg backdrop-blur-sm rounded-2xl rounded-t-none px-6 py-6">
+            <div className="w-full h-full bg-white/50 dark:bg-black/50 shadow-lg backdrop-blur-sm rounded-2xl rounded-t-none px-6 py-6">
               <TagList tags={tags} />
               <h1 className="text-[1.5rem] md:text-[3rem] lg:text-[3.5rem] mt-0">
                 {title}
               </h1>
-              <p className="text-xs mb-4 text-gray-700">
-                <b className="text-black">{categories}</b> -{' '}
+              <p className="text-xs mb-4 text-gray-700 dark:text-gray-300">
+                <b>{categories}</b> -{' '}
                 {new Date(date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',

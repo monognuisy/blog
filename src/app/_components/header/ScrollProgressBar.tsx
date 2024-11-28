@@ -24,10 +24,10 @@ const ScrollProgressBar = () => {
 
   return (
     <div
+      className="bg-primary dark:bg-primary-dark"
       style={{
         width: `${scrollProgress}%`,
         height: '4px',
-        backgroundColor: '#0066FF',
         zIndex: 100,
         transition: 'width 0.1s ease-out',
       }}

@@ -20,7 +20,10 @@ const SlugPath = () => {
               key={index}
             >
               <span
-                className={'cursor-pointer ' + (isLast ? `text-highlight` : '')}
+                className={
+                  'cursor-pointer ' +
+                  (isLast ? `text-primary dark:text-primary-dark` : '')
+                }
                 style={{
                   fontWeight: isLast ? 'bold' : 'normal',
                   color: 'gray',
@@ -33,7 +36,7 @@ const SlugPath = () => {
         })
       ) : (
         <span
-          className="cursor-pointer text-highlight"
+          className="cursor-pointer text-primary dark:text-primary-dark"
           style={{
             fontWeight: 'bold',
             color: 'gray',

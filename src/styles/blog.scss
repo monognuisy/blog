@@ -5,7 +5,7 @@
 
   a {
     &:not(.link-card) {
-      color: constants.$color-primary;
+      color: var(--color-primary);
       text-decoration: none;
 
       &:hover {
@@ -44,8 +44,8 @@
     list-style-type: decimal;
   }
 
-  &>ul,
-  &>ol {
+  & > ul,
+  & > ol {
     margin-bottom: constants.$spacing-8;
   }
 
@@ -54,7 +54,7 @@
   }
 
   // Caption
-  p:has(>img+em) {
+  p:has(> img + em) {
     text-align: center;
     font-size: 0.8rem;
 
@@ -63,7 +63,6 @@
       color: gray;
     }
   }
-
 
   .footnotes {
     border-top: 1px solid rgb(229, 231, 235);
@@ -81,7 +80,7 @@
       counter-reset: list;
     }
 
-    ol>li {
+    ol > li {
       list-style: none;
       content: '[';
       display: flex;
@@ -92,7 +91,7 @@
       }
     }
 
-    ol>li:before {
+    ol > li:before {
       content: '[' counter(list) ']';
       counter-increment: list;
       margin-left: -1.5em;
@@ -101,7 +100,7 @@
     }
   }
 
-  sup>a {
+  sup > a {
     color: constants.$color-primary;
   }
 
