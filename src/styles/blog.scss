@@ -54,11 +54,11 @@
   }
 
   // Caption
-  p:has(> img + em) {
+  p:has(> .image-caption) {
     text-align: center;
     font-size: 0.8rem;
 
-    em {
+    .image-caption {
       font-style: normal;
       color: gray;
     }
