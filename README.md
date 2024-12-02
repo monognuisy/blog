@@ -9,8 +9,8 @@
 - [x] category 분류
   - [x] tags page
 - [x] 댓글 기능 활성화
-  - [ ] 댓글 수식 기능 활성화
+  - [ ] 댓글 수식 기능 활성화 -> utterances issue?
 - [x] code highlighting 개선
-- [ ] css -> styled-components
-  - [x] css -> scss
-- [ ] dark theme 지원
+- [x] dark theme 지원
+- [ ] 검색 기능
+  - [ ] DB 연동
