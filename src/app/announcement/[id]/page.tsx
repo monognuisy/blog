@@ -5,6 +5,7 @@ import {
   getSortedAnnouncement,
 } from '@/lib/getAnnouncement';
 import customMDX from '@/lib/mdxCompiler';
+import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
 
 type TAnnouncementPageProps = {
   params: {
@@ -27,6 +28,7 @@ const AnnouncementPage = async ({ params }: TAnnouncementPageProps) => {
 
   const { content, frontmatter } = await customMDX<TAnnouncement>({
     source: postFile,
+    components: CustomMDXComponents('announcement', id),
   });
 
   return (
