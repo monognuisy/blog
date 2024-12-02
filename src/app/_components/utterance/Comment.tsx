@@ -20,8 +20,7 @@ const Comment = () => {
         scriptElement.setAttribute('label', '✨💬✨');
         scriptElement.setAttribute(
           'theme',
-          // theme === 'light' ? 'github-light' : 'github-dark',
-          'github-light',
+          theme === 'light' ? 'github-light' : 'github-dark',
         );
         scriptElement.setAttribute('crossorigin', 'anonymous');
         scriptElement.setAttribute('async', 'true');
