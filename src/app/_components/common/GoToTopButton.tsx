@@ -33,7 +33,7 @@ const GoToTopButton = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed right-[24px] bottom-[24px] md:right-[48px] md:bottom-[48px] rounded-full 
+          className="fixed right-[24px] bottom-[24px] md:right-[48px] md:bottom-[48px] rounded-full bg-white dark:bg-dark-bg
             border-2 dark:border-gray-800 w-[32px] h-[32px] md:w-[48px] md:h-[48px] flex justify-center items-center 
              shadow-lg text-xl"
         >
