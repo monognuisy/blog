@@ -26,11 +26,12 @@ const SearchBar = () => {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    // TODO: Implement search functionality
+    // window.addEventListener('keydown', handleKeyDown);
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    // return () => {
+    //   window.removeEventListener('keydown', handleKeyDown);
+    // };
   }, []);
 
   return (
@@ -39,10 +40,12 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search"
-          className="text-sm border border-gray-300 dark:border-gray-700 rounded-md p-2 w-[300px] dark:bg-dark-bg"
+          className="text-sm border border-gray-300 dark:border-gray-700 rounded-md p-2 w-[300px] dark:bg-dark-bg cursor-not-allowed"
+          disabled
           onFocus={(e) => e.preventDefault()}
           onClick={(e) => {
-            toggleModalOpen();
+            // TODO: Implement search functionality
+            // toggleModalOpen();
             e.preventDefault();
           }}
         />

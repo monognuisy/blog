@@ -58,11 +58,11 @@
   }
 
   // Caption
-  p:has(> img + em) {
+  p:has(> .image-caption) {
     text-align: center;
     font-size: 0.8rem;
 
-    em {
+    .image-caption {
       font-style: normal;
       color: gray;
     }
@@ -77,7 +77,7 @@
     }
 
     .data-footnote-backref {
-      color: constants.$color-primary;
+      color: var(--color-primary);
     }
 
     ol {
@@ -106,6 +106,7 @@
 
   sup > a {
     color: constants.$color-primary;
+    scroll-margin-top: 100px;
   }
 
   /* Place `[` and `]` around footnote references. */

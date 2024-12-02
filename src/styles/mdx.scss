@@ -2,19 +2,32 @@
 
 @use 'constants';
 
+:root {
+  --highlight-bg-blue: #aff0ef;
+  --highlight-bg-yellow: #ffee9b;
+  --highlight-bg-red: #ffb8bb;
+}
+
+.dark {
+  --highlight-bg-blue: #145ebe;
+  --highlight-bg-yellow: #ffd000;
+  --highlight-bg-red: #c64d4d;
+}
+
 .mdx {
   &.highlight {
     padding: 3px;
     border-radius: 3px;
 
     &.blue {
-      background-color: constants.$highlight-bg-blue;
+      background-color: var(--highlight-bg-blue);
     }
     &.yellow {
-      background-color: constants.$highlight-bg-yellow;
+      background-color: var(--highlight-bg-yellow);
+      color: black;
     }
     &.red {
-      background-color: constants.$highlight-bg-red;
+      background-color: var(--highlight-bg-red);
     }
   }
 }

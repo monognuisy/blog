@@ -3,39 +3,32 @@
 import { useEffect, useState } from 'react';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useTheme } from 'next-themes';
 
 const DarkmodeToggleButton = () => {
-  const [isDarkmode, setIsDarkmode] = useState(false);
-
-  useEffect(() => {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
-      document.body.classList.add('dark');
-      setIsDarkmode(true);
-    } else {
-      document.body.classList.remove('dark');
-      setIsDarkmode(false);
-    }
-  }, []);
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [loaded, setLoaded] = useState(false);
 
   const toggleDarkmode = () => {
-    if (isDarkmode) {
-      document.body.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.body.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    }
-    setIsDarkmode(!isDarkmode);
-    console.log('changed!');
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  const isDarkmode = resolvedTheme === 'dark';
+
+  useEffect(() => {
+    setLoaded(true);
+  }, [setLoaded]);
+
   return (
-    <div className="flex items-center">
-      {isDarkmode ? (
-        <LightModeIcon onClick={toggleDarkmode} />
+    <div className="flex items-center cursor-pointer">
+      {loaded ? (
+        isDarkmode ? (
+          <LightModeIcon onClick={toggleDarkmode} />
+        ) : (
+          <DarkModeIcon onClick={toggleDarkmode} />
+        )
       ) : (
-        <DarkModeIcon onClick={toggleDarkmode} />
+        <></>
       )}
     </div>
   );

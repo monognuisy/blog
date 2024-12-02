@@ -2,6 +2,7 @@ import { TContentHeader } from '@/lib/type';
 import TagList from './TagList';
 import Link from 'next/link';
 import CardImage from './CardImage';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 type TCategoryPostCardProps = {
   post: TContentHeader;
@@ -35,9 +36,9 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
           <p className="mb-2">{description}</p>
           <Link
             href={`/${post.category}/${post.slug}`}
-            className="font-bold text-highlight hover:underline"
+            className="font-bold text-highlight hover:underline text-xl"
           >
-            Read more 🡪
+            Read more <ArrowForwardIcon />
           </Link>
         </div>
       </div>
