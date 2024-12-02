@@ -1,0 +1,152 @@
+---
+title: Next.js + MDX 조합으로 블로그 만들기
+date: "2024-11-29"
+description: "기존에 Gatsby 로 만들던 블로그를 Next.js 를 이용해서 개편해보자."
+tags: ["Blog", "Web", "Frontend"]
+categories: "Web"
+cover: "blog-nextjs"
+---
+
+## Next.js vs Gatsby?
+
+지금까지 [gatsby](https://www.gatsbyjs.com/) 를 이용해서 블로그를 개발하고, 사용해왔다. 하지만, 몇몇 불편함이나 거슬리는 부분이 있어서 next.js 로 옮겨야겠다고 생각했다. 그 몇몇 이유를 간단하게 언급해보자면,
+
+- **너무 오래 걸리는 빌드 시간**
+  - 모든 페이지를 다 빌드한 후 제공하는 gatsby 특성 상, 정적 컨텐츠 뿐인 블로그일 뿐인데도, 플러그인 몇개 붙으니 빌드 속도가 너무 느려졌다. hot-reload 를 사용하는데도 거의 1분이 걸리니, 전혀 hot 하지 않게 느껴졌다.
+- **graphql 의 필요성**
+  - 굳이? graphql 을 사용해서 모든 데이터를 받아와야 하는지도 의문이었다.
+  - 엔드포인트별로 나뉘어져있지 않으니 불필요한 정보까지도 다 type 지정해줘야 하고… 좀 불편했다.
+- **API 요청의 어려움**
+  - 어떠한 link 에 대해서 og tag 들을 불러와 화면에 표시하기 위해서 api 요청을 보내야했는데, 당연히 client 쪽에서는 CORS 문제가 발생했다. 이를 해결하려면 proxy 서버를 두거나, 서버리스 함수를 만들거나, `gatsby-node.js` 에서 처리한 뒤 graphql 로 저장하고 이후에 불러와야 하는데… 굉장히 번거로웠다.
+- **라이브러리 버전 충돌이 잦음**
+  - 중간중간 deprecated 되는 것들 + 그냥 버전 충돌이 너무 많았다
+- **제대로 알고 하는 건지에 대한 의문**
+  - gatsby-starter-blog 를 수정하는 것으로 시작했기 때문에 코드를 짜면 짤 수록 내가 다 이해하면서 짜는 것인지 의문이었다.
+  - 차라리 처음부터 생으로 짜보면서 이해하는 것이 빠르고 쉽겠다고 생각했다.
+- **그냥 next.js 를 해보고 싶었음**
+
+    ![State of Javascript 2023](state-js-2023.png)
+
+  - 이번 [State of JavaScript 2023](https://2023.stateofjs.com/en-US/libraries/#tier_list) 에서 발표한 티어리스트인데, (이런 것에 민감한 사람은 아니지만) Gastby 가 많이 떨어진 것을 보았다.
+  - 그에 반해, next.js 는 건재하다. 이참에 블로그를 만들어 보면서 clinet 와 server component의 차이 및 융합이라던가, 렌더링 및 빌드 성능 개선을 해보고 싶어서 일단 옮기게 되었다.
+  - ~~좀 더 많이 쓰는 것 같기도 하고…~~
+
+## 개발
+
+패키지 매니저로는 yarn 을 사용하였다. next는 14를 사용하였다.
+
+### 필요한 패키지 다운로드
+
+저번 블로그에서 mdx 를 이용했을 때 좋은 인상을 받았기 때문에 이번에도 블로그 포스팅은 mdx 를 쓸 예정이었다. 따라서, 다음과 같은 패키지들을 추가했다.
+
+```bash
+yarn add @mdx-js/loader @mdx-js/react @next/mdx next-mdx-remote remark-gfm 
+yarn add @types/mdx -D
+```
+
+next-mdx-remote 가 지원하는 추가 플러그인이 많아서 일단 그것을 사용했다.
+
+만일 turbopack을 사용하고 있다면, `next.config.mjs` 에 다음과 같이 `transpilePackages` 를 추가해야 한다.
+
+```tsx
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  transpilePackages: ['next-mdx-remote'],
+};
+
+export default nextConfig;
+```
+
+### 메커니즘
+
+일단 나는 포스팅을 `content/blog` 에 `[category]/[slug].mdx` 형태로 저장하고 있다. 이를 그대로 사용하기 위해서 next 의 app routing 을 사용하기로 하였다.
+
+server component 에서는 로컬의 파일을 읽어올 수 있기 때문에, 불러온 mdx 파일을 next-mdx-remote 의 `compileMDX`를 이용해서 파싱하고, 이를 보여주는 형식을 생각했다.
+
+```tsx
+// src/app/[category]/[slug]/page.tsx
+// import 생략
+
+const generateStaticParams = async () => {
+  const fullPaths = getAllPostPaths();
+
+  return fullPaths.map((fullPath) => {
+    const splited = fullPath.split('/');
+
+    const category = splited[splited.length - 2];
+    const slug = splited[splited.length - 1].replace(/\.mdx$/, ''); // omit extension
+
+    return {
+      category,
+      slug,
+    };
+  }) satisfies TPostPageProps['params'][];
+};
+
+const PostPage = async ({ params }: TPostPageProps) => {
+  const { category, slug } = params;
+  const fullPath = getPostPath(category, slug);
+  const postFile = fs.readFileSync(fullPath);
+
+  const { content, frontmatter } = await compileMDX<TFrontmatter>({
+    source: postFile,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm, remarkMath],
+        rehypePlugins: [rehypeKatex],
+      },
+    },
+    components: CustomMDXComponents,
+  });
+
+  return (
+    <div>
+      <h1>{frontmatter.title}</h1>
+      {content}
+    </div>
+  );
+};
+
+export { generateStaticParams };
+export default PostPage;
+```
+
+`getPostPath` 나 `getAllPostPaths` 와 같은 유틸 함수들은 다음과 같다.
+
+```tsx
+// src/lib/getBlogPost.ts
+
+const postsDirectory = path.join(process.cwd(), 'content/blog');
+
+const getPostPath = (category: string, slug: string) => {
+  return path.join(postsDirectory, category, `${slug}.mdx`);
+};
+
+const getAllPostPaths = () => {
+  // 재귀적으로 mdx 파일을 찾는다.
+  const categories = fs.readdirSync(postsDirectory);
+  const fileNames = categories.flatMap((category) => {
+    const filePath = path.join(postsDirectory, category);
+    
+    const names = fs
+      .readdirSync(filePath)
+      .map((name) => path.join(postsDirectory, category, name));
+
+    return names;
+  });
+
+  return fileNames;
+};
+
+export { getPostPath, getAllPostPaths };
+```
+
+### 결과
+
+그러면 이렇게 못생겼지만 잘 라우팅 되는 것을 확인할 수 있었다.
+
+이젠 스타일링을 해야할 것 같다.
+
+![무쌩긴 처음 블로그의 모습](first-page.png)
