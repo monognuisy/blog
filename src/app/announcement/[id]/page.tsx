@@ -5,7 +5,7 @@ import {
   getSortedAnnouncement,
 } from '@/lib/getAnnouncement';
 import customMDX from '@/lib/mdxCompiler';
-import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
+import CustomMDXComponents from '@/app/_components/post/custom/CustomMDXComponents';
 
 type TAnnouncementPageProps = {
   params: {

@@ -1,7 +1,7 @@
 'use client';
 
 import { DetailedHTMLProps, HTMLAttributes, useState } from 'react';
-import CopyButton from './CopyButton';
+import CopyButton from '../codeblock/CopyButton';
 
 export type TPreProps = DetailedHTMLProps<
   HTMLAttributes<HTMLPreElement>,

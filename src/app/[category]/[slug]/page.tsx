@@ -5,13 +5,14 @@ import {
   getAdjacentPosts,
 } from '@/lib/getBlogPost';
 import fs from 'fs';
-import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
+import CustomMDXComponents from '@/app/_components/post/custom/CustomMDXComponents';
 import { TFrontmatter } from '@/app/_types/post';
 import Comment from '@/app/_components/utterance/Comment';
 import { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
 import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
+import TableOfContents from '@/app/_components/post/TableOfContents';
 
 type TPostPageProps = {
   params: {
@@ -85,7 +86,8 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <div className="relative ">
+        <div className="relative">
+          <TableOfContents />
           <PostTitle post={frontmatter} />
           <div className="post-wrapper bg-white dark:bg-dark-bg translate-y-[100vh]">
             <div className="relative mx-auto pt-20 max-w-[768px] px-4">
