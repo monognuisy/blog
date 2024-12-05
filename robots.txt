@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://monognuisy.github.io/blog/sitemap-0.xml
-Host: https://monognuisy.github.io
