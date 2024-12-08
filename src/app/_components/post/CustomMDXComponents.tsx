@@ -42,6 +42,7 @@ const CustomMDXComponents = (
       )}
     </>
   ),
+  a: (props) => <Link href={props.href ?? ''} {...props} />,
   pre: (props) => <Pre {...(props as TPreProps)} />,
   Highlight,
   LinkCard,
