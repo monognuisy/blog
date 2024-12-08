@@ -21,10 +21,12 @@ const Pre = ({ raw, children, ...props }: TPreProps) => {
   };
 
   return (
-    <pre {...props} style={{ position: 'relative' }} onClick={handleClick}>
-      {children}
+    <div className="relative">
+      <pre {...props} onClick={handleClick}>
+        {children}
+      </pre>
       {isCodeClicked && <CopyButton raw={raw} />}
-    </pre>
+    </div>
   );
 };
 
