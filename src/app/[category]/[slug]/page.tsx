@@ -87,9 +87,9 @@ const PostPage = async ({ params }: TPostPageProps) => {
       <>
         <div className="relative ">
           <PostTitle post={frontmatter} />
-          <div className="post-wrapper bg-white dark:bg-dark-bg translate-y-[100vh]">
-            <div className="relative mx-auto pt-20 max-w-[768px] px-4">
-              <div className="">{content}</div>
+          <div className="bg-white dark:bg-dark-bg translate-y-[100vh]">
+            <div className="post-wrapper relative mx-auto pt-20 max-w-[768px] px-4">
+              {content}
               <AdjacentPostLinks prev={prev} next={next} />
               <Comment />
             </div>

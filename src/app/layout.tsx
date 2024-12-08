@@ -5,7 +5,7 @@ import Header from './_components/common/Header';
 import Footer from './_components/common/Footer';
 import GoToTopButton from './_components/common/GoToTopButton';
 import QueryProvider from './_providers/QueryProvider';
-import { ThemeProvider } from 'next-themes';
+import CustomThemeProvider from './_providers/CustomThemeProvider';
 
 export const metadata: Metadata = {
   title: 'monognuisy blog',
@@ -46,9 +46,9 @@ export default function RootLayout({
         <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
         <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
       </head>
-      <body className="">
+      <body>
         <QueryProvider>
-          <ThemeProvider attribute="class">
+          <CustomThemeProvider>
             <div className="min-h-[100dvh] dark:bg-dark-bg dark:text-dark-text">
               <Header />
               <section className="dark:bg-dark-bg w-full mx-auto mb-auto h-full">
@@ -57,7 +57,7 @@ export default function RootLayout({
               <GoToTopButton />
               <Footer />
             </div>
-          </ThemeProvider>
+          </CustomThemeProvider>
         </QueryProvider>
       </body>
     </html>

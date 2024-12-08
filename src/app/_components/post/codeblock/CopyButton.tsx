@@ -22,7 +22,7 @@ const CopyButton = ({ raw }: TCopyButtonProps) => {
 
   return (
     <button
-      className="copy-button rounded-md p-1 sticky top-0 right-0  ease-in-out duration-300"
+      className="copy-button rounded-md p-1 absolute top-2 right-2 ease-in-out duration-300"
       style={{
         backgroundColor: isCopied ? '#b8fa7a' : '#0000000a',
       }}
