@@ -1,0 +1,146 @@
+---
+title: "[Showpang] 음악 생성 서버 개선"
+date: "2024-12-08"
+description: "Showpang 프로젝트에서 사용된 음악 생성 서버를 람다와 도커를 이용해서 개선해보자"
+tags: ["Project", "Web", "DevOps", "Music"]
+categories: "Projects"
+cover: "showpang"
+draft: true
+---
+
+## 문제점
+
+Showpang 의 가장 주된 서비스라고 할 수 있는 음악 생성 서비스를 구현하기 위해, ec2 인스턴스 내에서 미디파일 생성과 렌더링을 진행했다. 하지만, midi → wav → mp3 로 변환하는데 사용되는 fluidsynth 와 ffmpeg 가 굉장히 cpu 집약적인 작업이었기 때문에, 작은 서버로는 비동기적으로 들어오는 요청을 적절하게 처리하기 힘들었다.
+
+특히, 요청 하나만 들어와도 ffmpeg 로 인해서 cpu utilization 이 거의 100% 가까이 기록되었기 때문에, 여러 요청이 들어왔을 때 성능과 서버 안정성 간의 균형점을 찾기 힘들었다.
+
+이는 분명히 서비스에 큰 타격을 줄 수 있는 것이었기 때문에 여러 해결책을 생각해보게 되었다.
+
+## 해결책
+
+### 1. 좋은 서버, 더 많은 서버
+
+단순히 돈으로 해결하는 가장 간단한 방법이었다. 지금은 요청 하나만 들어와도 cpu 가 100% 가까이 찍히기 때문에 기본적으로 서버 성능을 조금 높인 다음, 한 ffmpeg 프로세스 자체에 cpu 제한을 두고, 요청에 따라 일정 수치 이상이면 auto scaling 되게끔 설정하면 해결될 수 있을 (수도 있을…) 것 같았다.
+
+하지만, 너무 비싼 것 같은 느낌이 들었다. 더 적은 비용으로 해결할 수 있을 것 같은 느낌?
+
+또한, 인턴했던 회사에서 경험했던 **오토스케일링 과정에서 발생하는 딜레이**나, **정합성 문제** 등도 충분히 발생할 수 있을 것 같은 느낌이 들었다. 물론, 추후에 AI 기능과 결합한다던가 하는 무거운 작업을 돌리기 위해서는 인스턴스 업그레이드가 불가피할 것 같지만, 당장 결론적으로는 **비용 대비 편익이 적은 방법**이라고 생각했다.
+
+### 2. 동기적인 무거운 task 수 제한
+
+기존에는 모든 과정이 동기적이었다. midi → wav → mp3 로 이어지는 파이프라인은 동기적으로 실행된다고 하더라도, 요청 자체가 비동기적이었기 때문에 무거운 동기성 작업이 들어온 요청에 비례하여 증가하게 되었다. 따라서, 이러한 프로세스의 수를 제한하면서도 기존 비동기적인 요청 및 midi 파일 생성에 크게 영향을 주지 않았으면 했다.
+
+이를 위해 **Celery** 와 같은 **분산 작업 큐**를 도입할까도 생각했다.
+
+![Celery 를 이용한 비동기 작업 처리](celery-sample.png)
+
+여러 작업을 celery queue 에 할당하고, 한 번에 수행될 task 수를 제한한다면 많은 요청이 들어오더라도 순차적으로 적절히 수행할 수 있을 것으로 보였다.
+
+추가적으로 생각해야 할 것으로는, celery 에서의 응답 = “작업이 잘 할당되었는가” 라는 것이었기 때문에, 실제로 task 가 완료된 후의 결과물을 클라이언트에게 전달할 방법을 생각하는 것이었다. 크게는 두 가지 방법이 있는 것 같았다.
+
+- **callback**
+  - fastapi 서버에 음악 생성이 성공했다는 추가적인 api 만들고, 성공 시 그것을 통해 spring 서버로 보냄
+  - 즉, api 가 하나 더 있어야 함
+- **result backend**
+  - result 를 저장하는 부분을 별도로 만들고, 이를 브로커와 연결
+  - Redis + RabbitMQ 를 동시에 사용하는 경우도 있는 것 같음
+
+이를 적용하기 위해서는 조금 더 공부가 필요할 것 같아서, 일단은 지켜보기로 하였다. 그래도, 무작정 크고 많은 인스턴스를 쓰는 것에 비해서는 훨씬 체계적이고 예상가능해서 추후에 적용할 가능성이 크다고 생각했다. (이쪽에 대한 공부도 시작해야겠다는 이야기😓 …)
+
+같은 인스턴스에서 돌리는 것은 거의 무의미하므로 새로운 인스턴스를 파야 했는데, 이것도 제대로 사용하기 위해서는 나름 괜찮은 스펙의 인스턴스가 필요해보여서 일단 보류해놓기로 하였다.
+
+### ⭐ 3. 람다 + 도커
+
+AWS lambda 에는 **도커 컨테이너를 실행할 수 있는 기능**이 있다. 이를 이용하면 우리 서비스와 같이 python 외의 외부 프로그램을 사용하는 경우에도 도커를 이용해 람다로 돌릴 수 있다는 장점이 있다.
+
+그리고, 람다는 요청(실행)마다 **독립적인 개별 인스턴스를 프로비저닝** 하므로, 많은 요청을 핸들링 하기 위한 인스턴스 규모를 신경쓰지 않아도 됐었고, 요금이 매우 저렴한 편이라 잘만 이용하면 비용 대비 편익이 클 것이라 생각했다.
+
+하지만, 제약도 있었다. ECR 의 private repository 의 이미지만 사용할 수 있었고, 500MB 초과분에 대해서 요금이 부과되었다. 하지만, 그걸 감안해도 저렴했다! → 선택!
+
+#### Dockerfile
+
+본 서비스와 같이 python 과 외부 프로그램을 같이 사용하기 위해서는 일반적인 base image 가 필요한데, [공식 문서](https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/python-image.html#python-image-clients)에서 소개된 방법을 이용해서 python 런타임 인터페이스 클라이언트를 포함시켰다.
+
+```docker
+# Define custom function directory
+ARG CODE_DIR="/code"
+
+# 미리 정의한 base image 지정
+FROM showpang/fastapi-base
+
+# Include global arg in this stage of the build
+ARG CODE_DIR
+
+# Copy function code
+RUN mkdir -p ${CODE_DIR}
+COPY . ${CODE_DIR}
+
+# 변환 과정에서 사용 될 임시 음악 파일들 (자세한 것은 후술)
+RUN mkdir -p /tmp/assets/music && cp -r /code/app/assets/* /tmp/assets/
+
+# Install the function's dependencies
+RUN pip install \
+    --target ${CODE_DIR} \
+        awslambdaric
+
+WORKDIR ${CODE_DIR}
+
+RUN pip install --no-cache-dir -r /code/requirements.txt
+
+# Set runtime interface client as default command for the container runtime
+ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
+# Pass the name of the function handler as an argument to the runtime
+CMD [ "app.main.handler" ]
+```
+
+이를 이용해서 이미지를 빌드한 후, ECR 에 푸시하면 된다.
+
+#### ⚠️ 임시 음악 파일 경로 재설정
+
+lambda 에서 어떠한 임시 파일을 저장하기 위해서는 `/tmp` 공간을 사용해야 한다. 기존의 코드에서는 `/code/app/assets` 에 생성했기 때문에, 이를 `/tmp` 로 바꿔주어야 했다.
+
+```python
+def get_music(music_body):
+    assets_dir_path = '/tmp/assets/'
+    music_dir_path = assets_dir_path + 'music/'
+
+    uuid_prefix = str(uuid.uuid1())
+    midi_file = music_dir_path + f'{uuid_prefix}.mid'
+    mp3_file = music_dir_path + f'{uuid_prefix}.mp3'
+    soundfont_path = assets_dir_path + 'soundfont.sf2'
+
+    if not os.path.exists(music_dir_path):
+        os.makedirs(music_dir_path)
+       
+    // ...
+```
+
+#### ⚠️ 람다 함수 테스트와 주의사항
+
+람다에 API Gateway 를 붙이면, 요청은 `body` 에 포함되게 된다. 따라서, 테스트 할 때도 `body` 에 요청 값을 넣어야 한다. 주의해야 할 점은, JSON 요청을 보내려면 escaped 된 문자열로 `body` 내에 집어넣어야 한다는 것.
+
+이를테면,
+
+```python
+{
+  "body": "{\"foo\": \"bar\"}"
+}
+```
+
+![k6 metric](k6-metric.png)
+
+![응답 시간 그래프](req-duration-graph.png)
+
+간단하게 k6 를 이용해서 테스트를 진행해 보았을 때, 이전과는 비교도 안될 정도의 안정성을 보여주었다. 이전에는 동시에 4개 정도의 요청만 보내도 죽었던 것이, 이제는 10명의 VU 가 80번의 요청을 보내도 충분히 버티는 모습을 보여주었다.
+
+또한 첫 요청에 대해서는 다소 높은 응답시간을 보였는데, 이는 람다의 **cold start** 로 보인다. 여기서는 파악되지 않지만, 한동안 사용하지 않다가 사용하면 처음에 docker image 를 pull 받는 시간이 있을 것으로 보인다. (현재는 이미지가 메모리에 있는듯?) 이 또한, 추후 테스트로 확인해야 할 것 같다.
+
+#### ⚠️ 음악 데이터 전송 문제
+
+현재 워크플로우는 생성된 음악 파일을 spring 서버에 전달하고, spring 서버에서 s3 버킷에 음악을 업로드 하는 형식인데, 일단 이 방식을 유지하기 위해 람다에서 음악 파일을 응답받을 수 있게 하고 싶었다. 하지만, 파일 응답은 지원되지 않아 base64 로 인코딩하여 응답을 보냈다.
+
+그러나, 람다의 응답 길이에 제한이 있어서 실패하는 경우가 잦았다.
+
+![실패 로그](req-length-failure.png)
+
+따라서 그냥 람다에서 s3 로 업로드하는 방안을 생각했다. (이에 대해서는 추가로 작성)
