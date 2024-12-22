@@ -40,7 +40,7 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search"
-          className="text-sm border border-gray-300 dark:border-gray-700 rounded-md p-2 w-[300px] dark:bg-dark-bg cursor-not-allowed"
+          className="text-sm border border-gray-300 dark:border-gray-700 rounded-md p-2 w-[300px] bg-white dark:bg-dark-bg cursor-not-allowed"
           disabled
           onFocus={(e) => e.preventDefault()}
           onClick={(e) => {
