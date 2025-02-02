@@ -12,6 +12,7 @@ import { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
 import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
+import { notFound } from 'next/navigation';
 
 type TPostPageProps = {
   params: {
@@ -75,7 +76,6 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
   try {
     const postFile = fs.readFileSync(fullPath);
-
     const { content, frontmatter } = await customMDX<TFrontmatter>({
       source: postFile,
       components: CustomMDXComponents(category, slug),
@@ -85,7 +85,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <div className="relative ">
+        <div className="relative">
           <PostTitle post={frontmatter} />
           <div className="bg-white dark:bg-dark-bg translate-y-[100vh]">
             <div className="post-wrapper relative mx-auto pt-20 max-w-[768px] px-4">
@@ -98,7 +98,8 @@ const PostPage = async ({ params }: TPostPageProps) => {
       </>
     );
   } catch (error) {
-    return <></>;
+    // 못 찾았을 시 404 페이지로 이동
+    notFound();
   }
 };
 

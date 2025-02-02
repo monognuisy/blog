@@ -5,6 +5,7 @@ import {
 import CategoryPostCard from '../_components/post/CategoryPostCard';
 import PostCard from '../_components/post/PostCard';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 type TCategoryPageProps = {
   params: {
@@ -50,7 +51,11 @@ const CategoryPage = ({ params }: TCategoryPageProps) => {
   const { category } = params;
   const contents = getSortedPostListByCategory(category);
 
-  const categoryName = contents?.[0]?.categories ?? category;
+  if (!contents || contents.length === 0) {
+    notFound();
+  }
+
+  const categoryName = contents[0]?.categories ?? category;
 
   return (
     <div className="max-w-[1200px] mx-auto   px-4">
