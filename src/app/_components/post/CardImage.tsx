@@ -10,6 +10,7 @@ const CardImage = ({ className, cover, alt }: TCardImageProps) => {
   return (
     <Image
       src={cover ? `/images/cover/${cover}.webp` : '/images/sample-bg.webp'}
+      priority
       alt={alt}
       fill
       sizes="100%"
