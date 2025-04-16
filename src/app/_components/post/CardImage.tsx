@@ -13,7 +13,7 @@ const CardImage = ({ className, cover, alt }: TCardImageProps) => {
       priority
       alt={alt}
       fill
-      sizes="100%"
+      sizes="100vw"
       className={className}
     />
   );

@@ -31,10 +31,9 @@ const CustomMDXComponents = (
               {...props}
               alt={props.alt || ''}
               src={`/images/post/${category}/${slug}/${props.src}`}
-              width={0}
-              height={0}
-              sizes="100%"
-              className="w-full h-auto mx-auto"
+              width={1024}
+              height={1024}
+              className="w-full max-w-[768px] h-auto mx-auto"
             />
           </Link>
           <em className="inline-block mt-2 image-caption">{props.alt}</em>

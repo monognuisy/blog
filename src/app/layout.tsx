@@ -54,7 +54,7 @@ export default function RootLayout({
         <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
         <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
       </head>
-      <body>
+      <body className="antialiased">
         <QueryProvider>
           <CustomThemeProvider>
             <ThemeColorSetter />
