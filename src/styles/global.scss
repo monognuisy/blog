@@ -21,11 +21,15 @@
   --bg: #1e1e1e;
 }
 
+html {
+  font-size: constants.$fontSize-root;
+}
+
 body {
   color: constants.$color-text;
   background: constants.$bg-color-primary;
   font-family: constants.$font-body !important;
-  font-weight: constants.$fontWeight-medium;
+  font-weight: constants.$fontWeight-normal;
 }
 
 // Headings

@@ -12,7 +12,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
   const { title, description, date, tags, cover } = post;
   return (
     <div className="flex gap-10">
-      <header className="sticky top-0 flex flex-col pl-6 w-[400px] will-change-transform h-min">
+      <header className="sticky top-20 flex flex-col grow pl-6 w-[400px] will-change-transform h-min">
         <div className="relative">
           <div className="absolute left-[-28px] top-[8px] aspect-square rounded-full w-2 bg-black dark:bg-dark-text category-dot"></div>
           {new Date(date).toLocaleDateString('en-US', {
@@ -24,7 +24,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
         <h3>{title}</h3>
         <TagList tags={tags} />
       </header>
-      <div className="flex-grow flex flex-col gap-4">
+      <div className="grow max-w-[600px] flex flex-col gap-4">
         <div className="relative w-full aspect-video">
           <CardImage
             cover={cover}

@@ -10,7 +10,7 @@ const SlugPath = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="text-md md:text-xl tracking-tight" ref={containerRef}>
+    <div className="text-sm md:text-base tracking-tight" ref={containerRef}>
       {pathnameArray[0] ? (
         pathnameArray.map((path, index) => {
           const isLast = index === pathnameArray.length - 1;
