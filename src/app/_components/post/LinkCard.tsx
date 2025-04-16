@@ -14,7 +14,7 @@ type TLinkCardProps = {
 const LoadingCard = () => {
   return (
     <div className="border rounded-xl p-2 flex gap-4 mb-8 animation-pulse">
-      <div className="rounded-xl w-[100px] h-[100px] md:w-[200px] md:h-[200px] bg-gray-300 animate-pulse flex-shrink-0"></div>
+      <div className="rounded-xl w-[100px] h-[100px] md:w-[150px] md:h-[150px] bg-gray-300 animate-pulse flex-shrink-0"></div>
       <div className="w-full flex flex-col gap-4">
         <div className="h-12 bg-gray-300 animate-pulse rounded w-1/2"></div>
         <div className="bg-gray-300 animate-pulse rounded w-full flex-1"></div>
@@ -51,19 +51,18 @@ const LinkCard = ({ url }: TLinkCardProps) => {
             <Image
               src={metadata?.image}
               alt={metadata?.title}
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="rounded-xl w-[100px] h-[100px] md:w-[200px] md:h-[200px] aspect-square object-cover"
+              width={500}
+              height={500}
+              className="rounded-xl w-[100px] h-[100px] md:w-[150px] md:h-[150px] aspect-square object-cover"
             />
           </div>
         )}
-        <div className="flex-shrink max-h-[100px] md:max-h-[200px] flex flex-col">
-          <h3 className="text-[1rem] md:text-[1.5rem] line-clamp-1">
+        <div className="flex-shrink max-h-[100px] md:max-h-[150px] flex flex-col">
+          <h3 className="text-base md:text-xl line-clamp-1">
             {metadata?.title || 'No title available'}
           </h3>
           <p
-            className="text-gray-500 text-[0.8rem] md:text-[1rem] line-clamp-1 md:line-clamp-3 md:flex-1"
+            className="text-gray-500 text-sm md:text-base line-clamp-1 md:line-clamp-3 md:flex-1"
             style={{
               marginBottom: `0`,
             }}
@@ -71,7 +70,7 @@ const LinkCard = ({ url }: TLinkCardProps) => {
             {metadata?.description || 'No description available'}
           </p>
           <p
-            className="text-gray-500 text-[0.8rem] md:text-[1rem] line-clamp-1"
+            className="text-gray-500 text-xs md:text-sm line-clamp-1"
             style={{
               marginBottom: `0`,
             }}
