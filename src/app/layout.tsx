@@ -16,6 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(`${process.env.NEXT_PUBLIC_URI ?? 'localhost:3000'}`),
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
   verification: {

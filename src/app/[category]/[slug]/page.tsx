@@ -15,14 +15,14 @@ import customMDX from '@/lib/mdxCompiler';
 import { notFound } from 'next/navigation';
 
 type TPostPageProps = {
-  params: {
+  params: Promise<{
     category: string;
     slug: string;
-  };
+  }>;
 };
 
 const generateMetadata = async ({ params }: TPostPageProps) => {
-  const { category, slug } = params;
+  const { category, slug } = await params;
 
   try {
     const { frontmatter } = getPostData(category, slug);
@@ -67,11 +67,11 @@ const generateStaticParams = async () => {
       category,
       slug,
     };
-  }) satisfies TPostPageProps['params'][];
+  }) satisfies Awaited<TPostPageProps['params']>[];
 };
 
 const PostPage = async ({ params }: TPostPageProps) => {
-  const { category, slug } = params;
+  const { category, slug } = await params;
   const fullPath = getPostPath(category, slug);
 
   try {
