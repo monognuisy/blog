@@ -1,5 +1,6 @@
 import { visit } from 'unist-util-visit';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const rehypeCodePreProcess = () => (tree: any) => {
   visit(tree, (node) => {
     if (node?.type === 'element' && node?.tagName === 'pre') {
@@ -12,6 +13,7 @@ export const rehypeCodePreProcess = () => (tree: any) => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const rehypeCodePostProcess = () => (tree: any) => {
   visit(tree, 'element', (node) => {
     if (node?.type === 'element' && node?.tagName === 'pre') {

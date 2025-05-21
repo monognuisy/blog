@@ -4,7 +4,7 @@ type TTagChipProps = {
 
 const TagChip = ({ tag }: TTagChipProps) => {
   const tagColor = '#9933f8'; // TODO: replace to random-pick function in utils
-  const tagBgColor = '#ffffff'; // TODO: replace to random-pick function in utils
+  // const tagBgColor = '#ffffff'; // TODO: replace to random-pick function in utils
 
   return (
     <p

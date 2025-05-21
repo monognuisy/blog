@@ -47,7 +47,7 @@ const generateMetadata = async ({ params }: TPostPageProps) => {
         },
       },
     } satisfies Metadata;
-  } catch (error) {
+  } catch {
     //
   }
   return {};
@@ -97,7 +97,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
         </div>
       </>
     );
-  } catch (error) {
+  } catch {
     // 못 찾았을 시 404 페이지로 이동
     notFound();
   }

@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes, useState } from 'react';
+import { DetailedHTMLProps, HTMLAttributes } from 'react';
 import CopyButton from './CopyButton';
 
 export type TPreProps = DetailedHTMLProps<

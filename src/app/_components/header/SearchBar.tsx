@@ -11,24 +11,21 @@ const SearchBar = () => {
   };
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.ctrlKey &&
-        event.shiftKey &&
-        (event.key === 'k' || event.key === 'K')
-      ) {
-        event.preventDefault();
-        toggleModalOpen();
-      }
-
-      if (event.key === 'Escape') {
-        setIsModalOpen(false);
-      }
-    };
-
+    // const handleKeyDown = (event: KeyboardEvent) => {
+    //   if (
+    //     event.ctrlKey &&
+    //     event.shiftKey &&
+    //     (event.key === 'k' || event.key === 'K')
+    //   ) {
+    //     event.preventDefault();
+    //     toggleModalOpen();
+    //   }
+    //   if (event.key === 'Escape') {
+    //     setIsModalOpen(false);
+    //   }
+    // };
     // TODO: Implement search functionality
     // window.addEventListener('keydown', handleKeyDown);
-
     // return () => {
     //   window.removeEventListener('keydown', handleKeyDown);
     // };
