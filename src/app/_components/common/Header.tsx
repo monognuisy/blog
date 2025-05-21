@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import SearchBar from '../header/SearchBar';
 import SlugPath from '../header/SlugPath';
-import { basePath } from '@/../next.config.mjs';
+import { basePath } from '@/../next.config';
 import Link from 'next/link';
 import ScrollProgressBar from '../header/ScrollProgressBar';
 import DarkmodeToggleButton from '../header/DarkmodeToggleButton';

@@ -8,13 +8,13 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 type TCategoryPageProps = {
-  params: {
+  params: Promise<{
     category: string;
-  };
+  }>;
 };
 
 const generateMetadata = async ({ params }: TCategoryPageProps) => {
-  const { category } = params;
+  const { category } = await params;
   const contents = getSortedPostListByCategory(category);
   const categoryName = contents?.[0]?.categories ?? category;
 
@@ -44,11 +44,11 @@ const generateStaticParams = async () => {
   const categories = getAllCategories();
   return categories.map((category) => ({
     category,
-  })) as TCategoryPageProps['params'][];
+  })) as Awaited<TCategoryPageProps['params']>[];
 };
 
-const CategoryPage = ({ params }: TCategoryPageProps) => {
-  const { category } = params;
+const CategoryPage = async ({ params }: TCategoryPageProps) => {
+  const { category } = await params;
   const contents = getSortedPostListByCategory(category);
 
   if (!contents || contents.length === 0) {

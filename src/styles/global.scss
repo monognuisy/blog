@@ -1,14 +1,14 @@
 @use 'constants';
 
-@import './fonts';
-@import './codeblock';
-@import './blog';
-@import './mdx';
-@import './katex';
+@use './fonts';
+@use './codeblock';
+@use './blog';
+@use './mdx';
+@use './katex';
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@use 'tailwindcss/base';
+@use 'tailwindcss/components';
+@use 'tailwindcss/utilities';
 
 // TODO: Handle darkmode
 

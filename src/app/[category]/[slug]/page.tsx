@@ -15,14 +15,14 @@ import customMDX from '@/lib/mdxCompiler';
 import { notFound } from 'next/navigation';
 
 type TPostPageProps = {
-  params: {
+  params: Promise<{
     category: string;
     slug: string;
-  };
+  }>;
 };
 
 const generateMetadata = async ({ params }: TPostPageProps) => {
-  const { category, slug } = params;
+  const { category, slug } = await params;
 
   try {
     const { frontmatter } = getPostData(category, slug);
@@ -47,7 +47,7 @@ const generateMetadata = async ({ params }: TPostPageProps) => {
         },
       },
     } satisfies Metadata;
-  } catch (error) {
+  } catch {
     //
   }
   return {};
@@ -67,11 +67,11 @@ const generateStaticParams = async () => {
       category,
       slug,
     };
-  }) satisfies TPostPageProps['params'][];
+  }) satisfies Awaited<TPostPageProps['params']>[];
 };
 
 const PostPage = async ({ params }: TPostPageProps) => {
-  const { category, slug } = params;
+  const { category, slug } = await params;
   const fullPath = getPostPath(category, slug);
 
   try {
@@ -97,7 +97,7 @@ const PostPage = async ({ params }: TPostPageProps) => {
         </div>
       </>
     );
-  } catch (error) {
+  } catch {
     // 못 찾았을 시 404 페이지로 이동
     notFound();
   }

@@ -2,7 +2,6 @@ import path from 'path';
 import matter from 'gray-matter';
 import fs from 'fs';
 import { TContentHeader } from './type';
-import { serialize } from 'next-mdx-remote/serialize';
 import { ascendingSortFn } from './function';
 import { TFrontmatter } from '@/app/_types/post';
 

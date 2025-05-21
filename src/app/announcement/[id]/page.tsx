@@ -8,9 +8,9 @@ import customMDX from '@/lib/mdxCompiler';
 import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
 
 type TAnnouncementPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 const generateStaticParams = () => {
@@ -18,11 +18,11 @@ const generateStaticParams = () => {
 
   return announcements.map(({ id }) => ({
     id,
-  }));
+  })) satisfies Awaited<TAnnouncementPageProps['params']>[];
 };
 
 const AnnouncementPage = async ({ params }: TAnnouncementPageProps) => {
-  const { id } = params;
+  const { id } = await params;
   const fullPath = getAnnouncementPath(id);
   const postFile = fs.readFileSync(fullPath);
 
