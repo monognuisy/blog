@@ -48,13 +48,28 @@
     list-style-type: decimal;
   }
 
-  & > ul,
-  & > ol {
+  &>ul,
+  &>ol {
     margin-bottom: constants.$spacing-8;
   }
 
   pre {
     margin-bottom: constants.$spacing-8;
+  }
+
+  details {
+    overflow-x: auto;
+
+
+    summary {
+      cursor: pointer;
+
+      &::marker {
+        margin-right: constants.$spacing-2;
+      }
+
+      margin-bottom: constants.$spacing-2;
+    }
   }
 
   // Caption
@@ -84,7 +99,7 @@
       counter-reset: list;
     }
 
-    ol > li {
+    ol>li {
       list-style: none;
       content: '[';
       display: flex;
@@ -95,7 +110,7 @@
       }
     }
 
-    ol > li:before {
+    ol>li:before {
       content: '[' counter(list) ']';
       counter-increment: list;
       margin-left: -1.5em;
@@ -104,7 +119,7 @@
     }
   }
 
-  sup > a {
+  sup>a {
     color: constants.$color-primary;
     scroll-margin-top: 100px;
   }
