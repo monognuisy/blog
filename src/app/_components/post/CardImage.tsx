@@ -22,7 +22,7 @@ const CardImage = ({
       fill
       sizes={sizes}
       className={className}
-      quality={100}
+      quality={80}
       priority={priority}
     />
   );
