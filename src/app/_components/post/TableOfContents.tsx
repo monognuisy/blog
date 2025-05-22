@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { TocItem } from '@/lib/extractToc';
+
+export type TocItem = {
+  id: string; // 헤더 요소의 ID
+  text: string; // 헤더 텍스트
+  level: number; // 헤더 레벨 (1, 2, 3)
+};
 
 interface TableOfContentsProps {
   toc?: TocItem[]; // 서버에서 전달된 목차 (선택적)
@@ -89,7 +94,7 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   };
 
   return (
-    <aside className="toc-container sticky mt-24 top-20 left-4 z-10 w-64 h-fit p-4 hidden lg:block text-sm">
+    <aside className="toc-container sticky mt-20 top-20 left-8 z-10 w-64 h-fit p-4 hidden lg:block text-sm">
       <nav>
         <ul className="space-y-2">
           {toc.map(({ id, text, level }) => {

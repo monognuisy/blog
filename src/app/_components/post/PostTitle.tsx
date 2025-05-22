@@ -11,7 +11,7 @@ const PostTitle = ({ post }: TPostTitleProps) => {
 
   return (
     <div className="w-full">
-      <div className="h-[calc(100vh-60px)]">
+      <div className="h-[calc(100vh-60px)] relative">
         <CardImage
           cover={cover}
           alt={`Cover image of latest post`}

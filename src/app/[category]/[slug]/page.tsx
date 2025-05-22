@@ -91,10 +91,10 @@ const PostPage = async ({ params }: TPostPageProps) => {
             <PostTitle post={frontmatter} />
           </div>
 
-          <div className="bg-white dark:bg-dark-bg grid grid-cols-[1fr_auto_1fr] items-start">
+          <div className="bg-white dark:bg-dark-bg lg:grid lg:grid-cols-[1fr_auto_1fr] items-start">
             {/* 목차 사이드바 */}
             <TableOfContents />
-            <div className="post-wrapper relative mx-auto pt-20 max-w-[800px] px-4">
+            <div className="post-wrapper relative mx-auto pt-10 max-w-[800px] px-4">
               {content}
               <AdjacentPostLinks prev={prev} next={next} />
               <Comment />
