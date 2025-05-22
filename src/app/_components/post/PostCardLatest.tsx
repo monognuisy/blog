@@ -24,6 +24,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
             cover={cover}
             alt={`Cover image of latest post`}
             className="rounded-2xl object-cover z-[0]"
+            priority
           />
           <div className="w-full h-full grid grid-rows-[2fr_1fr]">
             <div></div>
