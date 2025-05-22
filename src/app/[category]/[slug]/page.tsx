@@ -13,6 +13,7 @@ import PostTitle from '@/app/_components/post/PostTitle';
 import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
 import { notFound } from 'next/navigation';
+import TableOfContents from '@/app/_components/post/TableOfContents';
 
 type TPostPageProps = {
   params: Promise<{
@@ -85,10 +86,15 @@ const PostPage = async ({ params }: TPostPageProps) => {
 
     return (
       <>
-        <div className="relative">
-          <PostTitle post={frontmatter} />
-          <div className="bg-white dark:bg-dark-bg translate-y-[100vh]">
-            <div className="post-wrapper relative mx-auto pt-20 max-w-[1024px] px-4">
+        <div>
+          <div>
+            <PostTitle post={frontmatter} />
+          </div>
+
+          <div className="bg-white dark:bg-dark-bg lg:grid lg:grid-cols-[1fr_auto_1fr] items-start">
+            {/* 목차 사이드바 */}
+            <TableOfContents />
+            <div className="post-wrapper relative mx-auto pt-10 max-w-[800px] px-4">
               {content}
               <AdjacentPostLinks prev={prev} next={next} />
               <Comment />

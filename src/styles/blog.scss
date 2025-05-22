@@ -48,8 +48,8 @@
     list-style-type: decimal;
   }
 
-  & > ul,
-  & > ol {
+  &>ul,
+  &>ol {
     margin-bottom: constants.$spacing-8;
   }
 
@@ -84,7 +84,7 @@
       counter-reset: list;
     }
 
-    ol > li {
+    ol>li {
       list-style: none;
       content: '[';
       display: flex;
@@ -95,7 +95,7 @@
       }
     }
 
-    ol > li:before {
+    ol>li:before {
       content: '[' counter(list) ']';
       counter-increment: list;
       margin-left: -1.5em;
@@ -104,7 +104,7 @@
     }
   }
 
-  sup > a {
+  sup>a {
     color: constants.$color-primary;
     scroll-margin-top: 100px;
   }
@@ -116,5 +116,37 @@
 
   [data-footnote-ref]::after {
     content: ']';
+  }
+}
+
+/* 목차 관련 스타일 */
+.toc-container {
+  scrollbar-width: thin;
+}
+
+.toc-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.toc-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 20px;
+}
+
+/* 헤더에 ID 앵커 링크를 위한 패딩 추가 */
+h2,
+h3,
+h4 {
+  scroll-margin-top: 120px;
+  padding-top: 0.5rem;
+}
+
+@media (min-width: 1280px) {
+  .post-wrapper {
+    padding-right: 20rem;
   }
 }
