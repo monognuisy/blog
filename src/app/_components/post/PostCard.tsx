@@ -19,6 +19,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
             <CardImage
               cover={cover}
               alt={`Cover image of ${slug}`}
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="rounded-2xl object-cover"
             />
           </div>

@@ -3,18 +3,27 @@ import Image from 'next/image';
 type TCardImageProps = {
   className?: string;
   cover?: string;
+  sizes?: string;
   alt: string;
+  priority?: boolean;
 };
 
-const CardImage = ({ className, cover, alt }: TCardImageProps) => {
+const CardImage = ({
+  className,
+  cover,
+  alt,
+  sizes = '100vw',
+  priority = false,
+}: TCardImageProps) => {
   return (
     <Image
       src={cover ? `/images/cover/${cover}.webp` : '/images/sample-bg.webp'}
-      priority
       alt={alt}
       fill
-      sizes="100vw"
+      sizes={sizes}
       className={className}
+      quality={100}
+      priority={priority}
     />
   );
 };

@@ -16,6 +16,7 @@ const PostTitle = ({ post }: TPostTitleProps) => {
           cover={cover}
           alt={`Cover image of latest post`}
           className="object-cover"
+          priority
         />
         <div className="relative flex flex-col justify-end w-full h-full z-[2]">
           <div className="w-full bg-white/50 dark:bg-black/50 shadow-lg backdrop-blur-sm py-16">
