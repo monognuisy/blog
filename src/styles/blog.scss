@@ -84,6 +84,10 @@
 
     .data-footnote-backref {
       color: var(--color-primary);
+
+      sup.outer-link {
+        display: none !important;
+      }
     }
 
     ol {
@@ -110,9 +114,15 @@
     }
   }
 
-  sup>a {
+  // Footnote anchor 설정
+
+  [data-footnote-ref] {
     color: constants.$color-primary;
     scroll-margin-top: 100px;
+
+    sup.outer-link {
+      display: none !important;
+    }
   }
 
   /* Place `[` and `]` around footnote references. */

@@ -108,7 +108,12 @@ const CustomMDXComponents = (
         )}
       </>
     ),
-    a: (props) => <Link href={props.href ?? ''} {...props} />,
+    a: (props) => (
+      <Link href={props.href ?? ''} {...props}>
+        {props.children}
+        <sup className="outer-link text-xs">↗</sup>
+      </Link>
+    ),
     pre: (props) => <Pre {...(props as TPreProps)} />,
     Highlight,
     LinkCard,
