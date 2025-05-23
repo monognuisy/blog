@@ -5,14 +5,8 @@ import Pre, { TPreProps } from './codeblock/Pre';
 import Link from 'next/link';
 import React from 'react';
 import { cn } from '@/lib/styles';
-
-type THighlightProps = {
-  color: 'blue' | 'red' | 'yellow';
-  children: React.ReactNode;
-};
-const Highlight = ({ color = 'blue', children }: THighlightProps) => {
-  return <span className={`mdx highlight ${color}`}>{children}</span>;
-};
+import Highlight from './custom/Highlight';
+import Note from './custom/Note';
 
 // 텍스트에서 ID 생성 함수
 const generateIdFromText = (text: string | React.ReactNode): string => {
@@ -117,6 +111,7 @@ const CustomMDXComponents = (
     pre: (props) => <Pre {...(props as TPreProps)} />,
     Highlight,
     LinkCard,
+    Note,
   };
 };
 
