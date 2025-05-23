@@ -4,13 +4,9 @@ import LinkCard from './LinkCard';
 import Pre, { TPreProps } from './codeblock/Pre';
 import Link from 'next/link';
 import React from 'react';
-type THighlightProps = {
-  color: 'blue' | 'red' | 'yellow';
-  children: React.ReactNode;
-};
-const Highlight = ({ color = 'blue', children }: THighlightProps) => {
-  return <span className={`mdx highlight ${color}`}>{children}</span>;
-};
+import { cn } from '@/lib/styles';
+import Highlight from './custom/Highlight';
+import Note from './custom/Note';
 
 // 텍스트에서 ID 생성 함수
 const generateIdFromText = (text: string | React.ReactNode): string => {
@@ -44,13 +40,7 @@ const generateIdFromText = (text: string | React.ReactNode): string => {
     ); // 빈 문자열이면 랜덤 ID 생성
   };
 
-  const generatedId = generator(text);
-
-  if (generatedId === defaultRandomId) {
-    return defaultRandomId;
-  }
-
-  return generatedId + defaultRandomId;
+  return generator(text);
 };
 
 /**
@@ -60,54 +50,89 @@ const generateIdFromText = (text: string | React.ReactNode): string => {
 const CustomMDXComponents = (
   category: string,
   slug: string,
-): React.ComponentProps<typeof MDXProvider>['components'] => ({
-  h1: (props) => {
-    const id = props.id || generateIdFromText(props.children);
-    return <h1 id={id} className="text-3xl font-bold mt-6 mb-4" {...props} />;
-  },
-  h2: (props) => {
-    const id = props.id || generateIdFromText(props.children);
-    return (
-      <h2
-        id={id}
-        className="text-2xl font-bold mt-8 mb-4 pt-6 border-t border-gray-200 dark:border-gray-700"
-        {...props}
-      />
-    );
-  },
-  h3: (props) => {
-    const id = props.id || generateIdFromText(props.children);
-    return (
-      <h3 id={id} className="text-xl font-semibold mt-6 mb-3 pt-4" {...props} />
-    );
-  },
-  h4: (props) => {
-    const id = props.id || generateIdFromText(props.children);
-    return <h4 id={id} className="text-lg font-medium mt-4 mb-2" {...props} />;
-  },
-  img: (props) => (
-    <>
-      {props.src && (
-        <>
-          <Link href={`/images/post/${category}/${slug}/${props.src}`}>
-            <Image
-              {...props}
-              alt={props.alt || ''}
-              src={`/images/post/${category}/${slug}/${props.src}`}
-              width={1024}
-              height={1024}
-              className="w-full max-w-[768px] h-auto mx-auto"
-            />
-          </Link>
-          <em className="inline-block mt-2 image-caption">{props.alt}</em>
-        </>
-      )}
-    </>
-  ),
-  a: (props) => <Link href={props.href ?? ''} {...props} />,
-  pre: (props) => <Pre {...(props as TPreProps)} />,
-  Highlight,
-  LinkCard,
-});
+): React.ComponentProps<typeof MDXProvider>['components'] => {
+  return {
+    h1: (props) => {
+      const id = props.id || generateIdFromText(props.children);
+      return <h1 id={id} className="text-3xl font-bold mt-6 mb-4" {...props} />;
+    },
+    h2: (props) => {
+      const id = props.id || generateIdFromText(props.children);
+      return (
+        <div className="*:text-2xl *:font-bold mt-8 mb-4 pt-6 border-t border-gray-200 dark:border-gray-700 relative group">
+          <HeaderAnchor level={2} id={id} className="top-6" />
+          <h2 id={id} className="m-0 p-0" {...props} />
+        </div>
+      );
+    },
+    h3: (props) => {
+      const id = props.id || generateIdFromText(props.children);
+      return (
+        <div className="*:text-xl *:font-semibold mt-6 mb-3 pt-4 relative group">
+          <HeaderAnchor level={3} id={id} className="top-4" />
+          <h3 id={id} className="m-0 p-0" {...props} />
+        </div>
+      );
+    },
+    h4: (props) => {
+      const id = props.id || generateIdFromText(props.children);
+      return (
+        <div className="*:text-lg *:font-medium mt-4 mb-2 relative group">
+          <HeaderAnchor level={4} id={id} className="top-0" />
+          <h4 id={id} className="m-0 p-0" {...props} />
+        </div>
+      );
+    },
+    img: (props) => (
+      <>
+        {props.src && (
+          <>
+            <Link href={`/images/post/${category}/${slug}/${props.src}`}>
+              <Image
+                {...props}
+                alt={props.alt || ''}
+                src={`/images/post/${category}/${slug}/${props.src}`}
+                width={1024}
+                height={1024}
+                className="w-full max-w-[768px] h-auto mx-auto"
+              />
+            </Link>
+            <em className="inline-block mt-2 image-caption">{props.alt}</em>
+          </>
+        )}
+      </>
+    ),
+    a: (props) => (
+      <Link href={props.href ?? ''} {...props}>
+        {props.children}
+        <sup className="outer-link text-xs">↗</sup>
+      </Link>
+    ),
+    pre: (props) => <Pre {...(props as TPreProps)} />,
+    Highlight,
+    LinkCard,
+    Note,
+  };
+};
 
 export default CustomMDXComponents;
+
+interface IHeaderAnchorProps {
+  id: string;
+  level: 2 | 3 | 4;
+  className?: string;
+}
+
+const HeaderAnchor = ({ level, id, className }: IHeaderAnchorProps) => {
+  return (
+    <Link
+      href={`#${id}`}
+      className={cn(
+        'group-hover:opacity-100 opacity-0 transition-opacity duration-300 ease-in-out absolute text-right -left-2 -translate-x-full cursor-pointer',
+        className,
+      )}
+    >
+      {`#`.repeat(level - 1)}
+    </Link>
+  );
+};

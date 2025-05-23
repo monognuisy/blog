@@ -271,15 +271,13 @@ function cached(callback) {
 
 #### 번외) 순환 참조의 처리
 
-(아직 설명에 미흡한 부분이 많을 수 있습니다. 추후 보충하겠습니다)
+(아직 설명에 미흡한 부분이 있을 수 있습니다. 추후 보충하겠습니다)
 
-<details>
-<summary>참고</summary>
+<Note title="참고" variant="note">
 - [https://dl.acm.org/doi/pdf/10.1145/263700.263733](https://dl.acm.org/doi/pdf/10.1145/263700.263733)
 - [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management#weakmaps_and_weaksets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management#weakmaps_and_weaksets)
-</details>
+</Note>
 
-\
 WeakMap 에서 다음과 같이 순환 참조가 되어 있을 때에도 약한 참조가 유지될까?
 
 ```tsx
