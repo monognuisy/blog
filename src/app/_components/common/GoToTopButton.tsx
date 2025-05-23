@@ -33,11 +33,11 @@ const GoToTopButton = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed right-[24px] bottom-[24px] md:right-[48px] md:bottom-[48px] rounded-full bg-white dark:bg-dark-bg
-            border-2 dark:border-gray-800 w-[32px] h-[32px] md:w-[48px] md:h-[48px] flex justify-center items-center 
-             shadow-lg text-xl"
+          className="fixed right-6 bottom-6 md:right-8 md:bottom-8 rounded-full bg-white dark:bg-dark-bg
+            border-2 dark:border-gray-800 w-8 h-8 md:w-8 md:h-8 flex justify-center items-center 
+            shadow-lg text-sm"
         >
-          <ArrowUpwardIcon className="text-xl md:text-2xl" />
+          <ArrowUpwardIcon className="text-base" />
         </button>
       )}
     </>

@@ -20,6 +20,7 @@ const Header = () => {
               width={logoSize}
               height={logoSize}
               className="block dark:hidden"
+              unoptimized
             />
             <Image
               src={`${basePath}/images/logo-dark.webp`}
@@ -27,6 +28,7 @@ const Header = () => {
               width={logoSize}
               height={logoSize}
               className="hidden dark:block"
+              unoptimized
             />
           </Link>
           <SlugPath />
