@@ -69,11 +69,17 @@
   }
 
   .footnotes {
-    border-top: 1px solid rgb(229, 231, 235);
-    padding-top: 2rem;
+    padding-top: 0;
 
     h2 {
-      display: none;
+      padding-top: 0;
+      margin-top: 0;
+      visibility: hidden;
+
+      &::before {
+        visibility: visible;
+        content: '각주';
+      }
     }
 
     .data-footnote-backref {
