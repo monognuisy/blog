@@ -94,7 +94,7 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   };
 
   return (
-    <aside className="toc-container sticky mt-20 top-20 left-8 z-10 w-64 h-fit p-4 hidden lg:block text-sm">
+    <aside className="toc-container sticky mt-20 top-20 z-10 w-64 h-fit p-4 hidden lg:block text-sm">
       <nav>
         <ul className="space-y-2">
           {toc.map(({ id, text, level }) => {
@@ -107,9 +107,9 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
               <li key={id} className={`toc-item ${indentClass}`}>
                 <Link
                   href={`#${id}`}
-                  className={`block py-1 ${fontSize} hover:text-primary dark:hover:text-primary-dark transition-colors ${
+                  className={`block ${fontSize} pb-1 hover:text-primary dark:hover:text-primary-dark transition-colors ${
                     activeId === id
-                      ? 'text-primary dark:text-primary-dark font-medium border-l-2 border-primary dark:border-primary-dark pl-2'
+                      ? 'text-primary dark:text-primary-dark font-bold '
                       : 'text-gray-700 dark:text-gray-300'
                   }`}
                   onClick={(e) => {
