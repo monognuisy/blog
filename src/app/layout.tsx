@@ -15,8 +15,12 @@ export const viewport: Viewport = {
   ],
 };
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(`${process.env.NEXT_PUBLIC_URI ?? 'localhost:3000'}`),
+  metadataBase: new URL(
+    isProduction ? process.env.NEXT_PUBLIC_URI! : 'http://localhost:3000',
+  ),
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
   verification: {
@@ -30,15 +34,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'monognuisy blog',
     description: 'Technical blog about web development, programming, and more.',
-    url: `${process.env.NEXT_PUBLIC_URI}`,
+    url: '/',
     siteName: 'monognuisy blog',
-    locale: 'en_US',
+    locale: 'ko_KR',
     type: 'website',
     images: [
       {
         url: `/images/cover/blog-cover.webp`,
         width: 1200,
         height: 630,
+        alt: 'monognuisy blog cover image',
       },
     ],
   },
