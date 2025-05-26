@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import SearchBar from '../header/SearchBar';
 import SlugPath from '../header/SlugPath';
-import { basePath } from '@/../next.config';
 import Link from 'next/link';
 import ScrollProgressBar from '../header/ScrollProgressBar';
 import DarkmodeToggleButton from '../header/DarkmodeToggleButton';
@@ -15,7 +14,7 @@ const Header = () => {
         <section className="flex-grow flex items-center gap-3">
           <Link href={'/'} style={{ minWidth: logoSize, minHeight: logoSize }}>
             <Image
-              src={`${basePath}/images/logo.webp`}
+              src={`/images/logo.webp`}
               alt="Logo"
               width={logoSize}
               height={logoSize}
@@ -23,7 +22,7 @@ const Header = () => {
               unoptimized
             />
             <Image
-              src={`${basePath}/images/logo-dark.webp`}
+              src={`/images/logo-dark.webp`}
               alt="Logo"
               width={logoSize}
               height={logoSize}

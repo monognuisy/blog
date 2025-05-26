@@ -15,10 +15,36 @@ export const viewport: Viewport = {
   ],
 };
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(`${process.env.NEXT_PUBLIC_URI ?? 'localhost:3000'}`),
+  metadataBase: new URL(
+    isProduction ? process.env.NEXT_PUBLIC_URI! : 'http://localhost:3000',
+  ),
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
+  openGraph: {
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    url: 'https://monognuisy.github.io/blog',
+    siteName: 'monognuisy blog',
+    locale: 'ko_KR',
+    type: 'website',
+    images: [
+      {
+        url: `/images/cover/blog-cover.webp`,
+        width: 1200,
+        height: 630,
+        alt: 'monognuisy blog cover image',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    images: [`/images/cover/blog-cover.webp`],
+  },
   verification: {
     google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
   },
@@ -26,21 +52,6 @@ export const metadata: Metadata = {
     icon: `/icons/favicon-32x32.png`,
     shortcut: `/icons/favicon.ico`,
     apple: `/icons/apple-touch-icon.png`,
-  },
-  openGraph: {
-    title: 'monognuisy blog',
-    description: 'Technical blog about web development, programming, and more.',
-    url: `${process.env.NEXT_PUBLIC_URI}`,
-    siteName: 'monognuisy blog',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: `/images/cover/blog-cover.webp`,
-        width: 1200,
-        height: 630,
-      },
-    ],
   },
 };
 
@@ -54,6 +65,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
         <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
+        <title>monognuisy blog</title>
+        <meta
+          name="description"
+          content="Technical blog about web development, programming, and more."
+        />
       </head>
       <body className="antialiased">
         <QueryProvider>

@@ -2,7 +2,7 @@ import { TContentHeader } from '@/lib/type';
 import TagList from './TagList';
 import Link from 'next/link';
 import CardImage from './CardImage';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ArrowRight } from 'lucide-react';
 
 type TCategoryPostCardProps = {
   post: TContentHeader;
@@ -38,7 +38,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
             href={`/${post.category}/${post.slug}`}
             className="font-bold text-highlight hover:underline text-xl"
           >
-            Read more <ArrowForwardIcon />
+            Read more <ArrowRight className='inline' />
           </Link>
         </div>
       </div>
