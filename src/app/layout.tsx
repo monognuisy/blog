@@ -23,18 +23,10 @@ export const metadata: Metadata = {
   ),
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
-  verification: {
-    google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
-  },
-  icons: {
-    icon: `/icons/favicon-32x32.png`,
-    shortcut: `/icons/favicon.ico`,
-    apple: `/icons/apple-touch-icon.png`,
-  },
   openGraph: {
     title: 'monognuisy blog',
     description: 'Technical blog about web development, programming, and more.',
-    url: '/',
+    url: 'https://monognuisy.github.io/blog',
     siteName: 'monognuisy blog',
     locale: 'ko_KR',
     type: 'website',
@@ -46,6 +38,20 @@ export const metadata: Metadata = {
         alt: 'monognuisy blog cover image',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    images: [`/images/cover/blog-cover.webp`],
+  },
+  verification: {
+    google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
+  },
+  icons: {
+    icon: `/icons/favicon-32x32.png`,
+    shortcut: `/icons/favicon.ico`,
+    apple: `/icons/apple-touch-icon.png`,
   },
 };
 
@@ -59,6 +65,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
         <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
+        <title>monognuisy blog</title>
+        <meta
+          name="description"
+          content="Technical blog about web development, programming, and more."
+        />
       </head>
       <body className="antialiased">
         <QueryProvider>
