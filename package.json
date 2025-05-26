@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prebuild": "next lint && yarn tsc",
     "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true"
   },
   "dependencies": {
