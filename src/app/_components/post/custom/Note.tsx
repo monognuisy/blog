@@ -1,7 +1,6 @@
 'use client';
 
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { AlertCircle, Info, Pen, AlertTriangle, Lightbulb } from 'lucide-react';
+import { AlertCircle, Info, Pen, AlertTriangle, Lightbulb, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/styles';
 
@@ -74,7 +73,7 @@ const Note = ({
           <span className={cn('font-bold block')}>{title}</span>
         </div>
         {!lock && (
-          <UnfoldMoreIcon
+          <ChevronsUpDown
             className={cn('w-4 h-4 ml-auto')}
             onClick={() => setIsOpen(!isOpen)}
           />

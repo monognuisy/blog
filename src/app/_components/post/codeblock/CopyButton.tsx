@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CheckIcon from '@mui/icons-material/Check';
 import { cn } from '@/lib/styles';
+import { Check, Copy } from 'lucide-react';
 
 type TCopyButtonProps = {
   raw: string;
@@ -25,7 +24,7 @@ const CopyButton = ({ raw, className }: TCopyButtonProps) => {
   return (
     <button
       className={cn(
-        'hidden copy-button rounded-md p-1 absolute top-2 right-2 ease-in-out duration-300 group-hover:block',
+        'opacity-0 copy-button rounded-md p-1 absolute top-2 right-2 ease-in-out duration-300 group-hover:opacity-100',
         className,
       )}
       style={{
@@ -34,9 +33,9 @@ const CopyButton = ({ raw, className }: TCopyButtonProps) => {
       onClick={handleCopy}
     >
       {isCopied ? (
-        <CheckIcon className="text-gray-500" fontSize="small" />
+        <Check className="text-gray-500 w-4 h-4" />
       ) : (
-        <ContentCopyIcon className="text-gray-500" fontSize="small" />
+        <Copy className="text-gray-500 w-4 h-4" />
       )}
     </button>
   );
