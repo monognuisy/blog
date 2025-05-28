@@ -5,8 +5,8 @@ import Header from './_components/common/Header';
 import Footer from './_components/common/Footer';
 import GoToTopButton from './_components/common/GoToTopButton';
 import QueryProvider from './_providers/QueryProvider';
-import CustomThemeProvider from './_providers/CustomThemeProvider';
 import ThemeColorSetter from './_components/common/ThemeColorSetter';
+import { ThemeProvider } from 'next-themes';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'monognuisy blog',
     description: 'Technical blog about web development, programming, and more.',
-    url: 'https://monognuisy.github.io/blog',
+    url: `${process.env.NEXT_PUBLIC_URI}`,
     siteName: 'monognuisy blog',
     locale: 'ko_KR',
     type: 'website',
@@ -61,19 +61,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <head>
-        <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
-        <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
-        <title>monognuisy blog</title>
-        <meta
-          name="description"
-          content="Technical blog about web development, programming, and more."
-        />
-      </head>
+    <html lang="ko" suppressHydrationWarning>
+      <head></head>
       <body className="antialiased">
         <QueryProvider>
-          <CustomThemeProvider>
+          <ThemeProvider attribute="class">
             <ThemeColorSetter />
             <div className="min-h-[100dvh] dark:bg-dark-bg dark:text-dark-text">
               <Header />
@@ -83,7 +75,7 @@ export default function RootLayout({
               <GoToTopButton />
               <Footer />
             </div>
-          </CustomThemeProvider>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>
