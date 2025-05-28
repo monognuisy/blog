@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'monognuisy blog',
     description: 'Technical blog about web development, programming, and more.',
-    url: 'https://monognuisy.github.io/blog',
+    url: `${process.env.NEXT_PUBLIC_URI}`,
     siteName: 'monognuisy blog',
     locale: 'ko_KR',
     type: 'website',
@@ -62,15 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href={`/icons/favicon.ico`} sizes="any" />
-        <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png`} />
-        <title>monognuisy blog</title>
-        <meta
-          name="description"
-          content="Technical blog about web development, programming, and more."
-        />
-      </head>
+      <head></head>
       <body className="antialiased">
         <QueryProvider>
           <ThemeProvider attribute="class">
