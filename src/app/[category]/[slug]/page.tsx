@@ -8,7 +8,7 @@ import fs from 'fs';
 import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
 import { TFrontmatter } from '@/app/_types/post';
 import Comment from '@/app/_components/utterance/Comment';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import PostTitle from '@/app/_components/post/PostTitle';
 import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
@@ -22,7 +22,9 @@ type TPostPageProps = {
   }>;
 };
 
-const generateMetadata = async ({ params }: TPostPageProps) => {
+const generateMetadata = async ({
+  params,
+}: TPostPageProps): Promise<Metadata> => {
   const { category, slug } = await params;
 
   try {
@@ -42,16 +44,28 @@ const generateMetadata = async ({ params }: TPostPageProps) => {
         type: 'article',
         url,
         siteName: 'monognuisy blog',
-        images: {
-          url: imgPath,
-          alt: title,
-        },
+        images: [
+          {
+            url: imgPath,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: [imgPath],
       },
     } satisfies Metadata;
-  } catch {
-    //
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'monognuisy blog',
+      description:
+        'Technical blog about web development, programming, and more.',
+    };
   }
-  return {};
 };
 
 // Note: Need to return `Promise<params[]>` for PostPage
