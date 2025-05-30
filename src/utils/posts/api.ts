@@ -1,4 +1,4 @@
-import { TMetadata } from '@/app/_types/post';
+import { TMetadata } from '@/types/post';
 import { API } from '../api';
 
 const PostApi = {

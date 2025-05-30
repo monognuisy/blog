@@ -2,8 +2,8 @@ import {
   getAllCategories,
   getSortedPostListByCategory,
 } from '@/lib/getBlogPost';
-import CategoryPostCard from '../_components/post/CategoryPostCard';
-import PostCard from '../_components/post/PostCard';
+import CategoryPostCard from '../../components/post/CategoryPostCard';
+import PostCard from '../../components/post/PostCard';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

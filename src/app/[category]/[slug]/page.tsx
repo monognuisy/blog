@@ -5,15 +5,15 @@ import {
   getAdjacentPosts,
 } from '@/lib/getBlogPost';
 import fs from 'fs';
-import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
-import { TFrontmatter } from '@/app/_types/post';
-import Comment from '@/app/_components/utterance/Comment';
+import CustomMDXComponents from '@/components/post/CustomMDXComponents';
+import { TFrontmatter } from '@/types/post';
+import Comment from '@/components/utterance/Comment';
 import type { Metadata } from 'next';
-import PostTitle from '@/app/_components/post/PostTitle';
-import AdjacentPostLinks from '@/app/_components/post/AdjacentPostLinks';
+import PostTitle from '@/components/post/PostTitle';
+import AdjacentPostLinks from '@/components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
 import { notFound } from 'next/navigation';
-import TableOfContents from '@/app/_components/post/TableOfContents';
+import TableOfContents from '@/components/post/TableOfContents';
 
 type TPostPageProps = {
   params: Promise<{

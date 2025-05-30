@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import '../styles/global.scss';
 import 'katex/dist/katex.min.css'; // Apply KaTeX style
-import Header from './_components/common/Header';
-import Footer from './_components/common/Footer';
-import GoToTopButton from './_components/common/GoToTopButton';
-import QueryProvider from './_providers/QueryProvider';
-import ThemeColorSetter from './_components/common/ThemeColorSetter';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
+import GoToTopButton from '../components/common/GoToTopButton';
+import QueryProvider from '../providers/QueryProvider';
+import ThemeColorSetter from '../components/common/ThemeColorSetter';
 import { ThemeProvider } from 'next-themes';
 
 export const viewport: Viewport = {
