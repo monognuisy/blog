@@ -1,3 +1,3 @@
-import axios from 'axios';
+import ky from 'ky';
 
-export const API = axios;
+export const API = ky.create({});
