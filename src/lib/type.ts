@@ -1,4 +1,4 @@
-import { TFrontmatter } from '@/app/_types/post';
+import { TFrontmatter } from '@/types/post';
 
 type TContentHeader = {
   id: string;

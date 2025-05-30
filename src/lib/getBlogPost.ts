@@ -3,7 +3,7 @@ import matter from 'gray-matter';
 import fs from 'fs';
 import { TContentHeader } from './type';
 import { ascendingSortFn } from './function';
-import { TFrontmatter } from '@/app/_types/post';
+import { TFrontmatter } from '@/types/post';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 

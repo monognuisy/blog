@@ -1,7 +1,7 @@
 'use client';
 
-import { TMetadata } from '@/app/_types/post';
-import { ogTagsQuery } from '@/app/_utils/posts/query';
+import { TMetadata } from '@/types/post';
+import { ogTagsQuery } from '@/utils/posts/query';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';

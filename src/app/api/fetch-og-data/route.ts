@@ -1,5 +1,5 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
+import ky from 'ky';
 import { NextResponse } from 'next/server';
 
 type TURLResponse = {
@@ -20,8 +20,7 @@ export const POST = async (request: Request) => {
 
   try {
     // Fetch og tags from the URL
-
-    const { data } = await axios.get(url);
+    const data = await ky.get(url).text();
     const $ = cheerio.load(data);
 
     // OG 태그 파싱

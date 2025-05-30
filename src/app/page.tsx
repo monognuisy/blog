@@ -1,5 +1,5 @@
-import PostList from '@/app/_components/post/PostList';
-import AnnouncementCard from './_components/announcement/AnnouncementCard';
+import PostList from '@/components/post/PostList';
+import AnnouncementCard from '../components/announcement/AnnouncementCard';
 import { getRecentAnnouncements } from '@/lib/getAnnouncement';
 
 export default function Home() {

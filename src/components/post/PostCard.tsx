@@ -1,4 +1,4 @@
-import { TFrontmatter } from '@/app/_types/post';
+import { TFrontmatter } from '@/types/post';
 import Link from 'next/link';
 import TagList from './TagList';
 import CardImage from './CardImage';

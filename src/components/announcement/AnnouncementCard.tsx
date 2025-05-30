@@ -1,4 +1,4 @@
-import { TAnnouncement } from '@/app/_types/announcement';
+import { TAnnouncement } from '@/types/announcement';
 import Link from 'next/link';
 
 type TAnnouncementCardProps = {
