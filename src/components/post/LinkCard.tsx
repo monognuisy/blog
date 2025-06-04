@@ -43,9 +43,9 @@ const LinkCard = ({ url }: TLinkCardProps) => {
       href={url}
       rel="noopener noreferrer"
       target="_blank"
-      className="link-card"
+      className="link-card block mb-8"
     >
-      <div className="rounded-xl border p-2 flex gap-4 mb-8">
+      <div className="rounded-xl border p-2 flex gap-4">
         {metadata?.image && (
           <div className="flex shrink-0 items-center">
             <Image
@@ -58,19 +58,14 @@ const LinkCard = ({ url }: TLinkCardProps) => {
           </div>
         )}
         <div className="flex-shrink max-h-[100px] md:max-h-[150px] flex flex-col">
-          <h3 className="text-base md:text-xl line-clamp-1">
+          <p className="text-base md:text-xl line-clamp-1 font-bold shrink mb-3">
             {metadata?.title || 'No title available'}
-          </h3>
-          <p
-            className="text-gray-500 text-sm md:text-base line-clamp-1 md:line-clamp-3 md:flex-1"
-            style={{
-              marginBottom: `0`,
-            }}
-          >
+          </p>
+          <p className="text-gray-500 text-sm md:text-base line-clamp-1 md:line-clamp-3 md:flex-1 mb-0">
             {metadata?.description || 'No description available'}
           </p>
           <p
-            className="text-gray-500 text-xs md:text-sm line-clamp-1"
+            className="text-gray-500 text-xs md:text-sm line-clamp-1 mt-1 shrink"
             style={{
               marginBottom: `0`,
             }}

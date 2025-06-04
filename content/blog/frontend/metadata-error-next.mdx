@@ -1,0 +1,296 @@
+---
+title: 메타데이터 적용 안되는 문제 해결 (feat. streaming metadata)
+date: '2025-06-04'
+description: 'Next.js 15 에서 메타데이터가 제대로 적용되지 않는 문제가 발생했다. 정확한 원인을 찾아보고, 실수로라도 발생하지 않도록 해결해보자.'
+tags: ['Web', 'Frontend', 'Next.js']
+categories: 'Web'
+# cover: 'next-nginx'
+---
+
+<Note title="읽기 전에" variant="warning">
+
+2025-06-04 기준, 문제의 근본적인 원인과 해결방법을 찾기 위해 공식 레포에서 discussion 중입니다. \
+다음 링크를 통해 자유롭게 의견을 제시해주세요.
+
+<LinkCard url="https://github.com/vercel/next.js/discussions/79916" />
+
+</Note>
+
+## next.js 15, react 19로의 업그레이드
+
+next.js 15 에서 react 19 를 완전히 지원한다는 것을 알았고 다른 프로젝트에서 15 버전으로 개발했을 때의 큰 불편함이 없었어서 이 블로그도 슬금슬금 버전 업 각을 보고 있었다. 동시에 tailwindcss 도 v3 에서 v4 로 업그레이드 할까 생각했지만, 완전히 달라진 config 방법으로 인해 한 번에 migration하는 것은 조금 복잡해질 것 같아서, 일단은 next 밑 다른 패키지들만 업그레이드 하고자 하였다.
+
+next.js 15 에서 react 19 를 완전히 지원한다는 것을 알았고 다른 프로젝트에서 15 버전으로 개발했을 때의 큰 불편함이 없었어서 이 블로그도 슬금슬금 버전 업 각을 보고 있었다. 동시에 tailwindcss 도 v3 에서 v4 로 업그레이드 할까 생각했지만, 완전히 달라진 config 방법으로 인해 한 번에 migration하는 것은 조금 복잡해질 것 같아서, 일단은 next 밑 다른 패키지들만 업그레이드 하고자 하였다.
+
+프로젝트는 yarn 으로 패키지를 관리하고 있었어서, 다음 명령어를 통해 인터랙티브 하게 원하는 패키지만 업그레이드를 진행할 수 있었다.
+
+```bash
+yarn upgrade-interactive --latest
+```
+
+간단히 next config 파일의 확장자를 ts 로 바꾸고, eslint 설정 파일을 재구성하는 등의 간단한 migration 과정을 거쳤다. 나아가 params 등을 await 해서 받아오게 바꾸었다.
+
+## 문제 발생: metadata 가 적용되지 않음
+
+그렇게 업그레이드를 하고 블로그를 살펴보던 중, **open graph 태그가 제대로 적용되고 있지 않다**는 것을 알게 되었다. 실제 배포된 블로그에서 개발자 도구로 요소 검사 했을때는 제대로 `<head>` 태그 아래에 open graph 메타 태그가 있었지만, 그것을 제대로 외부 검사 툴들이 크롤링하지 못하는 것으로 보였다.
+
+Open graph 뿐만 아니라, title, description 과 같은 **메타데이터도 제대로 적용되지 않**고 있었다. 이는 SEO에 큰 악영향을 끼칠 수 있기 때문에 블로그로서는 상당히 큰 문제였다.
+
+참고로, 메타데이터는 공식 문서를 따라 다음과 같이 app 의 최상위 `layout.tsx` 에 정의하였다.
+
+```tsx
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    isProduction ? process.env.NEXT_PUBLIC_URI! : 'http://localhost:3000',
+  ),
+  title: 'monognuisy blog',
+  description: 'Technical blog about web development, programming, and more.',
+  openGraph: {
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    url: `${process.env.NEXT_PUBLIC_URI}`,
+    siteName: 'monognuisy blog',
+    locale: 'ko_KR',
+    type: 'website',
+    images: [
+      {
+        url: `/images/cover/blog-cover.webp`,
+        width: 1200,
+        height: 630,
+        alt: 'monognuisy blog cover image',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'monognuisy blog',
+    description: 'Technical blog about web development, programming, and more.',
+    images: [`/images/cover/blog-cover.webp`],
+  },
+  verification: {
+    google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`,
+  },
+  icons: {
+    icon: `/icons/favicon-32x32.png`,
+    shortcut: `/icons/favicon.ico`,
+    apple: `/icons/apple-touch-icon.png`,
+  },
+};
+```
+
+이는 버전 업 과정에서 크게 건드리지 않았기 때문에 문제의 원인이 될 확률은 희박했다.
+
+### 초기 html 파일 분석
+
+외부에서 open graph 등을 받아오는 방법은 어쨌든 내 블로그 주소로 HTTP GET 요청을 보내서 받아온 초기 html 파일을 분석하는 것이라고 생각해서, 개발자 도구의 네트워크 탭에서 최초로 오는 html 요청을 확인하기로 하였다.
+
+![next 14 때의 head 태그 내부. 제대로 metadata 가 적용되어있다.](head-14.png)
+
+![next 15 로 버전 업 후의 head 태그 내부. 있어야 할 metadata 들이 보이지 않는다.](head-15.png)
+
+빠진 것은 메타데이터 뿐만이 아니었다. 원래는 pre-rendered 되어야 했을 body 태그 내의 여러 서버 컴포넌트(SSG)들이 전혀 렌더링되지 않고, 그것들을 대신하여 많은 `<script>` 태그만 있었다.
+
+즉, 마치 CSR 과 같이 작동되고 있음을 알게 되었다.
+
+문제점들을 요약하면 다음과 같다:
+
+- next.js 에서 권장하는 방법대로 정의한 open graph 를 포함한 metadata 가 첫 html 요청에 적용되지 않음
+- body 내의 컴포넌트들이 모두 CSR 됨
+
+## 원인과 해결
+
+### 🧯급한 불은 끄고 보자…
+
+처음 이 문제를 발견했을 때는 원인을 찾기 위해 여러 수정한 파일들을 다시 검토했다. `next.config.ts`, `tsconfig.json` 같은 파일들 말이다. 물론, 단순히 확장자만 바꾸거나 컴파일 타겟만 추가 했을 뿐이기에 아무 소득이 없었다.
+
+결국, 버전 업 보다는 일단 블로그의 SEO 를 크게 방해하는 버그를 해결하는 것이 우선이었기 때문에 **next.js 14, react 18 로 롤백**하였다.
+
+거짓말처럼 문제는 해결되었지만, 계속 원인을 찾기 위해 여러 이슈, 공식 문서들을 찾아보았다. 15.3 이상에서는 Suspense 와 같이 사용하였을 때, 클라이언트 컴포넌트에서 메타데이터가 추가되지 않는 버그가 발생할 수 있다고 알게 되었지만, Suspense 도, 메타데이터를 클라이언트 컴포넌트에서 관리하지도 않았기 때문에 큰 도움은 되지 않았다. 그래서 일단 손수 디버깅을 해보기로 하였다.
+
+### 어이없는 실수!
+
+문제를 찾기 위해서 15 버전에서 디버깅을 진행하였다.
+
+일단 body 내의 컴포넌트들이 모두 CSR 되는 문제와도 연관이 있어보였기 때문에, body 내의 클라이언트 컴포넌트들을 살펴보았다.
+
+```tsx
+// layout.tsx
+
+// ...
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="ko">
+      <head></head>
+      <body className="antialiased">
+        <QueryProvider>
+          <CustomThemeProvider attribute="class">
+            <ThemeColorSetter />
+            {/*  ... */}
+            { children }
+          </CustomThemeProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx
+// CustomThemeProvider.tsx
+
+'use client';
+
+import { ThemeProvider } from 'next-themes';
+import { useEffect, useState } from 'react';
+
+const CustomThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return (
+    <>
+      {isMounted && <ThemeProvider attribute="class">{children}</ThemeProvider>}
+    </>
+  );
+};
+
+export default CustomThemeProvider;
+```
+
+그리고, `CustomThemeProvider` 를 주석처리 하니 더 이상 위의 문제가 발생하지 않았다!
+
+#### body 내의 컴포넌트가 없었던 이유
+
+초기 해당 컴포넌트가 클라이언트에서 마운트 되기 이전에는 null 을 반환하고, 마운트 이후에 `ThemeProvider` 로 감싼 children 이 렌더링된다.
+
+```tsx
+// 서버 측
+null
+
+// 클라이언트 측 (마운트 후)
+<ThemeProvider attribute="class">{children}</ThemeProvider>
+```
+
+당연히, 서버 측에서는 `null` 을 보내기 때문에 body 내에 아무것도 없었던 것이다. (이렇게 허무할 수가!)
+
+따라서, 다음과 같이 마운트가 되지 않았을 때는 그냥 children 을 리턴하게 하면 문제는 해결된다. 😓 (코드리뷰의 필요성 및 중요성…)
+
+```tsx
+if (!isMounted) {
+ return children;
+}
+
+return (
+ <ThemeProvider attribute="class">{children}</ThemeProvider>
+);
+```
+
+혹은, ThemeProvider 이 발생시킬 수 있는 hydration warning 을 막기(무시하기) 위해 `suppressHydrationWarning` 을 최상위 html 태그에 넣어주고, 그대로 사용해도 된다.
+
+```tsx
+<html lang="ko" suppressHydrationWarning>
+  <head></head>
+  <body className="antialiased">
+    <QueryProvider>
+      <ThemeProvider attribute="class">
+        <ThemeColorSetter />
+        {/*  ... */}
+        { children }
+      </ThemeProvider>
+    </QueryProvider>
+  </body>
+</html>
+```
+
+이렇게 코드를 수정하면 발생하는 문제를 해결할 수 있다.
+
+![플래그 on](is-it-done.png)
+
+## 의문점
+
+### 메타데이터는 왜 없지?
+
+해당 코드는 업그레이드 과정에서 수정하지 않았다. 그렇다는 것은, next 14 에서도 동일하게 잘못된 코드를 이용했다는 것인데, 이 때는 정상적으로 메타데이터가 head 내에 들어가 있었다.
+
+사실, 생각해봐도 body 내부가 null 이라고 해서 head 에 들어가야 할 메타데이터가 들어가지 않는다는 것은 조금 이상했다. 실제 브라우저의 요소 검사 툴을 사용해서 보면 들어가있지만, 대부분의 봇이나 open graph scrapper 들에게 보여지는 첫 html 요청에는 포함되지 않았다.
+
+#### 추측) `<meta>` 태그의 hoisting?
+
+처음에 한 추측이다.
+
+react 19 가 되면서 meta 태그를 어디든 배치하더라도 자동으로 head 내에 넣어주는 기능이 도입되었다. 기존에는 [react-helmet](https://github.com/nfl/react-helmet) 과 같은 라이브러리를 사용하거나 `useEffect` 등으로 넣어주어야 했었지만, 이제는 자동으로 head 로 호이스팅해준다.  
+
+next.js 도 이러한 react 의 API 를 사용한다면, 단순히 body 에 `<meta>` 태그를 넣고, head 로 호이스팅하는 방법을 사용할 수도 있다. 그러면,
+
+1. body 내의 children 이 null → body 내의 `<meta>` 태그가 렌더링되지 않음 → 메타데이터가 head 에 들어있지 않다가 (첫 HTTP 요청)
+2. 마운트 되면 children 이 렌더링 → 그제서야 `<meta>` 태그가 렌더링 및 호이스팅 됨 → 메타데이터가 head 에 들어감 (브라우저에서)
+
+#### 실제 원인) streaming metadata
+
+[Metadata difference in next.js 15 and next.js 14, is this intended? · vercel next.js · Discussion #79916](https://github.com/vercel/next.js/discussions/79916)
+
+이 의문을 해결하기 위해서 next.js 깃허브 discussion 에 물어보았다. 비슷한 의문 및 현상을 경험한 사람들이 많았고, next.js 15 의 [**streaming metadata**](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#streaming-metadata) 때문이라는 것을 알았다.
+
+요약하자면 다음과 같다.
+
+- 자바스크립트를 실행할 수 있는 봇(Googlebot, 브라우저 등)에게는 메타데이터를 스트리밍한다. (streaming metadata)
+- 그렇지 못하는 봇(Slurp, Twitterbot 등)에게는 원래처럼 head 에 넣어서 준다. (blocking metadata)
+  - 이렇게 어떤 봇에게 streaming 을 해줄 것인지는 next 에서 [미리 지정해 놓았고](https://github.com/vercel/next.js/blob/canary/packages/next/src/shared/lib/router/utils/html-bots.ts), 이를 변경하기 위해서는 config 의 `htmlLimitedBots` 를 재정의 해주면 된다.
+
+        <aside>
+        ⚠️
+
+        **주의!**
+
+        `htmlLimitedBots` 로 재정의 하면 기존의 정의된 봇들이 덮어씌워진다.
+
+        </aside>
+
+이는 사용자들에게 더욱 빠른 렌더링된 페이지를 제공하기 위함으로, 원래는 `generateMetadata` 등의 함수를 이용하면 메타데이터가 다 만들어질 때 까지 렌더링을 막았다(blocked). 자바스크립트를 해석할 수 있는 클라이언트에 대해서는 일단 페이지를 렌더링 하고, 백그라운드에서 메타데이터를 스트리밍해서 알아서 파싱하도록 하는 것이 더 좋으므로 이러한 방식을 채택한 것으로 보인다.
+
+그래서 정상적인 테스트 프로젝트를 하나 만들어서, Slurp 에이전트를 이용해서 요청해보니, 메타데이터가 head 내에 잘 들어가 있는 것을 확인할 수 있다.
+
+```bash
+curl -A "Slurp" http://localhost:3000 | npx prettier --parser html
+```
+
+```bash
+<head>
+--
+  <title>Create Next App</title>
+  <meta name="description" content="Generated by create next app" />
+--
+</head>
+```
+
+자바스크립트를 읽을 수 있는 봇으로 동일한 요청을 보내면, body 내에 메타데이터가 들어가있는 것을 확인할 수 있고 (이미 스트리밍 된 메타데이터를 body 에 넣은 것으로 보임), 이러한 봇들은 이를 해석해서 메타데이터를 인식하는 것으로 보인다.
+
+```bash
+curl -A "Googlebot" http://localhost:3000 | npx prettier --parser html
+```
+
+```bash
+<head>
+--
+</head>
+<body>
+--
+  <title>Create Next App</title>
+  <meta name="description" content="Generated by create next app" />
+--
+<body>
+```
+
+### 그래서 body 의 children 이 null 인 경우에는?
+
+하지만 결국 body 내에 children 이 없으면, body 내에 `<meta>` 대신 `<script>` 태그들만 있는 것으로 보아, 제대로 streaming metadata 를 처리하지 못하는 것으로 보인다.
+
+물론, 이런 상황이 거의 발생하지 않는 errorful 한 상황일수도 있으나 의도된 것인지 확인이 필요할 것 같다.
