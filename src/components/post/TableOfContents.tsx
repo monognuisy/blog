@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import useMediaQuery from '@/hooks/useMediaQuery';
 
@@ -18,6 +18,25 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string>('');
   const [toc, setToc] = useState<TocItem[]>(initialToc);
   const tocContainerRef = useRef<HTMLElement>(null);
+  const [scrollState, setScrollState] = useState({
+    isAtTop: true,
+    isAtBottom: false,
+  });
+
+  // 스크롤 상태에 따른 CSS 클래스 결정
+  const getScrollClass = useMemo(() => {
+    const { isAtTop, isAtBottom } = scrollState;
+
+    if (isAtTop && isAtBottom) {
+      return 'toc-no-mask';
+    } else if (isAtTop) {
+      return 'toc-mask-bottom';
+    } else if (isAtBottom) {
+      return 'toc-mask-top';
+    } else {
+      return 'toc-mask-both';
+    }
+  }, [scrollState]);
 
   // 클라이언트 측에서 헤더 추출
   useEffect(() => {
@@ -102,6 +121,26 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
         container.scrollTo({
           top: scrollPortion * (scrollHeight - clientHeight),
         });
+
+        // 목차 컨테이너의 스크롤 상태 확인
+        const containerScrollTop = container.scrollTop;
+        const containerScrollHeight = container.scrollHeight;
+        const containerClientHeight = container.clientHeight;
+
+        const newScrollState = {
+          isAtTop: containerScrollTop <= 5,
+          isAtBottom:
+            containerScrollTop + containerClientHeight >=
+            containerScrollHeight - 5,
+        };
+
+        // 상태가 실제로 변경되었을 때만 업데이트
+        if (
+          newScrollState.isAtTop !== scrollState.isAtTop ||
+          newScrollState.isAtBottom !== scrollState.isAtBottom
+        ) {
+          setScrollState(newScrollState);
+        }
       }
     };
 
@@ -127,14 +166,10 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
         window.removeEventListener('scroll', throttledScrollHandler);
       }
     };
-  }, []);
-
-  if (toc.length === 0) {
-    return null;
-  }
+  }, [scrollState]);
 
   // 스크롤 오프셋 계산 함수 (헤더 높이를 고려)
-  const scrollToHeader = (id: string) => {
+  const scrollToHeader = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (!element) return;
 
@@ -146,45 +181,51 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
       top: offsetPosition,
       behavior: 'smooth',
     });
-  };
+  }, []);
+
+  if (toc.length === 0) {
+    return null;
+  }
 
   return (
-    <aside
-      ref={tocContainerRef}
-      className="toc-container sticky mt-20 top-20 z-10 w-full h-fit max-h-[calc(100vh-120px)] overflow-y-auto p-4 text-sm
-      [&::-webkit-scrollbar]:hidden
-      "
-    >
-      <nav>
-        <ul className="space-y-2">
-          {toc.map(({ id, text, level }) => {
-            // 레벨에 따른 들여쓰기 및 스타일 적용 (h2부터 시작하므로 조정)
-            const indentClass =
-              level === 2 ? '' : level === 3 ? 'ml-3' : 'ml-6';
-            const fontSize = level === 2 ? 'text-sm' : 'text-xs';
+    <>
+      <aside
+        ref={tocContainerRef}
+        className={`toc-container sticky mt-20 top-20 z-10 w-full h-fit max-h-[calc(100vh-120px)] overflow-y-auto p-4 text-sm
+        [&::-webkit-scrollbar]:hidden ${getScrollClass}
+        `}
+      >
+        <nav>
+          <ul className="space-y-2">
+            {toc.map(({ id, text, level }) => {
+              // 레벨에 따른 들여쓰기 및 스타일 적용 (h2부터 시작하므로 조정)
+              const indentClass =
+                level === 2 ? '' : level === 3 ? 'ml-3' : 'ml-6';
+              const fontSize = level === 2 ? 'text-sm' : 'text-xs';
 
-            return (
-              <li key={id} className={`toc-item ${indentClass}`}>
-                <Link
-                  href={`#${id}`}
-                  className={`block ${fontSize} pb-1 hover:text-primary dark:hover:text-primary-dark transition-colors ${
-                    activeId === id
-                      ? 'text-primary dark:text-primary-dark font-bold '
-                      : 'text-gray-700 dark:text-gray-300'
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToHeader(id); // 커스텀 스크롤 함수 사용
-                  }}
-                >
-                  {text}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-    </aside>
+              return (
+                <li key={id} className={`toc-item ${indentClass}`}>
+                  <Link
+                    href={`#${id}`}
+                    className={`block ${fontSize} pb-1 hover:text-primary dark:hover:text-primary-dark transition-colors ${
+                      activeId === id
+                        ? 'text-primary dark:text-primary-dark font-bold '
+                        : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToHeader(id); // 커스텀 스크롤 함수 사용
+                    }}
+                  >
+                    {text}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 };
 

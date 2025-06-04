@@ -135,6 +135,50 @@
   }
 }
 
+// ============== TOC 관련 ================
+
+.toc-no-mask {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.toc-mask-bottom {
+  mask-image: linear-gradient(to bottom,
+      black 0%,
+      black 92%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      black 0%,
+      black 92%,
+      transparent 100%);
+}
+
+.toc-mask-top {
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 100%);
+}
+
+.toc-mask-both {
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+}
+
+
+
 /* 헤더에 ID 앵커 링크를 위한 패딩 추가 */
 h2,
 h3,
