@@ -3,19 +3,8 @@ type TTagChipProps = {
 };
 
 const TagChip = ({ tag }: TTagChipProps) => {
-  const tagColor = '#9933f8'; // TODO: replace to random-pick function in utils
-  // const tagBgColor = '#ffffff'; // TODO: replace to random-pick function in utils
-
   return (
-    <p
-      className="text-xs font-semibold rounded-2xl border-2 py-1 px-3 w-fit dark:border-primary-dark dark:text-primary-dark"
-      style={{
-        // Is this the best way to handle dynamic color?
-        background: 'transparent',
-        borderColor: tagColor,
-        color: tagColor,
-      }}
-    >
+    <p className="text-xs font-medium text-black/50 dark:text-white/50 rounded-2xl py-0.5 px-2 w-fit bg-black/10 dark:bg-white/10">
       {tag}
     </p>
   );
