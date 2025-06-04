@@ -20,7 +20,7 @@ const CardImage = ({
     return (
       <div
         className={cn(
-          'w-full aspect-video bg-gray-100 dark:bg-neutral-800',
+          'w-full aspect-video bg-gray-100 dark:bg-neutral-800 absolute h-full',
           className,
         )}
       ></div>
