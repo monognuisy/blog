@@ -11,7 +11,7 @@ const PostList = () => {
   return (
     <div>
       <PostCardLatest post={latestPost} />
-      <h1 className="text-[2rem] md:text-[3rem] mt-8 md:mt-12">All Posts</h1>
+      <h1 className="text-3xl md:text-4xl mt-8 md:mt-20">최근 글</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-5">
         {postInfos.map(({ id, category, slug, ...frontmatter }) => (
           <PostCard
