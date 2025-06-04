@@ -1,11 +1,11 @@
 import fs from 'fs';
-import { TAnnouncement } from '@/app/_types/announcement';
+import { TAnnouncement } from '@/types/announcement';
 import {
   getAnnouncementPath,
   getSortedAnnouncement,
 } from '@/lib/getAnnouncement';
 import customMDX from '@/lib/mdxCompiler';
-import CustomMDXComponents from '@/app/_components/post/CustomMDXComponents';
+import CustomMDXComponents from '@/components/post/CustomMDXComponents';
 
 type TAnnouncementPageProps = {
   params: Promise<{

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
+import { Search } from 'lucide-react';
 
 const SearchBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,7 +60,7 @@ const SearchBar = () => {
       </div>
       <div className="md:hidden flex items-center">
         <button onClick={toggleModalOpen}>
-          <SearchIcon style={{ fontSize: '24px', color: 'gray' }} />
+          <Search style={{ fontSize: '24px', color: 'gray' }} />
         </button>
       </div>
 

@@ -1,4 +1,4 @@
-import AnnouncementCard from '@/app/_components/announcement/AnnouncementCard';
+import AnnouncementCard from '@/components/announcement/AnnouncementCard';
 import { getSortedAnnouncement } from '@/lib/getAnnouncement';
 
 export const generateMetadata = () => {

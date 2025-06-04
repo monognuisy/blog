@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useTheme } from 'next-themes';
+import { Sun, Moon } from 'lucide-react';
 
 const DarkmodeToggleButton = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -23,9 +22,9 @@ const DarkmodeToggleButton = () => {
     <div className="flex items-center cursor-pointer">
       {loaded ? (
         isDarkmode ? (
-          <LightModeIcon onClick={toggleDarkmode} />
+          <Sun fill="currentColor" onClick={toggleDarkmode} />
         ) : (
-          <DarkModeIcon onClick={toggleDarkmode} />
+          <Moon fill="currentColor" onClick={toggleDarkmode} />
         )
       ) : (
         <></>

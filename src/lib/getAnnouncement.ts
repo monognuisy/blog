@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { ascendingSortFn } from './function';
 import matter from 'gray-matter';
-import { TAnnouncement } from '@/app/_types/announcement';
+import { TAnnouncement } from '@/types/announcement';
 
 const announcementDirectory = path.join(process.cwd(), 'content/announcement');
 

@@ -150,23 +150,49 @@
   }
 }
 
-/* 목차 관련 스타일 */
-.toc-container {
-  scrollbar-width: thin;
+// ============== TOC 관련 ================
+
+.toc-no-mask {
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
-.toc-container::-webkit-scrollbar {
-  width: 4px;
+.toc-mask-bottom {
+  mask-image: linear-gradient(to bottom,
+      black 0%,
+      black 92%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      black 0%,
+      black 92%,
+      transparent 100%);
 }
 
-.toc-container::-webkit-scrollbar-track {
-  background: transparent;
+.toc-mask-top {
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 100%);
 }
 
-.toc-container::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.5);
-  border-radius: 20px;
+.toc-mask-both {
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
 }
+
+
 
 /* 헤더에 ID 앵커 링크를 위한 패딩 추가 */
 h2,

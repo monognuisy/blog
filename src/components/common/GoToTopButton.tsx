@@ -1,7 +1,7 @@
 'use client';
 
+import { ArrowUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const GoToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -34,10 +34,10 @@ const GoToTopButton = () => {
         <button
           onClick={scrollToTop}
           className="fixed right-6 bottom-6 md:right-8 md:bottom-8 rounded-full bg-white dark:bg-dark-bg
-            border-2 dark:border-gray-800 w-8 h-8 md:w-8 md:h-8 flex justify-center items-center 
+            border-2 dark:border-gray-800 w-10 h-10 md:w-10 md:h-10 flex justify-center items-center 
             shadow-lg text-sm"
         >
-          <ArrowUpwardIcon className="text-base" />
+          <ArrowUp className="w-5 h-5" />
         </button>
       )}
     </>
