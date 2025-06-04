@@ -15,16 +15,12 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
       <header className="sticky top-20 flex flex-col grow pl-6 w-[400px] will-change-transform h-min">
         <div className="relative">
           <div className="absolute left-[-28px] top-[8px] aspect-square rounded-full w-2 bg-black dark:bg-dark-text category-dot"></div>
-          {new Date(date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
+          {date}
         </div>
         <h3>{title}</h3>
         <TagList tags={tags} />
       </header>
-      <div className="grow max-w-[600px] flex flex-col gap-4">
+      <div className="grow w-[200px] flex flex-col gap-4">
         <div className="relative w-full aspect-video">
           <CardImage
             cover={cover}
@@ -33,12 +29,12 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
           />
         </div>
         <div>
-          <p className="mb-2">{description}</p>
+          <p className="mb-2 text-sm">{description}</p>
           <Link
             href={`/${post.category}/${post.slug}`}
-            className="font-bold text-highlight hover:underline text-xl"
+            className="font-semibold text-highlight hover:underline flex items-center gap-2 justify-end"
           >
-            Read more <ArrowRight className='inline' />
+            읽어보기 <ArrowRight className="inline w-4 h-4" />
           </Link>
         </div>
       </div>
