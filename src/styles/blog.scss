@@ -57,6 +57,21 @@
     margin-bottom: constants.$spacing-8;
   }
 
+  details {
+    overflow-x: auto;
+
+
+    summary {
+      cursor: pointer;
+
+      &::marker {
+        margin-right: constants.$spacing-2;
+      }
+
+      margin-bottom: constants.$spacing-2;
+    }
+  }
+
   // Caption
   p:has(> .image-caption) {
     text-align: center;
