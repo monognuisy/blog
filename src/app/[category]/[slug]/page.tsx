@@ -13,7 +13,7 @@ import PostTitle from '@/components/post/PostTitle';
 import AdjacentPostLinks from '@/components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
 import { notFound } from 'next/navigation';
-import TableOfContents from '@/components/post/TableOfContents';
+import TableOfContentsWrapper from '@/components/post/TableOfContents';
 
 type TPostPageProps = {
   params: Promise<{
@@ -113,7 +113,9 @@ const PostPage = async ({ params }: TPostPageProps) => {
                 <AdjacentPostLinks prev={prev} next={next} />
                 <Comment />
               </div>
-              <TableOfContents />
+              <div className="hidden lg:block">
+                <TableOfContentsWrapper />
+              </div>
             </div>
           </div>
         </div>

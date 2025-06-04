@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 export type TocItem = {
   id: string; // 헤더 요소의 ID
@@ -16,6 +17,7 @@ interface TableOfContentsProps {
 const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string>('');
   const [toc, setToc] = useState<TocItem[]>(initialToc);
+  const tocContainerRef = useRef<HTMLElement>(null);
 
   // 클라이언트 측에서 헤더 추출
   useEffect(() => {
@@ -24,10 +26,16 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
       const headings = document.querySelectorAll('h2, h3, h4');
       const newToc: TocItem[] = [];
 
+      const levelNums: number[] = [];
+
       headings.forEach((heading) => {
-        const id = heading.id;
+        const originalId = heading.id;
         const text = heading.textContent || '';
         const level = parseInt(heading.tagName.charAt(1), 10);
+
+        levelNums[level] = (levelNums[level] || 0) + 1;
+        const id = `${originalId}-${level}-${levelNums[level]}`;
+        heading.id = id;
 
         if (id && text) {
           newToc.push({ id, text, level });
@@ -74,6 +82,53 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
     };
   }, [toc]);
 
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const innerHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
+
+      const scrollPortion =
+        Math.max(currentScrollY - innerHeight, 0) /
+        (scrollHeight - 2 * innerHeight);
+
+      if (tocContainerRef.current) {
+        const container = tocContainerRef.current;
+        const scrollHeight = container.scrollHeight;
+        const clientHeight = container.clientHeight;
+
+        container.scrollTo({
+          top: scrollPortion * (scrollHeight - clientHeight),
+        });
+      }
+    };
+
+    // requestAnimationFrame을 사용한 쓰로틀링으로 성능 최적화
+    const throttledScrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    if (window) {
+      window.addEventListener('scroll', throttledScrollHandler, {
+        passive: true,
+      });
+    }
+
+    return () => {
+      if (window) {
+        window.removeEventListener('scroll', throttledScrollHandler);
+      }
+    };
+  }, []);
+
   if (toc.length === 0) {
     return null;
   }
@@ -83,9 +138,9 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
     const element = document.getElementById(id);
     if (!element) return;
 
-    const headerOffset = 120; // 헤더 높이 + 여유 공간
+    const headerOffset = 80; // 헤더 높이 + 여유 공간
     const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
     window.scrollTo({
       top: offsetPosition,
@@ -94,7 +149,12 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   };
 
   return (
-    <aside className="toc-container sticky mt-20 top-20 z-10 w-64 h-fit p-4 hidden lg:block text-sm">
+    <aside
+      ref={tocContainerRef}
+      className="toc-container sticky mt-20 top-20 z-10 w-full h-fit max-h-[calc(100vh-120px)] overflow-y-auto p-4 text-sm
+      [&::-webkit-scrollbar]:hidden
+      "
+    >
       <nav>
         <ul className="space-y-2">
           {toc.map(({ id, text, level }) => {
@@ -128,4 +188,14 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   );
 };
 
-export default TableOfContents;
+const TableOfContentsWrapper = () => {
+  const isMobile = useMediaQuery('(max-width: 1024px)');
+
+  if (isMobile) {
+    return null;
+  }
+
+  return <TableOfContents />;
+};
+
+export default TableOfContentsWrapper;
