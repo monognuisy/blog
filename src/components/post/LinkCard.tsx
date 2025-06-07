@@ -11,9 +11,9 @@ type TLinkCardProps = {
   url: string;
 };
 
-const LoadingCard = () => {
+const LoadingContent = () => {
   return (
-    <div className="border rounded-xl p-2 flex gap-4 mb-8 animation-pulse">
+    <div className="animation-pulse flex w-full gap-4">
       <div className="rounded-xl w-[100px] h-[100px] md:w-[150px] md:h-[150px] bg-gray-300 animate-pulse flex-shrink-0"></div>
       <div className="w-full flex flex-col gap-4">
         <div className="h-12 bg-gray-300 animate-pulse rounded w-1/2"></div>
@@ -34,46 +34,46 @@ const LinkCard = ({ url }: TLinkCardProps) => {
     }
   }, [data]);
 
-  if (isLoading) {
-    return <LoadingCard />;
-  }
-
   return (
     <Link
       href={url}
       rel="noopener noreferrer"
       target="_blank"
-      className="link-card block mb-8"
+      className="link-card mb-8 rounded-xl border p-2 flex gap-4"
     >
-      <div className="rounded-xl border p-2 flex gap-4">
-        {metadata?.image && (
-          <div className="flex shrink-0 items-center">
-            <Image
-              src={metadata?.image}
-              alt={metadata?.title}
-              width={500}
-              height={500}
-              className="rounded-xl w-[100px] h-[100px] md:w-[150px] md:h-[150px] aspect-square object-cover"
-            />
+      {isLoading ? (
+        <LoadingContent />
+      ) : (
+        <>
+          {metadata?.image && (
+            <div className="flex shrink-0 items-center">
+              <Image
+                src={metadata?.image}
+                alt={metadata?.title}
+                width={500}
+                height={500}
+                className="rounded-xl w-[100px] h-[100px] md:w-[150px] md:h-[150px] aspect-square object-cover"
+              />
+            </div>
+          )}
+          <div className="flex-shrink max-h-[100px] md:max-h-[150px] flex flex-col">
+            <p className="text-base md:text-lg line-clamp-1 font-bold shrink mb-3">
+              {metadata?.title || 'No title available'}
+            </p>
+            <p className="text-gray-500 text-sm md:text-base line-clamp-1 md:line-clamp-3 md:flex-1 mb-0">
+              {metadata?.description || 'No description available'}
+            </p>
+            <p
+              className="text-gray-500 text-xs md:text-sm line-clamp-1 mt-1 shrink"
+              style={{
+                marginBottom: `0`,
+              }}
+            >
+              {metadata?.siteName || 'Unknown site'}
+            </p>
           </div>
-        )}
-        <div className="flex-shrink max-h-[100px] md:max-h-[150px] flex flex-col">
-          <p className="text-base md:text-xl line-clamp-1 font-bold shrink mb-3">
-            {metadata?.title || 'No title available'}
-          </p>
-          <p className="text-gray-500 text-sm md:text-base line-clamp-1 md:line-clamp-3 md:flex-1 mb-0">
-            {metadata?.description || 'No description available'}
-          </p>
-          <p
-            className="text-gray-500 text-xs md:text-sm line-clamp-1 mt-1 shrink"
-            style={{
-              marginBottom: `0`,
-            }}
-          >
-            {metadata?.siteName || 'Unknown site'}
-          </p>
-        </div>
-      </div>
+        </>
+      )}
     </Link>
   );
 };
