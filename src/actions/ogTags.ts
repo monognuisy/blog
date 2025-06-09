@@ -1,21 +1,12 @@
+'use server';
+
 import * as cheerio from 'cheerio';
 import ky from 'ky';
-import { NextResponse } from 'next/server';
+import { TMetadata } from '@/types/post';
 
-type TURLResponse = {
-  url: string;
-};
-
-export const POST = async (request: Request) => {
-  const { url } = (await request.json()) as TURLResponse;
-
+export async function fetchOgTags(url: string): Promise<TMetadata> {
   if (!url) {
-    return NextResponse.json(
-      {
-        error: 'URL is required',
-      },
-      { status: 400 },
-    );
+    throw new Error('URL is required');
   }
 
   try {
@@ -24,7 +15,7 @@ export const POST = async (request: Request) => {
     const $ = cheerio.load(data);
 
     // OG 태그 파싱
-    const metadata = {
+    const metadata: TMetadata = {
       title:
         $('meta[property="og:title"]').attr('content') || $('title').text(),
       description: $('meta[property="og:description"]').attr('content') || '',
@@ -32,14 +23,9 @@ export const POST = async (request: Request) => {
       siteName: $('meta[property="og:site_name"]').attr('content') || '',
     };
 
-    return NextResponse.json(metadata);
+    return metadata;
   } catch (error) {
     console.error('Failed to fetch og tags', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch og tags',
-      },
-      { status: 500 },
-    );
+    throw new Error('Failed to fetch og tags');
   }
-};
+}

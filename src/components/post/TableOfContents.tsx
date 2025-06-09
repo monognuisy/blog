@@ -45,16 +45,10 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
       const headings = document.querySelectorAll('h2, h3, h4');
       const newToc: TocItem[] = [];
 
-      const levelNums: number[] = [];
-
       headings.forEach((heading) => {
-        const originalId = heading.id;
         const text = heading.textContent || '';
         const level = parseInt(heading.tagName.charAt(1), 10);
-
-        levelNums[level] = (levelNums[level] || 0) + 1;
-        const id = `${originalId}-${level}-${levelNums[level]}`;
-        heading.id = id;
+        const id = heading.id;
 
         if (id && text) {
           newToc.push({ id, text, level });
