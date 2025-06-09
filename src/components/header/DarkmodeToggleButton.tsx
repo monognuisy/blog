@@ -22,9 +22,17 @@ const DarkmodeToggleButton = () => {
     <div className="flex items-center cursor-pointer">
       {loaded ? (
         isDarkmode ? (
-          <Sun fill="currentColor" onClick={toggleDarkmode} />
+          <Sun
+            fill="currentColor"
+            onClick={toggleDarkmode}
+            className="w-5 h-5 md:w-6 md:h-6"
+          />
         ) : (
-          <Moon fill="currentColor" onClick={toggleDarkmode} />
+          <Moon
+            fill="currentColor"
+            onClick={toggleDarkmode}
+            className="w-5 h-5 md:w-6 md:h-6"
+          />
         )
       ) : (
         <></>
