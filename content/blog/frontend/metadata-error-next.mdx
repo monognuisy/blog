@@ -14,6 +14,8 @@ categories: 'Web'
 
 <LinkCard url="https://github.com/vercel/next.js/discussions/79916" />
 
+따라서, 본 포스팅의 내용이 앞으로 계속 추가되거나 바뀔 가능성이 높으니, 이점 참고해주세요.
+
 </Note>
 
 ## next.js 15, react 19로의 업그레이드
@@ -235,9 +237,7 @@ next.js 도 이러한 react 의 API 를 사용한다면, 단순히 body 에 `<me
 
 #### 실제 원인) streaming metadata
 
-[Metadata difference in next.js 15 and next.js 14, is this intended? · vercel next.js · Discussion #79916](https://github.com/vercel/next.js/discussions/79916)
-
-이 의문을 해결하기 위해서 next.js 깃허브 discussion 에 물어보았다. 비슷한 의문 및 현상을 경험한 사람들이 많았고, next.js 15 의 [**streaming metadata**](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#streaming-metadata) 때문이라는 것을 알았다.
+이 의문을 해결하기 위해서 [next.js 레포 discussion](https://github.com/vercel/next.js/discussions/79916) 에 물어보았다. 비슷한 의문 및 현상을 경험한 사람들이 많았고, next.js 15 의 [**streaming metadata**](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#streaming-metadata) 때문이라는 것을 알았다.
 
 요약하자면 다음과 같다.
 
@@ -245,14 +245,9 @@ next.js 도 이러한 react 의 API 를 사용한다면, 단순히 body 에 `<me
 - 그렇지 못하는 봇(Slurp, Twitterbot 등)에게는 원래처럼 head 에 넣어서 준다. (blocking metadata)
   - 이렇게 어떤 봇에게 streaming 을 해줄 것인지는 next 에서 [미리 지정해 놓았고](https://github.com/vercel/next.js/blob/canary/packages/next/src/shared/lib/router/utils/html-bots.ts), 이를 변경하기 위해서는 config 의 `htmlLimitedBots` 를 재정의 해주면 된다.
 
-        <aside>
-        ⚠️
-
-        **주의!**
-
-        `htmlLimitedBots` 로 재정의 하면 기존의 정의된 봇들이 덮어씌워진다.
-
-        </aside>
+        <Note title="주의" variant="warning">
+          `htmlLimitedBots` 로 재정의 하면 기존의 정의된 봇들이 덮어씌워진다.
+        </Note>
 
 이는 사용자들에게 더욱 빠른 렌더링된 페이지를 제공하기 위함으로, 원래는 `generateMetadata` 등의 함수를 이용하면 메타데이터가 다 만들어질 때 까지 렌더링을 막았다(blocked). 자바스크립트를 해석할 수 있는 클라이언트에 대해서는 일단 페이지를 렌더링 하고, 백그라운드에서 메타데이터를 스트리밍해서 알아서 파싱하도록 하는 것이 더 좋으므로 이러한 방식을 채택한 것으로 보인다.
 
