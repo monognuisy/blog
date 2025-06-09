@@ -7,40 +7,44 @@ import React from 'react';
 import { cn } from '@/lib/styles';
 import Highlight from './custom/Highlight';
 import Note from './custom/Note';
+import { LucideLink } from 'lucide-react';
 
-// 텍스트에서 ID 생성 함수
-const generateIdFromText = (text: string | React.ReactNode): string => {
-  const defaultRandomId =
-    'header-' + Math.random().toString(36).substring(2, 9);
-  if (!text) return defaultRandomId;
+// 헤더 ID 생성 함수
+const generateId = () => {
+  const headers: Record<number, number> = {};
 
-  const generator = (text: string | React.ReactNode): string => {
-    // ReactNode인 경우 문자열로 변환 시도
-    let textContent = '';
-    if (typeof text === 'string') {
-      textContent = text;
-    } else if (Array.isArray(text)) {
-      textContent = text.map((item) => generateIdFromText(item)).join('');
-    } else if (typeof text === 'object' && text !== null) {
-      // 간단한 텍스트 추출 로직
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        textContent = generateIdFromText((text as any).props.children);
-      } catch {
-        textContent = defaultRandomId;
+  return (text: string | React.ReactNode, level: number) => {
+    headers[level] = (headers[level] || 0) + 1;
+    const levelLabel = `${level}-${headers[level]}`;
+
+    const generator = (text: string | React.ReactNode): string => {
+      // ReactNode인 경우 문자열로 변환 시도
+      let textContent = '';
+      if (typeof text === 'string') {
+        textContent = text;
+      } else if (Array.isArray(text)) {
+        textContent = text.map((item) => generator(item)).join('');
+      } else if (typeof text === 'object' && text !== null) {
+        // 간단한 텍스트 추출 로직
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          textContent = generator((text as any).props.children);
+        } catch {
+          textContent = '';
+        }
       }
-    }
 
-    return (
-      textContent
+      return textContent
         .toLowerCase()
         .replace(/\s+/g, '-') // 공백을 대시로 변환
         .replace(/--+/g, '-') // 여러 대시를 하나로 압축
-        .trim() || defaultRandomId
-    ); // 빈 문자열이면 랜덤 ID 생성
-  };
+        .trim();
+    };
 
-  return generator(text);
+    const formattedHeadingId = `${levelLabel}-${generator(text)}`;
+
+    return formattedHeadingId;
+  };
 };
 
 /**
@@ -51,35 +55,37 @@ const CustomMDXComponents = (
   category: string,
   slug: string,
 ): React.ComponentProps<typeof MDXProvider>['components'] => {
+  const generateIdFromText = generateId();
+
   return {
     h1: (props) => {
-      const id = props.id || generateIdFromText(props.children);
+      const id = props.id || generateIdFromText(props.children, 1);
       return <h1 id={id} className="text-3xl font-bold mt-6 mb-4" {...props} />;
     },
     h2: (props) => {
-      const id = props.id || generateIdFromText(props.children);
+      const id = props.id || generateIdFromText(props.children, 2);
       return (
-        <div className="*:text-2xl *:font-bold mt-8 mb-4 pt-6 border-t border-gray-200 dark:border-gray-700 relative group">
-          <HeaderAnchor level={2} id={id} className="top-6" />
+        <div className="*:text-2xl *:font-bold mt-8 mb-4 pt-6 border-t border-gray-200 dark:border-gray-700 relative group flex items-center gap-2">
           <h2 id={id} className="m-0 p-0" {...props} />
+          <HeaderAnchor id={id} />
         </div>
       );
     },
     h3: (props) => {
-      const id = props.id || generateIdFromText(props.children);
+      const id = props.id || generateIdFromText(props.children, 3);
       return (
-        <div className="*:text-xl *:font-semibold mt-6 mb-3 pt-4 relative group">
-          <HeaderAnchor level={3} id={id} className="top-4" />
+        <div className="*:text-xl *:font-semibold mt-6 mb-3 pt-4 relative group flex items-center gap-2">
           <h3 id={id} className="m-0 p-0" {...props} />
+          <HeaderAnchor id={id} />
         </div>
       );
     },
     h4: (props) => {
-      const id = props.id || generateIdFromText(props.children);
+      const id = props.id || generateIdFromText(props.children, 4);
       return (
-        <div className="*:text-lg *:font-medium mt-4 mb-2 relative group">
-          <HeaderAnchor level={4} id={id} className="top-0" />
+        <div className="*:text-lg *:font-medium mt-4 mb-2 relative group flex items-center gap-2">
           <h4 id={id} className="m-0 p-0" {...props} />
+          <HeaderAnchor id={id} />
         </div>
       );
     },
@@ -119,20 +125,19 @@ export default CustomMDXComponents;
 
 interface IHeaderAnchorProps {
   id: string;
-  level: 2 | 3 | 4;
   className?: string;
 }
 
-const HeaderAnchor = ({ level, id, className }: IHeaderAnchorProps) => {
+const HeaderAnchor = ({ id, className }: IHeaderAnchorProps) => {
   return (
     <Link
       href={`#${id}`}
       className={cn(
-        'group-hover:opacity-100 opacity-0 transition-opacity duration-300 ease-in-out absolute text-right -left-2 -translate-x-full cursor-pointer',
+        'group-hover:opacity-100 opacity-0 transition-opacity duration-300 ease-in-out cursor-pointer text-gray-500 dark:text-gray-400',
         className,
       )}
     >
-      {`#`.repeat(level - 1)}
+      <LucideLink className="w-4 h-4" />
     </Link>
   );
 };
