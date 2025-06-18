@@ -104,7 +104,7 @@ export const metadata: Metadata = {
 - next.js 에서 권장하는 방법대로 정의한 open graph 를 포함한 metadata 가 첫 html 요청에 적용되지 않음
 - body 내의 컴포넌트들이 모두 CSR 됨
 
-## 원인과 해결 (내 코드) <InterContentAnchor name="문제-해결-방법" />
+## 원인과 해결 (내 코드) <IntraContentAnchor name="문제-해결-방법" />
 
 ### 🧯급한 불은 끄고 보자…
 
@@ -410,7 +410,7 @@ curl -A "Googlebot" http://localhost:3000 | npx prettier --parser html
 
 따라서, 변경된 파일들을 보고 실제 원인을 파악해보고자 하였다. 다행히, 중요한 부분은 단 몇 줄밖에 수정되지 않았어서 코드 리딩이 크게 어렵지는 않았다.
 
-## next.js 의 소스코드를 분석해보자! <InterContentAnchor name="원인-분석" />
+## next.js 의 소스코드를 분석해보자! <IntraContentAnchor name="원인-분석" />
 
 `ee579bf1..c61b479d` 를 비교했다. 먼저, 기존(`c61b479d`) 코드에서 바라본 원인을 서술하고, 이후에 이것을 해결한 커밋(`ee579bf1`)의 코드를 보도록 하자.
 
