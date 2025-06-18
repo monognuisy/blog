@@ -1,26 +1,31 @@
 ---
-title: 메타데이터 적용 안되는 문제 해결 (feat. streaming metadata)
+title: 메타데이터 적용 안되는 문제 분석
 date: '2025-06-04'
-description: 'Next.js 15 에서 메타데이터가 제대로 적용되지 않는 문제가 발생했다. 정확한 원인을 찾아보고, 실수로라도 발생하지 않도록 해결해보자.'
+description: 'Next.js 15 에서 메타데이터가 제대로 적용되지 않는 문제가 발생했다. 아무래도 15.2 에서 추가된 streaming metadata 가 원인인 것 같은데, 정확한 원인을 찾아보고, 실수로라도 발생하지 않도록 해결해보자. 또한, 정확한 원인을 알아보기 위해 코드를 분석해보자!'
 tags: ['Web', 'Frontend', 'Next.js']
 categories: 'Web'
-# cover: 'next-nginx'
+cover: 'streaming-metadata'
 ---
 
-<Note title="읽기 전에" variant="warning">
+<Note title="읽기 전에" variant="info">
 
-2025-06-04 기준, 문제의 근본적인 원인과 해결방법을 찾기 위해 공식 레포에서 discussion 중입니다. \
-다음 링크를 통해 자유롭게 의견을 제시해주세요.
+next.js 15.3.3 기준, 아직 이 버그는 해결되지 않았습니다.
 
-<LinkCard url="https://github.com/vercel/next.js/discussions/79916" />
-
-따라서, 본 포스팅의 내용이 앞으로 계속 추가되거나 바뀔 가능성이 높으니, 이점 참고해주세요.
+canary 빌드 (>= 15.3.1-canary.12) 에서는 버그가 해결되었으니, 동일한 문제를 겪는 분이 있다면 (**자신의 코드의 문제점을 먼저 고친 뒤!** 그래도 문제가 발생한다면) 최신 canary 빌드를 사용해보세요.
 
 </Note>
 
-## next.js 15, react 19로의 업그레이드
+<Note title="참고" variant="note">
+이 글은 문제 발생 배경, 문제 설명, 해결, 원인 분석의 과정을 담은 **다소 긴 글**입니다.
 
-next.js 15 에서 react 19 를 완전히 지원한다는 것을 알았고 다른 프로젝트에서 15 버전으로 개발했을 때의 큰 불편함이 없었어서 이 블로그도 슬금슬금 버전 업 각을 보고 있었다. 동시에 tailwindcss 도 v3 에서 v4 로 업그레이드 할까 생각했지만, 완전히 달라진 config 방법으로 인해 한 번에 migration하는 것은 조금 복잡해질 것 같아서, 일단은 next 밑 다른 패키지들만 업그레이드 하고자 하였다.
+따라서, 문제 해결 방법 이나 구체적인 원인 설명으로 바로 건너뛰고 싶다면, 다음을 누르세요.
+
+- [문제 해결 방법](#문제-해결-방법)
+- [원인 분석](#원인-분석)
+
+</Note>
+
+## 배경) next.js 15, react 19로의 업그레이드
 
 next.js 15 에서 react 19 를 완전히 지원한다는 것을 알았고 다른 프로젝트에서 15 버전으로 개발했을 때의 큰 불편함이 없었어서 이 블로그도 슬금슬금 버전 업 각을 보고 있었다. 동시에 tailwindcss 도 v3 에서 v4 로 업그레이드 할까 생각했지만, 완전히 달라진 config 방법으로 인해 한 번에 migration하는 것은 조금 복잡해질 것 같아서, 일단은 next 밑 다른 패키지들만 업그레이드 하고자 하였다.
 
@@ -99,7 +104,7 @@ export const metadata: Metadata = {
 - next.js 에서 권장하는 방법대로 정의한 open graph 를 포함한 metadata 가 첫 html 요청에 적용되지 않음
 - body 내의 컴포넌트들이 모두 CSR 됨
 
-## 원인과 해결
+## 원인과 해결 (내 코드) <IntraContentAnchor name="문제-해결-방법" />
 
 ### 🧯급한 불은 끄고 보자…
 
@@ -107,7 +112,7 @@ export const metadata: Metadata = {
 
 결국, 버전 업 보다는 일단 블로그의 SEO 를 크게 방해하는 버그를 해결하는 것이 우선이었기 때문에 **next.js 14, react 18 로 롤백**하였다.
 
-거짓말처럼 문제는 해결되었지만, 계속 원인을 찾기 위해 여러 이슈, 공식 문서들을 찾아보았다. 15.3 이상에서는 Suspense 와 같이 사용하였을 때, 클라이언트 컴포넌트에서 메타데이터가 추가되지 않는 버그가 발생할 수 있다고 알게 되었지만, Suspense 도, 메타데이터를 클라이언트 컴포넌트에서 관리하지도 않았기 때문에 큰 도움은 되지 않았다. 그래서 일단 손수 디버깅을 해보기로 하였다.
+거짓말처럼 문제는 해결되었지만, 계속 원인을 찾기 위해 여러 이슈, 공식 문서들을 찾아보았다. 15.3 이상에서는 Suspense 와 같이 사용하였을 때, 클라이언트 컴포넌트에서 메타데이터가 추가되지 않는 버그가 발생할 수 있다고 알게 되었지만, Suspense 도, 메타데이터를 클라이언트 컴포넌트에서 관리하지도 않았기 때문에 큰 도움은 되지 않았다. 그래서 일단 **손수 디버깅**을 해보기로 하였다.
 
 ### 어이없는 실수!
 
@@ -171,7 +176,7 @@ export default CustomThemeProvider;
 
 #### body 내의 컴포넌트가 없었던 이유
 
-초기 해당 컴포넌트가 클라이언트에서 마운트 되기 이전에는 null 을 반환하고, 마운트 이후에 `ThemeProvider` 로 감싼 children 이 렌더링된다.
+초기 해당 컴포넌트가 클라이언트에서 마운트 되기 이전에는 `null` 을 반환하고, 마운트 이후에 `ThemeProvider` 로 감싼 children 이 렌더링된다.
 
 ```tsx
 // 서버 측
@@ -222,7 +227,9 @@ return (
 
 해당 코드는 업그레이드 과정에서 수정하지 않았다. 그렇다는 것은, next 14 에서도 동일하게 잘못된 코드를 이용했다는 것인데, 이 때는 정상적으로 메타데이터가 head 내에 들어가 있었다.
 
-사실, 생각해봐도 body 내부가 null 이라고 해서 head 에 들어가야 할 메타데이터가 들어가지 않는다는 것은 조금 이상했다. 실제 브라우저의 요소 검사 툴을 사용해서 보면 들어가있지만, 대부분의 봇이나 open graph scrapper 들에게 보여지는 첫 html 요청에는 포함되지 않았다.
+사실, 생각해봐도 body 내부가 null 이라고 해서 head 에 들어가야 할 메타데이터가 들어가지 않는다는 것은 조금 이상했다. 실제 브라우저의 요소 검사 툴을 사용해서 보면 들어가있지만, 대부분의 봇이나 open graph scrapper 들[^og-bot]에게 보여지는 첫 html 요청에는 포함되지 않았다.
+
+[^og-bot]: 후술하겠지만 streaming bot 이나, 배포환경의 html-limited bot 들에게 문제가 발생하였다.
 
 #### 추측) `<meta>` 태그의 hoisting?
 
@@ -234,6 +241,8 @@ next.js 도 이러한 react 의 API 를 사용한다면, 단순히 body 에 `<me
 
 1. body 내의 children 이 null → body 내의 `<meta>` 태그가 렌더링되지 않음 → 메타데이터가 head 에 들어있지 않다가 (첫 HTTP 요청)
 2. 마운트 되면 children 이 렌더링 → 그제서야 `<meta>` 태그가 렌더링 및 호이스팅 됨 → 메타데이터가 head 에 들어감 (브라우저에서)
+
+하지만, next 15 + react 18 조합으로 해도 동일한 문제가 발생했기 때문에, react 의 문제는 아니라는 것을 확인했다.
 
 #### 실제 원인) streaming metadata
 
@@ -251,13 +260,15 @@ next.js 도 이러한 react 의 API 를 사용한다면, 단순히 body 에 `<me
 
 이는 사용자들에게 더욱 빠른 렌더링된 페이지를 제공하기 위함으로, 원래는 `generateMetadata` 등의 함수를 이용하면 메타데이터가 다 만들어질 때 까지 렌더링을 막았다(blocked). 자바스크립트를 해석할 수 있는 클라이언트에 대해서는 일단 페이지를 렌더링 하고, 백그라운드에서 메타데이터를 스트리밍해서 알아서 파싱하도록 하는 것이 더 좋으므로 이러한 방식을 채택한 것으로 보인다.
 
-그래서 정상적인 테스트 프로젝트를 하나 만들어서, Slurp 에이전트를 이용해서 요청해보니, 메타데이터가 head 내에 잘 들어가 있는 것을 확인할 수 있다.
+그래서 정상적인 테스트 프로젝트를 하나 만들어서, Slurp 에이전트[^slurp]를 이용해서 요청해보니, 메타데이터가 head 내에 잘 들어가 있는 것을 확인할 수 있다.
+
+[^slurp]: 대표적인 html-limited bot. Yahoo! 의 크롤링 봇이다.
 
 ```bash
 curl -A "Slurp" http://localhost:3000 | npx prettier --parser html
 ```
 
-```bash
+```html
 <head>
 --
   <title>Create Next App</title>
@@ -272,7 +283,7 @@ curl -A "Slurp" http://localhost:3000 | npx prettier --parser html
 curl -A "Googlebot" http://localhost:3000 | npx prettier --parser html
 ```
 
-```bash
+```html
 <head>
 --
 </head>
@@ -289,3 +300,423 @@ curl -A "Googlebot" http://localhost:3000 | npx prettier --parser html
 하지만 결국 body 내에 children 이 없으면, body 내에 `<meta>` 대신 `<script>` 태그들만 있는 것으로 보아, 제대로 streaming metadata 를 처리하지 못하는 것으로 보인다.
 
 물론, 이런 상황이 거의 발생하지 않는 errorful 한 상황일수도 있으나 의도된 것인지 확인이 필요할 것 같다.
+
+따라서 어느 상황에 이렇게 메타데이터가 렌더링 되지 않는지 파악하기 위하여, agent, `{ children }` 의 유무, dev 인지 prod 인지를 변화시켜 실험해보았다.
+
+사용한 agent 는 streaming bot(`googlebot`), html-limited bot(`facebookexternalhit`) 이다.
+
+<Note variant="default" title="구체적인 실험 결과" collapse>
+##### With `{ children }`
+
+1. streaming bots(`Googlebot`)
+
+- Dev: Metadata is in head for first compile, in body for the rest.
+- Prod: Metadata is in head.
+
+```html
+<head>
+  <title>Create Next App</title>
+        'body link[rel="icon"], body link[rel="apple-touch-icon"]',
+      .forEach((el) => document.head.appendChild(el));
+</head>
+<body>
+      't.suspense"\n29:I["[project]/node_modules/next/dist/client/components/metadata/async-metadata.js [app-client] (ecmascript)",["/_next/static/chunks/node_modules_next_dist_1a6ee436._.js","/_next/static/chunks/src_app_favicon_ico_mjs_8a7a8fdc._.js"],"AsyncMetadata"]\n:HL["/_next/static/chunks/%5Broot-of-the-server%5D__8ebb6d4b._.css","style"]\n:HL["/_next/static/media/gyByhwUxId8gMEwcGFWNOITd-s.p.da1ebef7.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n:HL["/_next/static/media/or3nQ6H_1_WfwkMZI_qYFrcdmhHkjko-s.p.be19f591.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n2:{"name":"Preloads","env":"Server","key":null,"owner":null,"stack":[],"props":{"preloadCallbacks":["$E(()=\u003e{ctx.componentMod.preloadStyle(fullHref,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})"]}}\n1:D"$2"\n1:null\n7:{"name":"RootLayout","env":"Server","key":null,"owner":null,"stack":[],"props":{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$3",null,{"children":["$","$L6",null,{},null,[],1]},null,[],0],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$Y","forbidden":"$undefined","unauthorized":"$undefined"},null,[],1],"params":"$Y"}}\n4:D"$7"\n9:{"name":"NotFound","env":"Server","key":null,"owner":null,"stack":[],"props":{}}\n8:D"$9"\na:{"name":"HTTPAccessErrorFallback","env":"Server","key":null,"owner":"$9","stack":[],"props":{"status":404,"message":"This page could not be found."}}\n8:D"$a"\n8:[["$","title",null,{"children":"404: This page could not be found."},"$a",[],1],["$","div",null,{"style":{"fontFamily":"system-ui,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif,\\"Apple Color Emoji\\",\\"Segoe UI Emoji\\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","d',
+      'iv",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}},"$a",[],1],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404},"$a",[],1],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."},"$a",[],1]},"$a",[],1]]},"$a",[],1]},"$a",[],1]]\n4:["$","html",null,{"lang":"en","children":["$","body",null,{"className":"geist_e531dabc-module__QGiZLq__variable geist_mono_68a01160-module__YLcDdW__variable antialiased","children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{},null,[],1],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$8",[]],"forbidden":"$undefined","unauthorized":"$undefined"},null,[],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",88,270]],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",86,263]],1]\nc:{"name":"Home","env":"Server","key":null,"owner":null,"stack":[],"props":{"params":"$@","searchParams":"$@"}}\nb:D"$c"\n',
+      '2a:{"metadata":[["$","title","0",{"children":"Create Next App"},"$13",[],0],["$","meta","1",{"name":"description","content":"Generated by create next app"},"$13",[],0],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.45db1c09.ico","sizes":"256x256","type":"image/x-icon"},"$13",[],0]],"error":null,"digest":"$undefined"}\n1c:{"metadata":"$2a:metadata","error":null,"digest":"$undefined"}\n',
+</body>
+```
+
+```html
+<head>
+</head>
+<body>
+      't.suspense"\n29:I["[project]/node_modules/next/dist/client/components/metadata/async-metadata.js [app-client] (ecmascript)",["/_next/static/chunks/node_modules_next_dist_1a6ee436._.js","/_next/static/chunks/src_app_favicon_ico_mjs_8a7a8fdc._.js"],"AsyncMetadata"]\n:HL["/_next/static/chunks/%5Broot-of-the-server%5D__8ebb6d4b._.css","style"]\n:HL["/_next/static/media/gyByhwUxId8gMEwcGFWNOITd-s.p.da1ebef7.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n:HL["/_next/static/media/or3nQ6H_1_WfwkMZI_qYFrcdmhHkjko-s.p.be19f591.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n2:{"name":"Preloads","env":"Server","key":null,"owner":null,"stack":[],"props":{"preloadCallbacks":["$E(()=\u003e{ctx.componentMod.preloadStyle(fullHref,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})"]}}\n1:D"$2"\n1:null\n7:{"name":"RootLayout","env":"Server","key":null,"owner":null,"stack":[],"props":{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$3",null,{"children":["$","$L6",null,{},null,[],1]},null,[],0],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$Y","forbidden":"$undefined","unauthorized":"$undefined"},null,[],1],"params":"$Y"}}\n4:D"$7"\n9:{"name":"NotFound","env":"Server","key":null,"owner":null,"stack":[],"props":{}}\n8:D"$9"\na:{"name":"HTTPAccessErrorFallback","env":"Server","key":null,"owner":"$9","stack":[],"props":{"status":404,"message":"This page could not be found."}}\n8:D"$a"\n8:[["$","title",null,{"children":"404: This page could not be found."},"$a",[],1],["$","div",null,{"style":{"fontFamily":"system-ui,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif,\\"Apple Color Emoji\\",\\"Segoe UI Emoji\\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","d',
+      'iv",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}},"$a",[],1],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404},"$a",[],1],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."},"$a",[],1]},"$a",[],1]]},"$a",[],1]},"$a",[],1]]\n4:["$","html",null,{"lang":"en","children":["$","body",null,{"className":"geist_e531dabc-module__QGiZLq__variable geist_mono_68a01160-module__YLcDdW__variable antialiased","children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{},null,[],1],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$8",[]],"forbidden":"$undefined","unauthorized":"$undefined"},null,[],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",88,270]],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",86,263]],1]\nc:{"name":"Home","env":"Server","key":null,"owner":null,"stack":[],"props":{"params":"$@","searchParams":"$@"}}\nb:D"$c"\n',
+      '2a:{"metadata":[["$","title","0",{"children":"Create Next App"},"$13",[],0],["$","meta","1",{"name":"description","content":"Generated by create next app"},"$13",[],0],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.45db1c09.ico","sizes":"256x256","type":"image/x-icon"},"$13",[],0]],"error":null,"digest":"$undefined"}\n1c:{"metadata":"$2a:metadata","error":null,"digest":"$undefined"}\n',
+  <title>Create Next App</title
+        'body link[rel="icon"], body link[rel="apple-touch-icon"]',
+      .forEach((el) => document.head.appendChild(el));
+</body>
+```
+
+2. html-limited bots(`facebookexternalhit`)
+
+- Dev: Metadata is in head
+- Prod: Metadata is in head
+
+```html
+<head>
+  <title>Create Next App</title>
+</head>
+<body>
+      '2","font",{"crossOrigin":"","type":"font/woff2"}]\n2:{"name":"Preloads","env":"Server","key":null,"owner":null,"stack":[],"props":{"preloadCallbacks":["$E(()=\u003e{ctx.componentMod.preloadStyle(fullHref,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})"]}}\n1:D"$2"\n1:null\n7:{"name":"RootLayout","env":"Server","key":null,"owner":null,"stack":[],"props":{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$3",null,{"children":["$","$L6",null,{},null,[],1]},null,[],0],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$Y","forbidden":"$undefined","unauthorized":"$undefined"},null,[],1],"params":"$Y"}}\n4:D"$7"\n9:{"name":"NotFound","env":"Server","key":null,"owner":null,"stack":[],"props":{}}\n8:D"$9"\na:{"name":"HTTPAccessErrorFallback","env":"Server","key":null,"owner":"$9","stack":[],"props":{"status":404,"message":"This page could not be found."}}\n8:D"$a"\n8:[["$","title",null,{"children":"404: This page could not be found."},"$a",[],1],["$","div",null,{"style":{"fontFamily":"system-ui,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif,\\"Apple Color Emoji\\",\\"Segoe UI Emoji\\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}},"$a",[],1],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404},"$a"',
+      ',[],1],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."},"$a",[],1]},"$a",[],1]]},"$a",[],1]},"$a",[],1]]\n4:["$","html",null,{"lang":"en","children":["$","body",null,{"className":"geist_e531dabc-module__QGiZLq__variable geist_mono_68a01160-module__YLcDdW__variable antialiased","children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{},null,[],1],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$8",[]],"forbidden":"$undefined","unauthorized":"$undefined"},null,[],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",88,270]],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",86,263]],1]\nc:{"name":"Home","env":"Server","key":null,"owner":null,"stack":[],"props":{"params":"$@","searchParams":"$@"}}\nb:D"$c"\n',
+      '11:null\n20:[["$","title","0",{"children":"Create Next App"},"$12",[],0],["$","meta","1",{"name":"description","content":"Generated by create next app"},"$12",[],0],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.45db1c09.ico","sizes":"256x256","type":"image/x-icon"},"$12",[],0]]\n',
+</body>
+```
+
+##### Without `{ children }`
+
+1. streaming bots(`Googlebot`)
+
+- Dev: **No metadata tag.**
+- Prod: **No metadata tag.**
+
+```html
+<head>
+</head>
+<body class="__variable_5cfdac __variable_9a8899 antialiased">
+      '0:{"P":null,"b":"cw34v8qy86IR3ZX4RO89d","p":"","c":["",""],"i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/f5851670bcc5d7e2.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased"}]}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","div",null,{"className":"grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]","children":[["$","main",null,{"className":"flex flex-col gap-[32px] row-start-2 items-center sm:items-start","children":[["$","$L2",null,{"className":"dark:invert","src":"/next.svg","alt":"Next.js logo","width":180,"height":38,"priority":true}],["$","ol",null,{"className":"list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]","children":[["$","li",null,{"className":"mb-2 tracking-[-.01em]","children":["Get started by editing"," ",["$","code",null,{"className":"bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold","children":"src/app/page.tsx"}],"."]}],["$","li",null,{"className":"tracking-[-.01em]","children":"Save and see your changes instantly."}]]}],["$","div",null,{"className":"flex gap-4 items-center flex-col sm:flex-row","children":[["$","a",null,{"className":"rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto","href":"https://vercel.com/new?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"className":"dark:invert","src":"/vercel.svg","alt":"Vercel logomark","width":20,"height":20}],"Deploy now"]}],["$","a",null,{"className":"rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]","href":"https://nextjs.org/docs?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":"Read our docs"}]]}]]}],["$","footer",null,{"className":"row-start-3 flex gap-[24px] flex-wrap items-center justify-center","children":[["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://nextjs.org/learn?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/file.svg","alt":"File icon","width":16,"height":16}],"Learn"]}],["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://vercel.com/templates?framework=next.js\u0026utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/window.svg","alt":"Window icon","width":16,"height":16}],"Examples"]}],["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://nextjs.org?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/globe.svg","alt":"Globe icon","width":16,"height":16}],"Go to nextjs.org →"]}]]}]]}],["$","$L3",null,{"children":"$L4"}],null,["$","$L5",null,{"children":["$L6","$L7",["$","$L8",null,{"promise":"$@9"}]]}]]}],{},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","PzboKGdl_5RZ4DJ_JKnkI",{"children":[["$","$La",null,{"children":"$Lb"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],null]}],false]],"m":"$undefined","G":["$c","$undefined"],"s":false,"S":true}\n',
+      'f:{"metadata":[["$","title","0",{"children":"Create Next App"}],["$","meta","1",{"name":"description","content":"Generated by create next app"}],["$","link","2",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]],"error":null,"digest":"$undefined"}\n9:{"metadata":"$f:metadata","error":null,"digest":"$undefined"}\n',
+</body>
+```
+
+2. html-limited bots(`facebookexternalhit`)
+
+- Dev: Metadata is in head.
+- Prod: **No metadata tag.**
+
+```html
+<head>
+  <title>Create Next App</title>
+</head>
+<body>
+      '2","font",{"crossOrigin":"","type":"font/woff2"}]\n2:{"name":"Preloads","env":"Server","key":null,"owner":null,"stack":[],"props":{"preloadCallbacks":["$E(()=\u003e{ctx.componentMod.preloadStyle(fullHref,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})","$E(()=\u003e{ctx.componentMod.preloadFont(href,type,ctx.renderOpts.crossOrigin,ctx.nonce)})"]}}\n1:D"$2"\n1:null\n7:{"name":"RootLayout","env":"Server","key":null,"owner":null,"stack":[],"props":{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$3",null,{"children":["$","$L6",null,{},null,[],1]},null,[],0],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$Y","forbidden":"$undefined","unauthorized":"$undefined"},null,[],1],"params":"$Y"}}\n4:D"$7"\n4:["$","html",null,{"lang":"en","children":["$","body",null,{"className":"geist_e531dabc-module__QGiZLq__variable geist_mono_68a01160-module__YLcDdW__variable antialiased"},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",88,270]],1]},"$7",[["RootLayout","/home/monognuisy/Code/test/sample-test/.next/server/chunks/ssr/[root-of-the-server]__6302eb5e._.js",86,263]],1]\n9:{"name":"Home","env":"Server","key":null,"owner":null,"stack":[],"props":{"params":"$@","searchParams":"$@"}}\n8:D"$9"\n',
+      'e:null\n1d:[["$","title","0",{"children":"Create Next App"},"$f",[],0],["$","meta","1",{"name":"description","content":"Generated by create next app"},"$f",[],0],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.45db1c09.ico","sizes":"256x256","type":"image/x-icon"},"$f",[],0]]\n',
+</body>
+```
+
+```html
+<head>
+</head>
+<body class="__variable_5cfdac __variable_9a8899 antialiased">
+      '0:{"P":null,"b":"cw34v8qy86IR3ZX4RO89d","p":"","c":["",""],"i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/f5851670bcc5d7e2.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased"}]}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","div",null,{"className":"grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]","children":[["$","main",null,{"className":"flex flex-col gap-[32px] row-start-2 items-center sm:items-start","children":[["$","$L2",null,{"className":"dark:invert","src":"/next.svg","alt":"Next.js logo","width":180,"height":38,"priority":true}],["$","ol",null,{"className":"list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]","children":[["$","li",null,{"className":"mb-2 tracking-[-.01em]","children":["Get started by editing"," ",["$","code",null,{"className":"bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold","children":"src/app/page.tsx"}],"."]}],["$","li",null,{"className":"tracking-[-.01em]","children":"Save and see your changes instantly."}]]}],["$","div",null,{"className":"flex gap-4 items-center flex-col sm:flex-row","children":[["$","a",null,{"className":"rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto","href":"https://vercel.com/new?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"className":"dark:invert","src":"/vercel.svg","alt":"Vercel logomark","width":20,"height":20}],"Deploy now"]}],["$","a",null,{"className":"rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]","href":"https://nextjs.org/docs?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":"Read our docs"}]]}]]}],["$","footer",null,{"className":"row-start-3 flex gap-[24px] flex-wrap items-center justify-center","children":[["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://nextjs.org/learn?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/file.svg","alt":"File icon","width":16,"height":16}],"Learn"]}],["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://vercel.com/templates?framework=next.js\u0026utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/window.svg","alt":"Window icon","width":16,"height":16}],"Examples"]}],["$","a",null,{"className":"flex items-center gap-2 hover:underline hover:underline-offset-4","href":"https://nextjs.org?utm_source=create-next-app\u0026utm_medium=appdir-template-tw\u0026utm_campaign=create-next-app","target":"_blank","rel":"noopener noreferrer","children":[["$","$L2",null,{"aria-hidden":true,"src":"/globe.svg","alt":"Globe icon","width":16,"height":16}],"Go to nextjs.org →"]}]]}]]}],["$","$L3",null,{"children":"$L4"}],null,["$","$L5",null,{"children":["$L6","$L7",["$","$L8",null,{"promise":"$@9"}]]}]]}],{},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","PzboKGdl_5RZ4DJ_JKnkI",{"children":[["$","$La",null,{"children":"$Lb"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],null]}],false]],"m":"$undefined","G":["$c","$undefined"],"s":false,"S":true}\n',
+      'f:{"metadata":[["$","title","0",{"children":"Create Next App"}],["$","meta","1",{"name":"description","content":"Generated by create next app"}],["$","link","2",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]],"error":null,"digest":"$undefined"}\n9:{"metadata":"$f:metadata","error":null,"digest":"$undefined"}\n',
+</body>
+```
+
+</Note>
+
+#### 결론
+
+| children?  | Streaming bot (dev) | Streaming bot (prod) | Html bot (dev) | Html bot (prod) |
+| --- | --- | --- | --- | --- |
+| O | head or body | head | head | head |
+| X | X | X | head | X |
+
+역시 streaming bot 들에 대해서는 children 이 없을 때 모두 문제가 발생한다. 특이한 점은, **html-limited bot 또한 배포환경에서는 문제가 생긴다**는 것이다. 이는, `facebookexternalhit` 로 검사한 내 블로그에 open graph 태그들이 보이지 않는 이유였다!
+
+이렇게 실험을 한 내용들도 포함해 [github issue](https://github.com/vercel/next.js/issues/80547) 에 올렸고, 다행이라고 해야할지, **canary 빌드에서는 잘 작동**한다는 답변을 받았다. 확인해보니 최신 canary 빌드 뿐만 아니라, 문제를 발견한 당시로부터 약 두 달 전인 `15.3.1-canary.12` 버전부터 정상 작동한듯 했다.
+
+따라서, 변경된 파일들을 보고 실제 원인을 파악해보고자 하였다. 다행히, 중요한 부분은 단 몇 줄밖에 수정되지 않았어서 코드 리딩이 크게 어렵지는 않았다.
+
+## next.js 의 소스코드를 분석해보자! <IntraContentAnchor name="원인-분석" />
+
+`ee579bf1..c61b479d` 를 비교했다. 먼저, 기존(`c61b479d`) 코드에서 바라본 원인을 서술하고, 이후에 이것을 해결한 커밋(`ee579bf1`)의 코드를 보도록 하자.
+
+### 원인
+
+일단, 가장 크게 바뀐 코드는 `app-render.tsx`(packages/next/src/server/app-render/app-render.tsx) 이다. 따라서, 이 파일을 집중적으로 살펴보면 원인을 찾을 수 있을 것 같다.
+
+#### 1. 왜 `{ children }` 이 없으면 메타데이터가 나오지 않을까?
+
+##### `createDivergedMetadataComponents` 함수
+
+기존에는 agent 가 streaming bot 인지를 판별하여 그에 맞는 메타데이터 컴포넌트를 반환하는 `createDivergedMetadataComponents` 함수가 있었다.
+
+```tsx
+// packages/next/src/server/app-render/app-render.tsx
+// 함수 정의
+function createDivergedMetadataComponents(
+  Metadata: React.ComponentType,
+  serveStreamingMetadata: boolean
+): {
+  StaticMetadata: React.ComponentType<{}>
+  StreamingMetadata: React.ComponentType<{}> | null
+} {
+  function EmptyMetadata() {
+    return null
+  }
+  const StreamingMetadata: React.ComponentType | null = serveStreamingMetadata
+    ? Metadata
+    : null
+
+  const StaticMetadata: React.ComponentType<{}> = serveStreamingMetadata
+    ? EmptyMetadata
+    : Metadata
+
+  return {
+    StaticMetadata,
+    StreamingMetadata,
+  }
+}
+
+// 실제 호출 예시
+const { StreamingMetadata, StaticMetadata } =
+  createDivergedMetadataComponents(() => {
+    return (
+      // Adding requestId as react key to make metadata remount for each render
+      <MetadataTree key={requestId} />
+    )
+  }, serveStreamingMetadata)
+  
+// 해당 컴포넌트 사용 예시
+// 대부분은 이렇게 StreamingMetadata 와 StaticMetadata 를 같이 사용한다
+<React.Fragment key={flightDataPathHeadKey}>
+  {/* noindex needs to be blocking */}
+  <NonIndex
+    pagePath={ctx.pagePath}
+    statusCode={ctx.res.statusCode}
+    isPossibleServerAction={ctx.isPossibleServerAction}
+  />
+  {/* Adding requestId as react key to make metadata remount for each render */}
+  <ViewportTree key={requestId} />
+  {StreamingMetadata ? <StreamingMetadata /> : null}
+  <StaticMetadata />
+</React.Fragment>
+```
+
+스트리밍이 가능하면 받은 컴포넌트를 `StreamingMetadata` 에, 그렇지 않으면 `StaticMetadata` 에 넣는 로직이었다. 따라서, 대부분은 이 둘에 모두 대응할 수 있도록 두 컴포넌트를 같이 사용하는 것을 볼 수 있다.
+
+하지만, 초기 head 를 만드는 부분에서는 `StreamingMetadata` 가 누락되어있다.
+
+##### head 렌더링: `getRSCPayload` 함수
+
+layout 의 head 를 렌더링 하는 코드의 일부분은 다음과 같다.
+
+```tsx
+// packages/next/src/server/app-render/app-render.tsx
+async function getRSCPayload(...) {
+ // ...
+ 
+  const { StreamingMetadata, StaticMetadata } =
+    createDivergedMetadataComponents(() => {
+      return (
+        // Not add requestId as react key to ensure segment prefetch could result consistently if nothing changed
+        <MetadataTree />
+      )
+    }, serveStreamingMetadata)
+
+ // 하위 react 컴포넌트 트리를 생성 (page 단 메타데이터 처리)
+  const seedData = await createComponentTree({
+    ctx,
+    loaderTree: tree,
+    parentParams: {},
+    injectedCSS,
+    injectedJS,
+    injectedFontPreloadTags,
+    rootLayoutIncluded: false,
+    getViewportReady,
+    getMetadataReady,
+    missingSlots,
+    preloadCallbacks,
+    authInterrupts: ctx.renderOpts.experimental.authInterrupts,
+    StreamingMetadata,
+    StreamingMetadataOutlet,
+  })
+  
+  // ...
+ 
+ // 오직 StaticMetadata 만 있음을 확인할 수 있다.
+  const initialHead = (
+    <React.Fragment key={flightDataPathHeadKey}>
+      <NonIndex
+        pagePath={ctx.pagePath}
+        statusCode={ctx.res.statusCode}
+        isPossibleServerAction={ctx.isPossibleServerAction}
+      />
+      <ViewportTree key={ctx.requestId} />
+      <StaticMetadata />
+    </React.Fragment>
+  )
+  
+  // ...
+  
+  return {
+    // See the comment above the `Preloads` component (below) for why this is part of the payload
+    P: <Preloads preloadCallbacks={preloadCallbacks} />,
+    b: ctx.sharedContext.buildId,
+    p: ctx.assetPrefix,
+    c: prepareInitialCanonicalUrl(url),
+    i: !!couldBeIntercepted,
+    f: [
+      [
+        initialTree,
+        seedData,
+        initialHead,
+        isPossiblyPartialHead,
+      ] as FlightDataPath,
+    ],
+    m: missingSlots,
+    G: [GlobalError, globalErrorStyles],
+    s: typeof ctx.renderOpts.postponed === 'string',
+    S: workStore.isStaticGeneration,
+  }
+}
+```
+
+여기서의 `initialHead` 에는 `StaticMetadata` 밖에 존재하지 않았다. 하지만, 어떻게 그럼에도 불구하고 정상적인 상황(children 이 있는 경우)에는 메타데이터가 잘 렌더링될 수 있을까?
+
+이를 파악하기 위해서는 저 `seedData` 를 만드는 `createComponentTree` 함수를 들여다봐야 한다.
+
+##### `createComponentTree` 함수
+
+`createComponentTree` 함수는 단순히 `createComponentTreeInternal` 을 호출하는 wrapper 함수이다. 따라서, 내부 함수의 일부분을 보도록 하자.
+
+```tsx
+// packages/next/src/server/app-render/create-component-tree.tsx
+
+async function createComponentTreeInternal(
+ // ...
+ ctx,                  // app 렌더링 컨텍스트 (streaming 가능 여부 포함)
+ StreamingMetadata,    // createDivergedMetadataComponents 함수로 생성된 컴포넌트
+ // ...
+) {
+ // ...
+ 
+ const isPage = typeof page !== 'undefined'
+ const metadata = StreamingMetadata ? <StreamingMetadata /> : undefined
+ 
+ if (isPage) {
+  return [
+      actualSegment,
+      <React.Fragment key={cacheNodeKey}>
+        {pageElement}
+        {/*
+         * The order here matters since a parent might call findDOMNode().
+         * findDOMNode() will return the first child if multiple children are rendered.
+         * But React will hoist metadata into <head> which breaks scroll handling.
+         */}
+        {metadata}  {/* page 단에서 메타데이터를 넣어준다 */}
+        {layerAssets}
+        <OutletBoundary>
+          <MetadataOutlet ready={getViewportReady} />
+          {/* Blocking metadata outlet */}
+          <MetadataOutlet ready={getMetadataReady} />
+          {/* Streaming metadata outlet */}
+          {metadataOutlet}
+        </OutletBoundary>
+      </React.Fragment>,
+      parallelRouteCacheNodeSeedData,
+      loadingData,
+      isPossiblyPartialResponse,
+    ]
+ } else {
+  // layout 인 경우 특별히 metadata 처리를 하지 않는다 (상위 함수에서 담당)
+    return [
+      actualSegment,
+      segmentNode,
+      parallelRouteCacheNodeSeedData,
+      loadingData,
+      isPossiblyPartialResponse,
+    ]
+ }
+}
+```
+
+여기서는 page 인 경우, 인자로 넘겨준 `StreamingMetadata` 를 렌더링하는 것을 확인할 수 있다. 따라서, children 이 있으면 어차피 page 가 렌더링 될 테니까, 상위 함수 (`getRSCPayload`) 의 head 에서 메타데이터를 렌더링하지 않더라도 page 내부에서 메타데이터를 처리해줌으로써 정상적으로 작동되는 것임을 알 수 있다.
+
+동시에, 이는 children 이 없으면 메타데이터가 렌더링 되지 않는 이유이기도 하다!
+
+정리해보면:
+
+| 봇 종류 | children? | 렌더링 과정  | 메타데이터 여부 |
+|--------------------------------|---------------------------|---------------------------|---------------------------|
+| Streaming  | O | StaticMetadata 가 null -> children 있으니 page 렌더링 가능 -> page 에서 StreamingMetadata 처리  | O |
+| Streaming  | X | StaticMetadata 가 null -> children 없으니 page 렌더링 불가능 -> page 에서 StreamingMetadata 처리 안됨                         | X |
+| HTML        | O | StaticMetadata 사용 |  O |
+| HTML       | X | StaticMetadata 사용 | O |
+
+#### 2. 왜 배포환경에서는 html-limited bot 도 메타데이터를 렌더링하지 못할까?
+
+하지만, 이상한 점은 배포 (build 후 start) 환경에서는 html bot 들도 제대로 메타데이터를 렌더링하지 못했다. html bot 이라면 `serveStreamingMetadata` 가 `false` 가 되면서 `StaticMetadata` 가 제대로 렌더링되어야 하는데, 의외의 결과였다.
+
+확인한 결과 빌드하면 `serveStreamingMetadata` 가 `true` 가 된다. 이는 [PR #77434](https://github.com/vercel/next.js/pull/77437) 에 따르면 동적인 메타데이터가 빌드 실패되지 않게 하면서도 DIO 규칙을 적용할 수 있는 방법이기 때문이라고 한다.
+
+```tsx
+// packages/next/src/export/worker.ts
+
+async function exportPageImpl(...) {
+  const renderOpts: WorkerRenderOpts = {
+    ...components,
+    ...input.renderOpts,
+    ampPath: renderAmpPath,
+    params,
+    optimizeCss,
+    disableOptimizedLoading,
+    locale,
+    supportsDynamicResponse: false,
+    
+    // serveStreamingMetadata 를 true 로 설정
+    // During the export phase in next build, we always enable the streaming metadata since if there's
+    // any dynamic access in metadata we can determine it in the build phase.
+    // If it's static, then it won't affect anything.
+    // If it's dynamic, then it can be handled when request hits the route.
+    serveStreamingMetadata: true,
+    experimental: {
+      ...input.renderOpts.experimental,
+      isRoutePPREnabled,
+    },
+  }
+}
+```
+
+따라서, html bot 또한 마치 streaming bot 처럼 처리되어서 children 이 없는 경우 제대로 `StaticMetadata` 를 처리하지 못하는 것이다. 반대로 children 이 있는 경우에는 page 단에서의 `StreamingMetadata` 컴포넌트를 이용해서 메타데이터를 처리하는 것이 된다.
+
+### 해결
+
+사실, 위 원인 부분을 읽으면서 추측할 수 있었겠지만, `initialHead` 내에 `StaticMetadata` 뿐만 아니라 `StreamingMetadata` 를 넣어주면 문제는 해결된다.
+
+그렇게 되면 결국 static, streaming 으로 나누는 의미가 없으므로 (다 함께 사용되니까) `createDivergedMetadataComponents` 함수를 사용하지 않아도 된다.
+
+더욱이, 이 함수의 인자로 건네지는 `MetadataTree` 컴포넌트 내에서 streaming 가능 여부를 판별하는 로직이 이미 있다.
+
+```tsx
+// packages/next/src/lib/metadata/metadata.tsx
+
+// MetadataTree 컴포넌트
+function MetadataTree() {
+  return (
+    <MetadataBoundary>
+      <Metadata />
+    </MetadataBoundary>
+  )
+}
+
+// Metadata 컴포넌트
+async function Metadata() {
+  const promise = resolveFinalMetadata()
+  
+  // 이미 streaming 가능 여부 코드 존재
+  if (serveStreamingMetadata) {
+    return (
+      <Suspense fallback={null}>
+        <AsyncMetadata promise={promise} />
+      </Suspense>
+    )
+  }
+  const metadataState = await promise
+  return metadataState.metadata
+}
+```
+
+따라서 이를 수정한 커밋(`ee579bf1`) 에서는 `StreamingMetadata` 나 `StaticMetadata` 대신 `MetadataTree` 를 사용하여 이 문제를 해결했다.
+
+## 결론
+
+결론적으로는, 나의 사소한 실수 때문에 발견한 문제였고, 코드 하나하나 짤 때마다 생각하고 짜야한다는 것을 다시금 깨닫게 되었다. 그래도 그 작은 실수 덕분에 next.js, 특히 15 버전에서 도입된 streaming metadata 에 대해 잘 알게 되었고, 내부적으로는 어떻게 구현되어있는지 파악해볼 수 있었다.
+
+그래도 아직까지는 streaming metadata 가 과연 그정도의 효용을 내는가 라는 생각을 머릿속에서 지울 수가 없다. vercel 이 아닌 다른 플랫폼에서는 제대로 작동이 안된다는 이야기도 있고… 무엇보다 이번에 코드를 보면서 14 버전의 코드도 살펴보았는데, 지나치게 메타데이터 처리 부분이 복잡해진 느낌이 들었다. (그래서 처음에 로직 파악하기가 힘들었던…) 뭐, 이것저것 개선되면 더 나아지지 않을까. 그렇지 않다면 블로그 같은 가벼운 서비스의 개발은 다른 프레임워크를 고려해봐야겠다.
+
+아무래도 오픈소스 코드는 방대하기 때문에 그 모든 것을 다 읽어보고 판단하는 것이 쉽지 않아 cursor 등의 AI 툴의 도움을 많이 받았다. 모든 경우에 단번에 완벽하게 문제점을 찾아주지는 못했어도, 꽤 큰 힌트들을 줬다.
+
+문제점을 파악하고 나니, 생각보다 간단하게 해결될수도 있었던 문제였다는 점이 신기했다. 이번에는 해결된 문제를 본 것이었지만, 앞으로는 이러한 오픈소스에 기여할 수 있도록 관심을 가지고 코드를 봐야겠다는 다짐을 했다.
+
+## 참고
+
+- [Next.js 공식 문서 - Streaming Metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#streaming-metadata)
+- [Next.js 공식 문서 - htmlLimitedBots](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots)
+- [vercel/next.js#79916](https://github.com/vercel/next.js/discussions/79916)
+- [vercel/next.js#80547](https://github.com/vercel/next.js/issues/80547)
+- [vercel/next.js#77434](https://github.com/vercel/next.js/pull/77434)
+- [vercel/next.js](https://github.com/vercel/next.js) source code (ee579bf1, c61b479d)

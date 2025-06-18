@@ -1,6 +1,13 @@
 'use client';
 
-import { AlertCircle, Info, Pen, AlertTriangle, Lightbulb, ChevronsUpDown } from 'lucide-react';
+import {
+  AlertCircle,
+  Info,
+  Pen,
+  AlertTriangle,
+  Lightbulb,
+  ChevronsUpDown,
+} from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/styles';
 

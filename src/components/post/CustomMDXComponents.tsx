@@ -74,7 +74,7 @@ const CustomMDXComponents = (
     h3: (props) => {
       const id = props.id || generateIdFromText(props.children, 3);
       return (
-        <div className="*:text-xl *:font-semibold mt-6 mb-3 pt-4 relative group flex items-center gap-2">
+        <div className="*:text-xl *:font-bold mt-6 mb-3 pt-4 relative group flex items-center gap-2">
           <h3 id={id} className="m-0 p-0" {...props} />
           <HeaderAnchor id={id} />
         </div>
@@ -83,9 +83,17 @@ const CustomMDXComponents = (
     h4: (props) => {
       const id = props.id || generateIdFromText(props.children, 4);
       return (
-        <div className="*:text-lg *:font-medium mt-4 mb-2 relative group flex items-center gap-2">
+        <div className="*:text-lg *:font-semibold mt-4 mb-2 relative group flex items-center gap-2">
           <h4 id={id} className="m-0 p-0" {...props} />
           <HeaderAnchor id={id} />
+        </div>
+      );
+    },
+    h5: (props) => {
+      const id = props.id || generateIdFromText(props.children, 5);
+      return (
+        <div className="*:text-base *:font-semibold mt-4 mb-2 relative group flex items-center gap-2">
+          <h5 id={id} className="m-0 p-0" {...props} />
         </div>
       );
     },
@@ -115,6 +123,42 @@ const CustomMDXComponents = (
       </Link>
     ),
     pre: (props) => <Pre {...(props as TPreProps)} />,
+    table: (props) => (
+      <div className="overflow-x-auto my-6">
+        <table
+          className="min-w-full text-sm border-collapse border border-gray-200 dark:border-neutral-700 rounded-lg overflow-hidden shadow-sm"
+          {...props}
+        />
+      </div>
+    ),
+    thead: (props) => (
+      <thead className="bg-gray-50 dark:bg-neutral-800" {...props} />
+    ),
+    tbody: (props) => (
+      <tbody
+        className="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-neutral-700"
+        {...props}
+      />
+    ),
+    tr: (props) => (
+      <tr
+        className="hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors duration-200"
+        {...props}
+      />
+    ),
+    th: (props) => (
+      <th
+        className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-neutral-300 uppercase tracking-wider border-b border-gray-200 dark:border-neutral-700"
+        {...props}
+      />
+    ),
+    td: (props) => (
+      <td
+        className="px-4 py-3 text-sm text-gray-900 dark:text-neutral-100 border-b border-gray-200 dark:border-neutral-700"
+        {...props}
+      />
+    ),
+    IntraContentAnchor,
     Highlight,
     LinkCard,
     Note,
@@ -139,5 +183,20 @@ const HeaderAnchor = ({ id, className }: IHeaderAnchorProps) => {
     >
       <LucideLink className="w-4 h-4" />
     </Link>
+  );
+};
+
+interface IIntraContentAnchorProps {
+  name: string;
+}
+
+const IntraContentAnchor = ({ name }: IIntraContentAnchorProps) => {
+  // HTML5에서는 id 사용이 권장되지만, name 속성을 사용하려면 아래와 같이 처리
+  return (
+    <a
+      id={name}
+      style={{ scrollMarginTop: '100px' }}
+      {...({ name } as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+    />
   );
 };
