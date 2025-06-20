@@ -60,7 +60,7 @@ const CategoryPage = async ({ params }: TCategoryPageProps) => {
   return (
     <div className="max-w-[1200px] mx-auto   px-4">
       <h1 className="my-2 md:my-12 text-[2rem] md:text-[2.5rem]">
-        {`"${categoryName}"`} 카테고리의 글
+        {`${categoryName}`} 카테고리의 글
       </h1>
       <div className="border-l hidden md:flex md:flex-col md:gap-12">
         {contents.map((post) => (

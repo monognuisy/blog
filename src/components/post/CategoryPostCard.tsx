@@ -1,8 +1,8 @@
 import { TContentHeader } from '@/lib/type';
-import TagList from './TagList';
 import Link from 'next/link';
 import CardImage from './CardImage';
 import { ArrowRight } from 'lucide-react';
+import Tags from './Tags';
 
 type TCategoryPostCardProps = {
   post: TContentHeader;
@@ -18,7 +18,7 @@ const CategoryPostCard = ({ post }: TCategoryPostCardProps) => {
           {date}
         </div>
         <h3>{title}</h3>
-        <TagList tags={tags} />
+        <Tags tags={tags} />
       </header>
       <div className="grow w-[200px] flex flex-col gap-4">
         <div className="relative w-full aspect-video">

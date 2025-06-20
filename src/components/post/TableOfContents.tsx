@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import useMediaQuery from '@/hooks/useMediaQuery';
+import ScrollableMask from '../common/ScrollableMask';
 
 export type TocItem = {
   id: string; // 헤더 요소의 ID
@@ -17,26 +18,11 @@ interface TableOfContentsProps {
 const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string>('');
   const [toc, setToc] = useState<TocItem[]>(initialToc);
-  const tocContainerRef = useRef<HTMLElement>(null);
+  const tocContainerRef = useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = useState({
     isAtTop: true,
     isAtBottom: false,
   });
-
-  // 스크롤 상태에 따른 CSS 클래스 결정
-  const getScrollClass = useMemo(() => {
-    const { isAtTop, isAtBottom } = scrollState;
-
-    if (isAtTop && isAtBottom) {
-      return 'toc-no-mask';
-    } else if (isAtTop) {
-      return 'toc-mask-bottom';
-    } else if (isAtBottom) {
-      return 'toc-mask-top';
-    } else {
-      return 'toc-mask-both';
-    }
-  }, [scrollState]);
 
   // 클라이언트 측에서 헤더 추출
   useEffect(() => {
@@ -95,6 +81,7 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
     };
   }, [toc]);
 
+  // 페이지 스크롤에 따른 목차 자동 스크롤
   useEffect(() => {
     let ticking = false;
 
@@ -184,40 +171,45 @@ const TableOfContents = ({ toc: initialToc = [] }: TableOfContentsProps) => {
   return (
     <>
       <aside
-        ref={tocContainerRef}
-        className={`toc-container sticky mt-20 top-20 z-10 w-full h-fit max-h-[calc(100vh-120px)] overflow-y-auto p-4 text-sm
-        [&::-webkit-scrollbar]:hidden ${getScrollClass}
-        `}
+        // ref={tocContainerRef}
+        className={`sticky mt-20 top-20 z-10 w-full scrollbar-hide`}
       >
-        <nav>
-          <ul className="space-y-2">
-            {toc.map(({ id, text, level }) => {
-              // 레벨에 따른 들여쓰기 및 스타일 적용 (h2부터 시작하므로 조정)
-              const indentClass =
-                level === 2 ? '' : level === 3 ? 'ml-3' : 'ml-6';
-              const fontSize = level === 2 ? 'text-sm' : 'text-xs';
+        <ScrollableMask
+          ref={tocContainerRef as React.RefObject<HTMLDivElement>}
+          direction="vertical"
+          className="h-fit max-h-[calc(100vh-120px)] overflow-y-auto p-4 text-sm scrollbar-hide"
+          maskSize={30}
+        >
+          <nav>
+            <ul className="space-y-2">
+              {toc.map(({ id, text, level }) => {
+                // 레벨에 따른 들여쓰기 및 스타일 적용 (h2부터 시작하므로 조정)
+                const indentClass =
+                  level === 2 ? '' : level === 3 ? 'ml-3' : 'ml-6';
+                const fontSize = level === 2 ? 'text-sm' : 'text-xs';
 
-              return (
-                <li key={id} className={`toc-item ${indentClass}`}>
-                  <Link
-                    href={`#${id}`}
-                    className={`block ${fontSize} pb-1 hover:text-primary dark:hover:text-primary-dark transition-colors ${
-                      activeId === id
-                        ? 'text-primary dark:text-primary-dark font-bold '
-                        : 'text-gray-700 dark:text-gray-300'
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToHeader(id); // 커스텀 스크롤 함수 사용
-                    }}
-                  >
-                    {text}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+                return (
+                  <li key={id} className={`toc-item ${indentClass}`}>
+                    <Link
+                      href={`#${id}`}
+                      className={`block ${fontSize} pb-1 hover:text-primary dark:hover:text-primary-dark transition-colors ${
+                        activeId === id
+                          ? 'text-primary dark:text-primary-dark font-bold '
+                          : 'text-gray-700 dark:text-gray-300'
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollToHeader(id); // 커스텀 스크롤 함수 사용
+                      }}
+                    >
+                      {text}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </ScrollableMask>
       </aside>
     </>
   );

@@ -1,6 +1,6 @@
 import { TFrontmatter } from '@/types/post';
-import TagList from './TagList';
 import CardImage from './CardImage';
+import Tags from './Tags';
 
 type TPostTitleProps = {
   post: TFrontmatter;
@@ -22,7 +22,7 @@ const PostTitle = ({ post }: TPostTitleProps) => {
         <div className="relative flex flex-col justify-end w-full h-full z-[2]">
           <div className="w-full bg-white/50 dark:bg-black/50  backdrop-blur-sm py-16">
             <div className="max-w-[1200px] mx-auto px-4">
-              {tags && <TagList tags={tags} />}
+              {tags && <Tags tags={tags} />}
               <h1 className="lg:text-[3.5rem] mt-0">{title}</h1>
               <p
                 className="text-sm text-gray-700 dark:text-gray-300"
