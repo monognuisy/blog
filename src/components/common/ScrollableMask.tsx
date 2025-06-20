@@ -16,6 +16,7 @@ interface ScrollableMaskProps {
   className?: string;
   direction?: 'vertical' | 'horizontal' | 'both';
   maskSize?: number; // 마스크 크기 (px)
+  ref?: React.RefObject<HTMLDivElement>;
 }
 
 const ScrollableMask = ({
@@ -23,8 +24,9 @@ const ScrollableMask = ({
   className = '',
   direction = 'vertical',
   maskSize = 20,
+  ref,
 }: ScrollableMaskProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = ref || useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = useState<ScrollState>({
     isAtTop: true,
     isAtBottom: false,
@@ -49,6 +51,7 @@ const ScrollableMask = ({
   };
 
   useEffect(() => {
+    console.log('containerRef', containerRef);
     if (!containerRef.current) return;
 
     const container = containerRef.current;
@@ -117,7 +120,7 @@ const ScrollableMask = ({
   return (
     <div className="relative">
       {/* 스크롤 컨테이너 */}
-      <div ref={containerRef} className={className}>
+      <div ref={ref || containerRef} className={className}>
         {children}
       </div>
 
