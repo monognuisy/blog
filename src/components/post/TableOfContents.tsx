@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import ScrollableMask from '../common/ScrollableMask';

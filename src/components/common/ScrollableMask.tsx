@@ -26,7 +26,8 @@ const ScrollableMask = ({
   maskSize = 20,
   ref,
 }: ScrollableMaskProps) => {
-  const containerRef = ref || useRef<HTMLDivElement>(null);
+  const innerContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = ref || innerContainerRef;
   const [scrollState, setScrollState] = useState<ScrollState>({
     isAtTop: true,
     isAtBottom: false,
@@ -51,7 +52,6 @@ const ScrollableMask = ({
   };
 
   useEffect(() => {
-    console.log('containerRef', containerRef);
     if (!containerRef.current) return;
 
     const container = containerRef.current;
@@ -103,7 +103,7 @@ const ScrollableMask = ({
       container.removeEventListener('scroll', throttledScrollHandler);
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [containerRef]);
 
   const shouldShowTopMask =
     (direction === 'vertical' || direction === 'both') && !scrollState.isAtTop;
@@ -120,7 +120,7 @@ const ScrollableMask = ({
   return (
     <div className="relative">
       {/* 스크롤 컨테이너 */}
-      <div ref={ref || containerRef} className={className}>
+      <div ref={containerRef} className={className}>
         {children}
       </div>
 
