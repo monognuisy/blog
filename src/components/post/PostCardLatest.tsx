@@ -15,7 +15,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
     <div className="my-6 hidden md:block">
       <Link href={`/${category}/${slug}`}>
         <div
-          className="relative w-full"
+          className="relative w-full overflow-hidden rounded-2xl group hover:shadow-md transition-shadow duration-300"
           style={{
             aspectRatio: '8 / 5',
           }}
@@ -23,7 +23,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
           <CardImage
             cover={cover}
             alt={`Cover image of latest post`}
-            className="rounded-2xl object-cover z-[0]"
+            className="rounded-2xl object-cover z-[0] group-hover:scale-105 transition-transform duration-300"
             priority
           />
           <div className="w-full h-full grid grid-rows-[2fr_1fr]">
