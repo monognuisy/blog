@@ -77,9 +77,9 @@ pre {
 
 code {
   font-family: constants.$fontFamily-mono;
-  padding: constants.$spacing-1;
+  padding: constants.$spacing-05 constants.$spacing-1;
   border-radius: constants.$rounded-1;
-  margin: 0 constants.$spacing-1;
+  margin: 0 constants.$spacing-05;
   font-size-adjust: 0.47;
 }
 
