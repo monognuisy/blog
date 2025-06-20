@@ -51,23 +51,23 @@ const GoToTopButton = () => {
     <div
       className={cn(
         'fixed right-6 bottom-6 md:right-8 md:bottom-8 rounded-md bg-white dark:bg-dark-bg',
-        'border-2 dark:border-neutral-800',
-        'shadow-lg text-sm',
+        'border dark:border-neutral-700',
+        'shadow-lg text-sm z-50',
         'flex flex-col justify-center items-center transition-opacity duration-300 opacity-80',
         isVisible ? 'opacity-80' : 'opacity-0',
       )}
     >
       <button
         onClick={scrollToTop}
-        className="hover:scale-110 transition-all duration-300 border-b-2 dark:border-neutral-800 p-1.5"
+        className="hover:scale-110 transition-transform duration-300 border-b dark:border-neutral-700 p-2"
       >
-        <ArrowUp className="w-4 h-4" />
+        <ArrowUp className="w-5 h-5" />
       </button>
       <button
         onClick={scrollToBottom}
-        className="hover:scale-110 transition-all duration-300 p-1.5"
+        className="hover:scale-110 transition-transform duration-300 p-2"
       >
-        <ArrowDown className="w-4 h-4" />
+        <ArrowDown className="w-5 h-5" />
       </button>
     </div>
   );
