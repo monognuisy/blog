@@ -148,7 +148,16 @@ export const getAdjacentPosts = (category: string, slug: string) => {
 const getAllTags = () => {
   const posts = getSortedPostList();
   const tags = posts.flatMap((post) => post.tags);
-  return [...new Set(tags)];
+
+  const tagsWithCount = tags.reduce((acc, tag) => {
+    acc[tag] = (acc[tag] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  const sortedTags = Object.entries(tagsWithCount)
+    .sort((a, b) => b[1] - a[1])
+    .map(([tag]) => tag);
+
+  return sortedTags;
 };
 
 /**
