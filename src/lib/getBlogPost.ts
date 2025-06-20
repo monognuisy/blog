@@ -7,6 +7,11 @@ import { TFrontmatter } from '@/types/post';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 
+// 캐시 변수들 - 빌드 후 포스트가 변경되지 않으므로 단순 메모리 캐싱
+let allPostsCache: TContentHeader[] | null = null;
+let allCategoriesCache: string[] | null = null;
+let allTagsCache: string[] | null = null;
+
 const getPostPath = (category: string, slug: string) => {
   return path.join(postsDirectory, category, `${slug}.mdx`);
 };
@@ -32,7 +37,12 @@ const getAllPostPaths = () => {
 };
 
 const getAllCategories = () => {
+  if (allCategoriesCache) {
+    return allCategoriesCache;
+  }
+
   const categories = fs.readdirSync(postsDirectory);
+  allCategoriesCache = categories;
   return categories;
 };
 
@@ -41,6 +51,12 @@ const getAllCategories = () => {
  * Return list of all blog posts' data
  */
 const getSortedPostList = (sortFn = ascendingSortFn) => {
+  // 캐시된 데이터가 있으면 정렬만 다시 해서 반환
+  if (allPostsCache) {
+    return allPostsCache.toSorted((a, b) => sortFn(a.date, b.date));
+  }
+
+  // 캐시가 없으면 파일에서 로드하고 캐시에 저장
   const fileNames = getAllPostPaths();
 
   const contents = fileNames
@@ -67,6 +83,9 @@ const getSortedPostList = (sortFn = ascendingSortFn) => {
       return !post.draft;
     });
 
+  // 캐시에 저장 (정렬하지 않은 원본 데이터)
+  allPostsCache = contents;
+
   // Sort posts in ascending order.
   const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));
 
@@ -82,32 +101,12 @@ const getSortedPostListByCategory = (
     return [];
   }
 
-  const categoryPath = path.join(postsDirectory, category);
-  const fileNames = fs.readdirSync(categoryPath);
+  // 전체 포스트 캐시를 활용해서 카테고리별 필터링
+  const allPosts = getSortedPostList(); // 이미 캐시된 데이터 사용
+  const categoryPosts = allPosts.filter((post) => post.category === category);
 
-  const contents = fileNames
-    .map((fileName) => {
-      const slug = fileName.replace(/\.mdx$/, '');
-      const fullPath = path.join(categoryPath, fileName);
-
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const matterResult = matter(fileContents);
-
-      return {
-        id: `${category}-${slug}`,
-        category,
-        slug,
-        ...matterResult.data,
-      } as TContentHeader;
-    })
-    .filter((post) => {
-      return !post.draft;
-    });
-
-  // Sort posts in ascending order.
-  const sortedContents = contents.toSorted((a, b) => sortFn(a.date, b.date));
-
-  return sortedContents;
+  // 다시 정렬 (다른 정렬 함수가 전달될 수 있으므로)
+  return categoryPosts.toSorted((a, b) => sortFn(a.date, b.date));
 };
 
 /**
@@ -146,7 +145,12 @@ export const getAdjacentPosts = (category: string, slug: string) => {
  * Return list of all unique tags from all posts
  */
 const getAllTags = () => {
-  const posts = getSortedPostList();
+  // 태그 캐시가 있으면 반환
+  if (allTagsCache) {
+    return allTagsCache;
+  }
+
+  const posts = getSortedPostList(); // 캐시된 포스트 데이터 사용
   const tags = posts.flatMap((post) => post.tags);
 
   const tagsWithCount = tags.reduce((acc, tag) => {
@@ -157,6 +161,8 @@ const getAllTags = () => {
     .sort((a, b) => b[1] - a[1])
     .map(([tag]) => tag);
 
+  // 태그 캐시에 저장
+  allTagsCache = sortedTags;
   return sortedTags;
 };
 
@@ -164,7 +170,7 @@ const getAllTags = () => {
  * Return list of posts filtered by tag
  */
 const getSortedPostListByTag = (tag: string, sortFn = ascendingSortFn) => {
-  const posts = getSortedPostList(sortFn);
+  const posts = getSortedPostList(sortFn); // 캐시된 데이터 사용
   return posts.filter((post) => post.tags.includes(tag));
 };
 
