@@ -1,7 +1,7 @@
 import { TFrontmatter } from '@/types/post';
 import Link from 'next/link';
-import TagList from './TagList';
 import CardImage from './CardImage';
+import Tags from './Tags';
 
 type TPostCardProps = {
   frontmatter: TFrontmatter;
@@ -24,7 +24,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
             />
           </div>
           <div className="p-4 mt-0">
-            <TagList tags={tags} />
+            <Tags tags={tags} />
             <h3 className="mb-1 text-xl">{title}</h3>
             <p className="text-xs mb-4 text-gray-500 dark:text-gray-400">
               <b>{categories}</b> - {date}

@@ -142,6 +142,23 @@ export const getAdjacentPosts = (category: string, slug: string) => {
   };
 };
 
+/**
+ * Return list of all unique tags from all posts
+ */
+const getAllTags = () => {
+  const posts = getSortedPostList();
+  const tags = posts.flatMap((post) => post.tags);
+  return [...new Set(tags)];
+};
+
+/**
+ * Return list of posts filtered by tag
+ */
+const getSortedPostListByTag = (tag: string, sortFn = ascendingSortFn) => {
+  const posts = getSortedPostList(sortFn);
+  return posts.filter((post) => post.tags.includes(tag));
+};
+
 export {
   getPostPath,
   getAllPostPaths,
@@ -149,4 +166,6 @@ export {
   getSortedPostList,
   getSortedPostListByCategory,
   getPostData,
+  getAllTags,
+  getSortedPostListByTag,
 };

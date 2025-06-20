@@ -1,7 +1,7 @@
 import { TContentHeader } from '@/lib/type';
 import Link from 'next/link';
-import TagList from './TagList';
 import CardImage from './CardImage';
+import Tags from './Tags';
 
 type TPostCardLatestProps = {
   post: TContentHeader;
@@ -29,7 +29,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
           <div className="w-full h-full grid grid-rows-[2fr_1fr]">
             <div></div>
             <div className="w-full h-full bg-white/50 dark:bg-black/50 shadow-lg backdrop-blur-sm rounded-2xl rounded-t-none px-6 py-6">
-              <TagList tags={tags} />
+              <Tags tags={tags} />
               <h1 className="text-[1.5rem] md:text-[3rem] lg:text-[3.5rem] mt-0">
                 {title}
               </h1>
