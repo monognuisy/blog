@@ -1,0 +1,129 @@
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { createClient } from '@supabase/supabase-js';
+import { config } from 'dotenv';
+
+// 환경 변수 로드
+config({ path: '.env.local' });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
+
+const postsDirectory = path.join(process.cwd(), 'content/blog');
+
+interface PostData {
+  slug: string;
+  title: string;
+  description: string | null;
+  content: string;
+  category: string;
+  tags: string[];
+  cover: string | null;
+  date: string;
+  published: boolean;
+}
+
+// MDX 파일에서 데이터 추출
+function parsePost(filePath: string, category: string): PostData {
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data: frontmatter, content } = matter(fileContents);
+  
+  const fileName = path.basename(filePath, '.mdx');
+  
+  return {
+    slug: fileName,
+    title: frontmatter.title,
+    description: frontmatter.description || null,
+    content: content,
+    category: category,
+    tags: frontmatter.tags || [],
+    cover: frontmatter.cover || null,
+    date: frontmatter.date,
+    published: true
+  };
+}
+
+// 모든 블로그 포스트 수집
+function getAllPosts(): PostData[] {
+  const posts: PostData[] = [];
+  
+  // 블로그 포스트 처리
+  const categories = fs.readdirSync(postsDirectory);
+  
+  for (const category of categories) {
+    const categoryPath = path.join(postsDirectory, category);
+    
+    if (fs.statSync(categoryPath).isDirectory()) {
+      const files = fs.readdirSync(categoryPath);
+      
+      for (const file of files) {
+        if (file.endsWith('.mdx')) {
+          const filePath = path.join(categoryPath, file);
+          const post = parsePost(filePath, category);
+          posts.push(post);
+        }
+      }
+    }
+  }
+  
+  return posts;
+}
+
+// Supabase에 데이터 삽입
+async function insertPosts(posts: PostData[]) {
+  console.log(`🚀 ${posts.length}개의 포스트를 Supabase에 삽입 중...`);
+  
+  // 기존 데이터 삭제 (전체 삭제)
+  const { error: deleteError } = await supabase
+    .from('posts')
+    .delete()
+    .gte('created_at', '1900-01-01'); // 모든 레코드 삭제
+  
+  if (deleteError) {
+    console.error('❌ 기존 데이터 삭제 실패:', deleteError);
+    return;
+  }
+  
+  // 새 데이터 삽입
+  const { data, error } = await supabase
+    .from('posts')
+    .insert(posts);
+  
+  if (error) {
+    console.error('❌ 데이터 삽입 실패:', error);
+    return;
+  }
+  
+  console.log('✅ 포스트 삽입 완료!');
+  console.log(`📊 총 ${posts.length}개의 포스트가 저장되었습니다.`);
+}
+
+// 메인 함수
+async function main() {
+  try {
+    console.log('📖 MDX 파일 파싱 중...');
+    const posts = getAllPosts();
+    
+    console.log(`📝 ${posts.length}개의 포스트를 발견했습니다:`);
+    posts.forEach((post, index) => {
+      console.log(`  ${index + 1}. [${post.category}] ${post.title}`);
+    });
+    
+    await insertPosts(posts);
+    
+    console.log('🎉 마이그레이션이 완료되었습니다!');
+  } catch (error) {
+    console.error('💥 마이그레이션 실패:', error);
+  }
+}
+
+main(); 

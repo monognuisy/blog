@@ -9,12 +9,14 @@
     "start": "next start",
     "lint": "next lint",
     "prebuild": "next lint && yarn tsc",
-    "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true"
+    "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true",
+    "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^14",
+    "@supabase/supabase-js": "^2.50.0",
     "@tanstack/react-query": "^5.76.1",
     "cheerio": "^1.0.0",
     "class-variance-authority": "^0.7.1",
@@ -42,12 +44,15 @@
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "dotenv": "^16.5.0",
     "eslint": "^9.27.0",
     "eslint-config-next": "15.3.2",
     "gh-pages": "^6.3.0",
     "postcss": "^8.5.3",
     "sass": "^1.89.0",
+    "supabase": "^2.26.9",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }
