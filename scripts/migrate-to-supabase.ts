@@ -37,9 +37,11 @@ function parsePost(filePath: string, category: string): PostData {
   const { data: frontmatter } = matter(fileContents);
   
   const fileName = path.basename(filePath, '.mdx');
+
+  const slug = `${category}/${fileName}`;
   
   return {
-    slug: fileName,
+    slug: slug,
     title: frontmatter.title,
     description: frontmatter.description || null,
     category: category,
