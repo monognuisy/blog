@@ -12,6 +12,9 @@
     "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true",
     "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts"
   },
+
+  "packageManager": "pnpm@10.12.1",
+
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
