@@ -5,7 +5,6 @@ CREATE TABLE posts
   slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
-  content TEXT NOT NULL,
   category TEXT NOT NULL,
   tags TEXT[],
   cover TEXT,

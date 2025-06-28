@@ -24,7 +24,6 @@ interface PostData {
   slug: string;
   title: string;
   description: string | null;
-  content: string;
   category: string;
   tags: string[];
   cover: string | null;
@@ -35,7 +34,7 @@ interface PostData {
 // MDX 파일에서 데이터 추출
 function parsePost(filePath: string, category: string): PostData {
   const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data: frontmatter, content } = matter(fileContents);
+  const { data: frontmatter } = matter(fileContents);
   
   const fileName = path.basename(filePath, '.mdx');
   
@@ -43,7 +42,6 @@ function parsePost(filePath: string, category: string): PostData {
     slug: fileName,
     title: frontmatter.title,
     description: frontmatter.description || null,
-    content: content,
     category: category,
     tags: frontmatter.tags || [],
     cover: frontmatter.cover || null,

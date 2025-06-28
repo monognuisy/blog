@@ -278,7 +278,7 @@ const SearchBar = () => {
                     {results.length > 0 ? (
                       <>
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                          <strong>"{searchQuery}"</strong>에 대한 검색 결과{' '}
+                          <strong>{`"${searchQuery}"`}</strong>에 대한 검색 결과{' '}
                           {results.length}개
                         </div>
                         <div className="space-y-3">

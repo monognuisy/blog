@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prebuild": "next lint && yarn tsc",
+    "prebuild": "next lint && pnpm tsc",
     "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true",
     "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts"
   },

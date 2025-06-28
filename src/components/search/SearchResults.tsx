@@ -144,7 +144,7 @@ export function SearchResults({
   return (
     <div className="space-y-4">
       <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        <strong>"{query}"</strong>에 대한 검색 결과 {results.length}개
+        <strong>{`${query}`}</strong>에 대한 검색 결과 {results.length}개
       </div>
 
       {results.map((result) => (
