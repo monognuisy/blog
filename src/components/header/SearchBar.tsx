@@ -291,7 +291,7 @@ const SearchResultCard = ({
 }: SearchResultCardProps) => {
   return (
     <Link
-      href={`/${result.category}/${result.slug}`}
+      href={`/${result.slug}`}
       onClick={closeModal} // 링크 클릭 시 모달 닫기
       className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors"
     >
