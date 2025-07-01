@@ -54,3 +54,13 @@ $$ LANGUAGE 'plpgsql';
   UPDATE ON posts
     FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column(); 
+
+create or replace function search_posts_flexible(search_text text)
+returns setof posts as $$
+begin
+  return query
+  select * from posts 
+  where replace(title, ' ', '') ilike '%' || replace(search_text, ' ', '') || '%'
+  or replace(description, ' ', '') ilike '%' || replace(search_text, ' ', '') || '%';
+end;
+$$ language plpgsql;

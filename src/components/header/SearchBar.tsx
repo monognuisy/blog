@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
+import ky from 'ky';
 
 interface SearchResult {
   id: string;
@@ -13,8 +14,8 @@ interface SearchResult {
   tags: string[];
   cover: string | null;
   date: string;
-  titleMatch: boolean;
-  descriptionMatch: boolean;
+  matchedTitle: string | null;
+  matchedDescription: string | null;
 }
 
 interface SearchResponse {
@@ -61,6 +62,10 @@ const SearchBar = () => {
     }
   };
 
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, [setIsModalOpen]);
+
   // 디바운싱된 검색 함수
   const performSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
@@ -78,8 +83,8 @@ const SearchBar = () => {
         limit: '8', // 모달에서는 결과를 제한
       });
 
-      const response = await fetch(`/api/search?${params}`);
-      const data: SearchResponse = await response.json();
+      const response = await ky.get(`/api/search?${params}`);
+      const data: SearchResponse = await response.json<SearchResponse>();
 
       if (!response.ok) {
         throw new Error(data.error || '검색 중 오류가 발생했습니다.');
@@ -127,6 +132,8 @@ const SearchBar = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -136,46 +143,6 @@ const SearchBar = () => {
       performSearch(searchQuery);
     }
   };
-
-  const SearchResultCard = ({ result }: { result: SearchResult }) => (
-    <Link
-      href={`/${result.category}/${result.slug}`}
-      onClick={() => setIsModalOpen(false)} // 링크 클릭 시 모달 닫기
-      className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors"
-    >
-      <div className="flex justify-between items-start mb-1">
-        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-          {result.category}
-        </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          {new Date(result.date).toLocaleDateString('ko-KR')}
-        </span>
-      </div>
-
-      <h4 className="font-medium text-sm mb-1 text-gray-900 dark:text-gray-100 line-clamp-1">
-        {highlightText(result.title, searchQuery)}
-      </h4>
-
-      {result.description && (
-        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
-          {highlightText(result.description, searchQuery)}
-        </p>
-      )}
-
-      {result.tags.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {result.tags.slice(0, 2).map((tag, index) => (
-            <span
-              key={index}
-              className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs rounded"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-    </Link>
-  );
 
   return (
     <>
@@ -218,17 +185,15 @@ const SearchBar = () => {
                   <div className="p-4">
                     <div className="text-gray-500 dark:text-gray-400">
                       <p className="mb-4 font-medium">검색 도움말</p>
-                      <ul className="text-sm space-y-2">
-                        <li>• 제목과 설명에서 검색합니다</li>
+                      <ul className="text-sm space-y-2 list-disc list-inside">
+                        <li>제목과 설명에서 검색합니다</li>
                         <li>
-                          •{' '}
                           <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
-                            Ctrl+Shift+K
+                            Ctrl + Shift + K
                           </kbd>
                           로 검색창을 열 수 있습니다
                         </li>
                         <li>
-                          •{' '}
                           <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
                             ESC
                           </kbd>
@@ -283,7 +248,12 @@ const SearchBar = () => {
                         </div>
                         <div className="space-y-3">
                           {results.map((result) => (
-                            <SearchResultCard key={result.id} result={result} />
+                            <SearchResultCard
+                              key={result.id}
+                              result={result}
+                              searchQuery={searchQuery}
+                              closeModal={closeModal}
+                            />
                           ))}
                         </div>
                       </>
@@ -305,6 +275,58 @@ const SearchBar = () => {
         </div>
       )}
     </>
+  );
+};
+
+interface SearchResultCardProps {
+  result: SearchResult;
+  searchQuery: string;
+  closeModal: () => void;
+}
+
+const SearchResultCard = ({
+  result,
+  searchQuery,
+  closeModal,
+}: SearchResultCardProps) => {
+  return (
+    <Link
+      href={`/${result.category}/${result.slug}`}
+      onClick={closeModal} // 링크 클릭 시 모달 닫기
+      className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors"
+    >
+      <div className="flex justify-between items-start mb-1">
+        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+          {result.category}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">
+          {new Date(result.date).toLocaleDateString('ko-KR')}
+        </span>
+      </div>
+
+      <h4 className="font-medium text-sm mb-1 text-gray-900 dark:text-gray-100 line-clamp-1">
+        {highlightText(result.title, searchQuery)}
+      </h4>
+
+      {result.description && (
+        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
+          {highlightText(result.description, searchQuery)}
+        </p>
+      )}
+
+      {result.tags.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {result.tags.slice(0, 2).map((tag, index) => (
+            <span
+              key={index}
+              className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs rounded"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </Link>
   );
 };
 
