@@ -7,7 +7,7 @@ const Comment = () => {
 
   return (
     <section
-      ref={(element) => {
+      ref={element => {
         if (!element) return;
 
         const scriptElement = document.createElement('script');

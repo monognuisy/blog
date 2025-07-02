@@ -1,11 +1,11 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import {
   getAllCategories,
   getSortedPostListByCategory,
 } from '@/lib/getBlogPost';
 import CategoryPostCard from '../../components/post/CategoryPostCard';
 import PostCard from '../../components/post/PostCard';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 type TCategoryPageProps = {
   params: Promise<{
@@ -42,7 +42,7 @@ const generateMetadata = async ({ params }: TCategoryPageProps) => {
 
 const generateStaticParams = async () => {
   const categories = getAllCategories();
-  return categories.map((category) => ({
+  return categories.map(category => ({
     category,
   })) as Awaited<TCategoryPageProps['params']>[];
 };
@@ -58,17 +58,17 @@ const CategoryPage = async ({ params }: TCategoryPageProps) => {
   const categoryName = contents[0]?.categories ?? category;
 
   return (
-    <div className="max-w-[1200px] mx-auto   px-4">
-      <h1 className="my-2 md:my-12 text-[2rem] md:text-[2.5rem]">
+    <div className="mx-auto max-w-[1200px] px-4">
+      <h1 className="my-2 text-[2rem] md:my-12 md:text-[2.5rem]">
         {`${categoryName}`} 카테고리의 글
       </h1>
-      <div className="border-l hidden md:flex md:flex-col md:gap-12">
-        {contents.map((post) => (
+      <div className="hidden border-l md:flex md:flex-col md:gap-12">
+        {contents.map(post => (
           <CategoryPostCard key={post.id} post={post} />
         ))}
       </div>
       <div className="flex flex-col gap-0 md:hidden">
-        {contents.map((post) => (
+        {contents.map(post => (
           <PostCard
             key={post.id}
             frontmatter={post}

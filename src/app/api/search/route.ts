@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { Posts } from '@/types/supabase';
+import type { Posts } from '@/types/supabase';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 검색 결과 하이라이팅을 위한 추가 정보
-    const results = posts.map((post) => {
+    const results = posts.map(post => {
       const titleLower = post.title.toLowerCase();
       const descLower = post.description?.toLowerCase() || '';
       const queryLower = query.toLowerCase();
@@ -50,8 +50,8 @@ export async function GET(request: NextRequest) {
       const matchedDescription = descLower.includes(queryLower)
         ? queryLower
         : descNoSpaces.includes(queryLower)
-        ? queryLower
-        : null;
+          ? queryLower
+          : null;
 
       return {
         ...post,

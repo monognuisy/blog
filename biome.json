@@ -27,9 +27,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "nursery": {
-        "useSortedClasses": "error"
-      },
       "style": {
         "useImportType": "error",
         "useExportType": "error",
@@ -37,7 +34,7 @@
       },
       "suspicious": {
         "noExplicitAny": "warn",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "off"
       },
       "complexity": {
         "noBannedTypes": "error",

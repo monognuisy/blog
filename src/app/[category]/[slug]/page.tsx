@@ -1,19 +1,19 @@
+import fs from 'node:fs';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import AdjacentPostLinks from '@/components/post/AdjacentPostLinks';
+import CustomMDXComponents from '@/components/post/CustomMDXComponents';
+import PostTitle from '@/components/post/PostTitle';
+import TableOfContentsWrapper from '@/components/post/TableOfContents';
+import Comment from '@/components/utterance/Comment';
 import {
+  getAdjacentPosts,
   getAllPostPaths,
   getPostData,
   getPostPath,
-  getAdjacentPosts,
 } from '@/lib/getBlogPost';
-import fs from 'fs';
-import CustomMDXComponents from '@/components/post/CustomMDXComponents';
-import { TFrontmatter } from '@/types/post';
-import Comment from '@/components/utterance/Comment';
-import type { Metadata } from 'next';
-import PostTitle from '@/components/post/PostTitle';
-import AdjacentPostLinks from '@/components/post/AdjacentPostLinks';
 import customMDX from '@/lib/mdxCompiler';
-import { notFound } from 'next/navigation';
-import TableOfContentsWrapper from '@/components/post/TableOfContents';
+import type { TFrontmatter } from '@/types/post';
 
 type TPostPageProps = {
   params: Promise<{
@@ -72,7 +72,7 @@ const generateMetadata = async ({
 const generateStaticParams = async () => {
   const fullPaths = getAllPostPaths();
 
-  return fullPaths.map((fullPath) => {
+  return fullPaths.map(fullPath => {
     const splited = fullPath.split('/');
 
     const category = splited[splited.length - 2];
@@ -99,27 +99,25 @@ const PostPage = async ({ params }: TPostPageProps) => {
     const { prev, next } = getAdjacentPosts(category, slug);
 
     return (
-      <>
+      <div>
         <div>
-          <div>
-            <PostTitle post={frontmatter} />
-          </div>
+          <PostTitle post={frontmatter} />
+        </div>
 
-          <div className="bg-white dark:bg-dark-bg items-start">
-            {/* 목차 사이드바 */}
-            <div className="w-full max-w-[1200px] mx-auto lg:flex lg:gap-20">
-              <div className="post-wrapper relative pt-10 max-w-[800px] px-4">
-                {content}
-                <AdjacentPostLinks prev={prev} next={next} />
-                <Comment />
-              </div>
-              <div className="hidden lg:block">
-                <TableOfContentsWrapper />
-              </div>
+        <div className="items-start bg-white dark:bg-dark-bg">
+          {/* 목차 사이드바 */}
+          <div className="mx-auto w-full max-w-[1200px] lg:flex lg:gap-20">
+            <div className="post-wrapper relative max-w-[800px] px-4 pt-10">
+              {content}
+              <AdjacentPostLinks prev={prev} next={next} />
+              <Comment />
+            </div>
+            <div className="hidden lg:block">
+              <TableOfContentsWrapper />
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   } catch {
     // 못 찾았을 시 404 페이지로 이동

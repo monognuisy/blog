@@ -7,7 +7,7 @@ interface TagsProps {
 const Tags = ({ tags }: TagsProps) => {
   return (
     <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
+      {tags.map(tag => (
         <TagChip key={tag} tag={tag} />
       ))}
     </div>

@@ -1,11 +1,11 @@
-import fs from 'fs';
-import { TAnnouncement } from '@/types/announcement';
+import fs from 'node:fs';
+import CustomMDXComponents from '@/components/post/CustomMDXComponents';
 import {
   getAnnouncementPath,
   getSortedAnnouncement,
 } from '@/lib/getAnnouncement';
 import customMDX from '@/lib/mdxCompiler';
-import CustomMDXComponents from '@/components/post/CustomMDXComponents';
+import type { TAnnouncement } from '@/types/announcement';
 
 type TAnnouncementPageProps = {
   params: Promise<{
@@ -32,17 +32,15 @@ const AnnouncementPage = async ({ params }: TAnnouncementPageProps) => {
   });
 
   return (
-    <>
-      <div className="post-wrapper">
-        <div className="relative mx-auto pt-10 max-w-[1024px] px-4">
-          <div>
-            <h1>{frontmatter.title}</h1>
-            <p>{frontmatter.date}</p>
-          </div>
-          <div className="">{content}</div>
+    <div className="post-wrapper">
+      <div className="relative mx-auto max-w-[1024px] px-4 pt-10">
+        <div>
+          <h1>{frontmatter.title}</h1>
+          <p>{frontmatter.date}</p>
         </div>
+        <div className="">{content}</div>
       </div>
-    </>
+    </div>
   );
 };
 

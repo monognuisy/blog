@@ -2,22 +2,22 @@
 
 import {
   AlertCircle,
-  Info,
-  Pen,
   AlertTriangle,
-  Lightbulb,
   ChevronsUpDown,
+  Info,
+  Lightbulb,
+  Pen,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/styles';
 
 const NoteVariant = {
   icon: {
-    default: <Lightbulb className="w-4 h-4" />,
-    note: <Pen className="w-4 h-4" />,
-    info: <Info className="w-4 h-4" />,
-    warning: <AlertTriangle className="w-4 h-4" />,
-    error: <AlertCircle className="w-4 h-4" />,
+    default: <Lightbulb className="h-4 w-4" />,
+    note: <Pen className="h-4 w-4" />,
+    info: <Info className="h-4 w-4" />,
+    warning: <AlertTriangle className="h-4 w-4" />,
+    error: <AlertCircle className="h-4 w-4" />,
   },
   border: {
     default: 'border-gray-200 dark:border-gray-700',
@@ -63,13 +63,13 @@ const Note = ({
   return (
     <div
       className={cn(
-        'note border rounded my-4 mb-8',
+        'note my-4 mb-8 rounded border',
         NoteVariant.border[variant],
       )}
     >
       <div
         className={cn(
-          'rounded-t px-4 py-2 flex items-center',
+          'flex items-center rounded-t px-4 py-2',
           !lock && 'cursor-pointer',
           NoteVariant.header[variant],
         )}
@@ -77,11 +77,11 @@ const Note = ({
       >
         <div className="flex items-center gap-2">
           {NoteVariant.icon[variant]}
-          <span className={cn('font-bold block')}>{title}</span>
+          <span className={cn('block font-bold')}>{title}</span>
         </div>
         {!lock && (
           <ChevronsUpDown
-            className={cn('w-4 h-4 ml-auto')}
+            className={cn('ml-auto h-4 w-4')}
             onClick={() => setIsOpen(!isOpen)}
           />
         )}
@@ -89,7 +89,7 @@ const Note = ({
       {isOpen && (
         <div
           className={cn(
-            'p-4 w-full rounded-b [&>:last-child]:mb-0 overflow-auto',
+            'w-full overflow-auto rounded-b p-4 [&>:last-child]:mb-0',
             NoteVariant.content[variant],
           )}
         >

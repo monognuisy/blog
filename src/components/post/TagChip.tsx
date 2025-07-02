@@ -4,7 +4,7 @@ type TTagChipProps = {
 
 const TagChip = ({ tag }: TTagChipProps) => {
   return (
-    <p className="text-xs font-medium text-black/50 dark:text-white/50 rounded-2xl py-0.5 px-2 w-fit bg-black/10 dark:bg-white/10">
+    <p className="w-fit rounded-2xl bg-black/10 px-2 py-0.5 font-medium text-black/50 text-xs dark:bg-white/10 dark:text-white/50">
       {tag}
     </p>
   );

@@ -1,15 +1,15 @@
-import path from 'path';
-import fs from 'fs';
-import { ascendingSortFn } from './function';
+import fs from 'node:fs';
+import path from 'node:path';
 import matter from 'gray-matter';
-import { TAnnouncement } from '@/types/announcement';
+import type { TAnnouncement } from '@/types/announcement';
+import { ascendingSortFn } from './function';
 
 const announcementDirectory = path.join(process.cwd(), 'content/announcement');
 
 export const getSortedAnnouncement = (sortFn = ascendingSortFn) => {
   const fileNames = fs.readdirSync(announcementDirectory);
 
-  const contents = fileNames.map((fileName) => {
+  const contents = fileNames.map(fileName => {
     const id = fileName.replace(/\.mdx$/, '');
     const fullPath = path.join(announcementDirectory, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -28,7 +28,7 @@ export const getSortedAnnouncement = (sortFn = ascendingSortFn) => {
 
 export const getRecentAnnouncements = (deltaDate = 30, count = 5) => {
   const announcements = getSortedAnnouncement();
-  const recentAnnouncements = announcements.filter((announcement) => {
+  const recentAnnouncements = announcements.filter(announcement => {
     const currentDate = new Date();
     const date = new Date(announcement.date);
 
