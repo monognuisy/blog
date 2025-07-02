@@ -1,5 +1,5 @@
 import Image from 'next/image';
-// import SearchBar from '../header/SearchBar';
+import SearchBar from '../header/SearchBar';
 import SlugPath from '../header/SlugPath';
 import Link from 'next/link';
 import ScrollProgressBar from '../header/ScrollProgressBar';
@@ -32,7 +32,7 @@ const Header = () => {
         </section>
         <section className="flex gap-6">
           <DarkmodeToggleButton />
-          {/* <SearchBar /> */}
+          <SearchBar />
         </section>
       </div>
       <ScrollProgressBar />
