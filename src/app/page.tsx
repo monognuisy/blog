@@ -1,6 +1,6 @@
 import PostList from '@/components/post/PostList';
-import AnnouncementCard from '../components/announcement/AnnouncementCard';
 import { getRecentAnnouncements } from '@/lib/getAnnouncement';
+import AnnouncementCard from '../components/announcement/AnnouncementCard';
 
 interface HomeProps {
   searchParams: Promise<{ tag?: string }>;
@@ -12,8 +12,8 @@ export default async function Home({ searchParams }: HomeProps) {
   const selectedTag = params.tag;
 
   return (
-    <main className="h-full max-w-[80rem] 2xl:max-w-[96rem] mx-auto px-4  ">
-      {recentAnnouncements.map((announcement) => (
+    <main className="mx-auto h-full max-w-[80rem] px-4 2xl:max-w-[96rem] ">
+      {recentAnnouncements.map(announcement => (
         <AnnouncementCard announcement={announcement} key={announcement.id} />
       ))}
       <PostList tag={selectedTag} />

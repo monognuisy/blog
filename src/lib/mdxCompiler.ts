@@ -1,9 +1,9 @@
-import { compileMDX, MDXRemoteProps } from 'next-mdx-remote/rsc';
+import { compileMDX, type MDXRemoteProps } from 'next-mdx-remote/rsc';
+import rehypeKatex from 'rehype-katex';
+import rehypePrism from 'rehype-prism-plus';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import { mathMacros } from './constants';
-import rehypePrism from 'rehype-prism-plus';
 import {
   rehypeCodePostProcess,
   rehypeCodePreProcess,

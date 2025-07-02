@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 interface ScrollState {
   // 세로 스크롤 상태
@@ -35,33 +35,33 @@ const ScrollableMask = ({
     isAtRight: false,
   });
 
-  // 스크롤 상태 확인 함수
-  const checkScrollState = (container: HTMLDivElement): ScrollState => {
-    const threshold = 5; // 스크롤 끝 판정 임계값
-
-    return {
-      isAtTop: container.scrollTop <= threshold,
-      isAtBottom:
-        container.scrollTop + container.clientHeight >=
-        container.scrollHeight - threshold,
-      isAtLeft: container.scrollLeft <= threshold,
-      isAtRight:
-        container.scrollLeft + container.clientWidth >=
-        container.scrollWidth - threshold,
-    };
-  };
-
   useEffect(() => {
+    // 스크롤 상태 확인 함수
+    const checkScrollState = (container: HTMLDivElement): ScrollState => {
+      const threshold = 5; // 스크롤 끝 판정 임계값
+
+      return {
+        isAtTop: container.scrollTop <= threshold,
+        isAtBottom:
+          container.scrollTop + container.clientHeight >=
+          container.scrollHeight - threshold,
+        isAtLeft: container.scrollLeft <= threshold,
+        isAtRight:
+          container.scrollLeft + container.clientWidth >=
+          container.scrollWidth - threshold,
+      };
+    };
+
     if (!containerRef.current) return;
 
     const container = containerRef.current;
     let ticking = false;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       const newScrollState = checkScrollState(container);
 
       // 상태가 실제로 변경되었을 때만 업데이트
-      setScrollState((prevState) => {
+      setScrollState(prevState => {
         if (
           prevState.isAtTop !== newScrollState.isAtTop ||
           prevState.isAtBottom !== newScrollState.isAtBottom ||
@@ -75,7 +75,7 @@ const ScrollableMask = ({
     };
 
     // requestAnimationFrame을 사용한 쓰로틀링으로 성능 최적화
-    const throttledScrollHandler = () => {
+    const throttledScrollHandler = (): void => {
       if (!ticking) {
         requestAnimationFrame(() => {
           handleScroll();
@@ -127,28 +127,28 @@ const ScrollableMask = ({
       {/* 마스크 오버레이들 */}
       {shouldShowTopMask && (
         <div
-          className="absolute top-0 left-0 right-0 pointer-events-none z-10 bg-gradient-to-b from-white to-transparent dark:from-neutral-900"
+          className="pointer-events-none absolute top-0 right-0 left-0 z-10 bg-gradient-to-b from-white to-transparent dark:from-neutral-900"
           style={{ height: `${maskSize}px` }}
         />
       )}
 
       {shouldShowBottomMask && (
         <div
-          className="absolute bottom-0 left-0 right-0 pointer-events-none z-10 bg-gradient-to-t from-white to-transparent dark:from-neutral-900"
+          className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 bg-gradient-to-t from-white to-transparent dark:from-neutral-900"
           style={{ height: `${maskSize}px` }}
         />
       )}
 
       {shouldShowLeftMask && (
         <div
-          className="absolute top-0 left-0 bottom-0 pointer-events-none z-10 bg-gradient-to-r from-white to-transparent dark:from-neutral-900"
+          className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 bg-gradient-to-r from-white to-transparent dark:from-neutral-900"
           style={{ width: `${maskSize}px` }}
         />
       )}
 
       {shouldShowRightMask && (
         <div
-          className="absolute top-0 right-0 bottom-0 pointer-events-none z-10 bg-gradient-to-l from-white to-transparent dark:from-neutral-900"
+          className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 bg-gradient-to-l from-white to-transparent dark:from-neutral-900"
           style={{ width: `${maskSize}px` }}
         />
       )}

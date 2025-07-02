@@ -2,7 +2,7 @@
 
 import * as cheerio from 'cheerio';
 import ky from 'ky';
-import { TMetadata } from '@/types/post';
+import type { TMetadata } from '@/types/post';
 
 export async function fetchOgTags(url: string): Promise<TMetadata> {
   if (!url) {

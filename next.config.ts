@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['next-mdx-remote'],
 };

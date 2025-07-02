@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import ky from 'ky';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
-import ky from 'ky';
+import { useCallback, useEffect, useState } from 'react';
 
 interface SearchResult {
   id: string;
@@ -35,7 +35,7 @@ function highlightText(text: string, query: string): React.ReactNode {
     regex.test(part) ? (
       <mark
         key={index}
-        className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded"
+        className="rounded bg-yellow-200 px-1 dark:bg-yellow-800"
       >
         {part}
       </mark>
@@ -52,19 +52,19 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleModalOpen = () => {
-    setIsModalOpen((prev) => !prev);
+  const toggleModalOpen = useCallback(() => {
+    setIsModalOpen(prev => !prev);
     if (!isModalOpen) {
       // 모달이 열릴 때 초기화
       setSearchQuery('');
       setResults([]);
       setError(null);
     }
-  };
+  }, [isModalOpen]);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  }, [setIsModalOpen]);
+  }, []);
 
   // 디바운싱된 검색 함수
   const performSearch = useCallback(async (query: string) => {
@@ -132,9 +132,7 @@ const SearchBar = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [toggleModalOpen]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,7 +145,7 @@ const SearchBar = () => {
   return (
     <>
       <div className="flex items-center">
-        <button onClick={toggleModalOpen}>
+        <button type="button" onClick={toggleModalOpen}>
           <Search strokeWidth={2} style={{ fontSize: '24px' }} />
         </button>
       </div>
@@ -155,26 +153,25 @@ const SearchBar = () => {
       {/* 검색 모달 */}
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 w-dvw h-[100vh] bg-black/50 flex justify-center items-start pt-20 z-50"
+          className="fixed top-0 left-0 z-50 flex h-[100vh] w-dvw items-start justify-center bg-black/50 pt-20"
           onClick={toggleModalOpen}
         >
-          <div className="w-[700px] max-w-[90vw] mx-auto px-4">
+          <div className="mx-auto w-[700px] max-w-[90vw] px-4">
             <div
-              className="w-full rounded-lg bg-white dark:bg-gray-800 mx-auto shadow-xl max-h-[80vh] overflow-hidden flex flex-col"
-              onClick={(e) => e.stopPropagation()}
+              className="mx-auto flex max-h-[80vh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-800"
+              onClick={e => e.stopPropagation()}
             >
               {/* 검색 입력 */}
               <form
                 onSubmit={handleFormSubmit}
-                className="p-4 border-b border-gray-200 dark:border-gray-700"
+                className="border-gray-200 border-b p-4 dark:border-gray-700"
               >
                 <input
                   type="text"
                   placeholder="검색어를 입력하세요..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full text-lg bg-transparent text-gray-900 dark:text-gray-100 focus:outline-none placeholder-gray-500"
-                  autoFocus
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-gray-900 text-lg placeholder-gray-500 focus:outline-none dark:text-gray-100"
                 />
               </form>
 
@@ -185,16 +182,16 @@ const SearchBar = () => {
                   <div className="p-4">
                     <div className="text-gray-500 dark:text-gray-400">
                       <p className="mb-4 font-medium">검색 도움말</p>
-                      <ul className="text-sm space-y-2 list-disc list-inside">
+                      <ul className="list-inside list-disc space-y-2 text-sm">
                         <li>제목과 설명에서 검색합니다</li>
                         <li>
-                          <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                          <kbd className="rounded bg-gray-100 px-2 py-1 text-xs dark:bg-gray-700">
                             Ctrl + Shift + K
                           </kbd>
                           로 검색창을 열 수 있습니다
                         </li>
                         <li>
-                          <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                          <kbd className="rounded bg-gray-100 px-2 py-1 text-xs dark:bg-gray-700">
                             ESC
                           </kbd>
                           로 검색창을 닫을 수 있습니다
@@ -211,14 +208,14 @@ const SearchBar = () => {
                       {[...Array(3)].map((_, i) => (
                         <div
                           key={i}
-                          className="animate-pulse p-3 border border-gray-200 dark:border-gray-600 rounded-lg"
+                          className="animate-pulse rounded-lg border border-gray-200 p-3 dark:border-gray-600"
                         >
-                          <div className="flex justify-between mb-2">
-                            <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-16"></div>
-                            <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-20"></div>
+                          <div className="mb-2 flex justify-between">
+                            <div className="h-3 w-16 rounded bg-gray-300 dark:bg-gray-600"></div>
+                            <div className="h-3 w-20 rounded bg-gray-300 dark:bg-gray-600"></div>
                           </div>
-                          <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-1"></div>
-                          <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-full"></div>
+                          <div className="mb-1 h-4 w-3/4 rounded bg-gray-300 dark:bg-gray-600"></div>
+                          <div className="h-3 w-full rounded bg-gray-300 dark:bg-gray-600"></div>
                         </div>
                       ))}
                     </div>
@@ -228,10 +225,10 @@ const SearchBar = () => {
                 {/* 에러 상태 */}
                 {error && searchQuery && !isLoading && (
                   <div className="p-4 text-center">
-                    <div className="text-red-500 mb-2">
+                    <div className="mb-2 text-red-500">
                       ⚠️ 검색 중 오류가 발생했습니다
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    <p className="text-gray-600 text-sm dark:text-gray-400">
                       {error}
                     </p>
                   </div>
@@ -242,12 +239,12 @@ const SearchBar = () => {
                   <div className="p-4">
                     {results.length > 0 ? (
                       <>
-                        <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <div className="mb-4 text-gray-600 text-sm dark:text-gray-400">
                           <strong>{`"${searchQuery}"`}</strong>에 대한 검색 결과{' '}
                           {results.length}개
                         </div>
                         <div className="space-y-3">
-                          {results.map((result) => (
+                          {results.map(result => (
                             <SearchResultCard
                               key={result.id}
                               result={result}
@@ -258,11 +255,11 @@ const SearchBar = () => {
                         </div>
                       </>
                     ) : (
-                      <div className="text-center py-8">
-                        <div className="text-gray-500 dark:text-gray-400 mb-2">
+                      <div className="py-8 text-center">
+                        <div className="mb-2 text-gray-500 dark:text-gray-400">
                           🔍 검색 결과가 없습니다
                         </div>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        <p className="text-gray-600 text-sm dark:text-gray-400">
                           다른 검색어를 시도해보세요.
                         </p>
                       </div>
@@ -293,23 +290,23 @@ const SearchResultCard = ({
     <Link
       href={`/${result.slug}`}
       onClick={closeModal} // 링크 클릭 시 모달 닫기
-      className="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors"
+      className="block rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
     >
-      <div className="flex justify-between items-start mb-1">
-        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+      <div className="mb-1 flex items-start justify-between">
+        <span className="font-medium text-blue-600 text-xs dark:text-blue-400">
           {result.category}
         </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-gray-500 text-xs dark:text-gray-400">
           {new Date(result.date).toLocaleDateString('ko-KR')}
         </span>
       </div>
 
-      <h4 className="font-medium text-sm mb-1 text-gray-900 dark:text-gray-100 line-clamp-1">
+      <h4 className="mb-1 line-clamp-1 font-medium text-gray-900 text-sm dark:text-gray-100">
         {highlightText(result.title, searchQuery)}
       </h4>
 
       {result.description && (
-        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
+        <p className="line-clamp-2 text-gray-600 text-xs dark:text-gray-300">
           {highlightText(result.description, searchQuery)}
         </p>
       )}
@@ -319,7 +316,7 @@ const SearchResultCard = ({
           {result.tags.slice(0, 2).map((tag, index) => (
             <span
               key={index}
-              className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs rounded"
+              className="rounded bg-gray-100 px-1.5 py-0.5 text-gray-600 text-xs dark:bg-gray-600 dark:text-gray-300"
             >
               {tag}
             </span>

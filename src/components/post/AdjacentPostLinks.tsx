@@ -1,7 +1,7 @@
-import { cn } from '@/lib/styles';
-import { TContentHeader } from '@/lib/type';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/styles';
+import type { TContentHeader } from '@/lib/type';
 
 type TAdjacentPostLinksProps = {
   prev: TContentHeader | null;
@@ -10,7 +10,7 @@ type TAdjacentPostLinksProps = {
 
 const AdjacentPostLinks = ({ prev, next }: TAdjacentPostLinksProps) => {
   return (
-    <div className="flex items-center gap-4 py-8 mt-8 border-t flex-wrap">
+    <div className="mt-8 flex flex-wrap items-center gap-4 border-t py-8">
       {prev ? <PostLink post={prev} className="mr-auto text-left" /> : <div />}
       {next ? (
         <PostLink post={next} next className="ml-auto text-right" />
@@ -35,21 +35,21 @@ const PostLink = ({
     <Link
       href={`/${post.category}/${post.slug}`}
       className={cn(
-        'flex flex-col border rounded-md p-3 w-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors duration-300 no-underline text-gray-700 dark:text-gray-300 min-w-[300px] flex-1',
+        'flex w-full min-w-[300px] flex-1 flex-col rounded-md border p-3 text-gray-700 no-underline transition-colors duration-300 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800',
         className,
       )}
     >
       <div
         className={cn(
-          'flex items-center gap-2 w-full',
+          'flex w-full items-center gap-2',
           next ? 'justify-end' : 'justify-start',
         )}
       >
-        {!next && <ArrowLeftIcon className="w-4 h-4" strokeWidth={2} />}
-        <span className="text-sm text-gray-500 block">{label}</span>
-        {next && <ArrowRightIcon className="w-4 h-4" strokeWidth={2} />}
+        {!next && <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} />}
+        <span className="block text-gray-500 text-sm">{label}</span>
+        {next && <ArrowRightIcon className="h-4 w-4" strokeWidth={2} />}
       </div>
-      <span className="w-full font-semibold block whitespace-nowrap overflow-hidden text-ellipsis">
+      <span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
         {post.title}
       </span>
     </Link>

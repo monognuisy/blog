@@ -1,9 +1,9 @@
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import matter from 'gray-matter';
-import fs from 'fs';
-import { TContentHeader } from './type';
+import type { TFrontmatter } from '@/types/post';
 import { ascendingSortFn } from './function';
-import { TFrontmatter } from '@/types/post';
+import type { TContentHeader } from './type';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
 
@@ -22,13 +22,13 @@ const getPostPath = (category: string, slug: string) => {
 const getAllPostPaths = () => {
   // Find mdx file recursively.
   const categories = fs.readdirSync(postsDirectory);
-  const fileNames = categories.flatMap((category) => {
+  const fileNames = categories.flatMap(category => {
     const filePath = path.join(postsDirectory, category);
 
     // Add categories at the front of each file name.
     const names = fs
       .readdirSync(filePath)
-      .map((name) => path.join(postsDirectory, category, name));
+      .map(name => path.join(postsDirectory, category, name));
 
     return names;
   });
@@ -60,7 +60,7 @@ const getSortedPostList = (sortFn = ascendingSortFn) => {
   const fileNames = getAllPostPaths();
 
   const contents = fileNames
-    .map((fullPath) => {
+    .map(fullPath => {
       const fullNameSplit = fullPath.split('/');
       const category = fullNameSplit[fullNameSplit.length - 2];
       const fileName = fullNameSplit[fullNameSplit.length - 1];
@@ -79,7 +79,7 @@ const getSortedPostList = (sortFn = ascendingSortFn) => {
         ...matterResult.data,
       } as TContentHeader;
     })
-    .filter((post) => {
+    .filter(post => {
       return !post.draft;
     });
 
@@ -103,7 +103,7 @@ const getSortedPostListByCategory = (
 
   // 전체 포스트 캐시를 활용해서 카테고리별 필터링
   const allPosts = getSortedPostList(); // 이미 캐시된 데이터 사용
-  const categoryPosts = allPosts.filter((post) => post.category === category);
+  const categoryPosts = allPosts.filter(post => post.category === category);
 
   // 다시 정렬 (다른 정렬 함수가 전달될 수 있으므로)
   return categoryPosts.toSorted((a, b) => sortFn(a.date, b.date));
@@ -132,7 +132,7 @@ const getPostData = (category: string, slug: string) => {
 export const getAdjacentPosts = (category: string, slug: string) => {
   const posts = getSortedPostList();
   const currentIndex = posts.findIndex(
-    (post) => post.slug === slug && post.category === category,
+    post => post.slug === slug && post.category === category,
   );
 
   return {
@@ -151,12 +151,15 @@ const getAllTags = () => {
   }
 
   const posts = getSortedPostList(); // 캐시된 포스트 데이터 사용
-  const tags = posts.flatMap((post) => post.tags);
+  const tags = posts.flatMap(post => post.tags);
 
-  const tagsWithCount = tags.reduce((acc, tag) => {
-    acc[tag] = (acc[tag] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const tagsWithCount = tags.reduce(
+    (acc, tag) => {
+      acc[tag] = (acc[tag] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
   const sortedTags = Object.entries(tagsWithCount)
     .sort((a, b) => b[1] - a[1])
     .map(([tag]) => tag);
@@ -171,7 +174,7 @@ const getAllTags = () => {
  */
 const getSortedPostListByTag = (tag: string, sortFn = ascendingSortFn) => {
   const posts = getSortedPostList(sortFn); // 캐시된 데이터 사용
-  return posts.filter((post) => post.tags.includes(tag));
+  return posts.filter(post => post.tags.includes(tag));
 };
 
 export {

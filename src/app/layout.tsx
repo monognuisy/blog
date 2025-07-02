@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import '../styles/global.scss';
 import 'katex/dist/katex.min.css'; // Apply KaTeX style
-import Header from '../components/common/Header';
+import { ThemeProvider } from 'next-themes';
 import Footer from '../components/common/Footer';
 import GoToTopButton from '../components/common/GoToTopButton';
-import QueryProvider from '../providers/QueryProvider';
+import Header from '../components/common/Header';
 import ThemeColorSetter from '../components/common/ThemeColorSetter';
-import { ThemeProvider } from 'next-themes';
+import QueryProvider from '../providers/QueryProvider';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -63,13 +63,13 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head></head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <QueryProvider>
           <ThemeProvider attribute="class">
             <ThemeColorSetter />
             <div className="min-h-[100dvh] dark:bg-dark-bg dark:text-dark-text">
               <Header />
-              <section className="dark:bg-dark-bg w-full mx-auto mb-auto h-full">
+              <section className="mx-auto mb-auto h-full w-full dark:bg-dark-bg">
                 {children}
               </section>
               <GoToTopButton />

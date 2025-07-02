@@ -2,8 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import ScrollableMask from '../common/ScrollableMask';
 import { cn } from '@/lib/styles';
+import ScrollableMask from '../common/ScrollableMask';
 
 interface TagListProps {
   tags: string[];
@@ -38,34 +38,36 @@ const TagList = ({ tags }: TagListProps) => {
   }, [router, searchParams]);
 
   return (
-    <div className="mb-6 mt-4">
+    <div className="mt-4 mb-6">
       <ScrollableMask
         direction="horizontal"
-        className="flex gap-2 overflow-x-auto scrollbar-hide"
+        className="scrollbar-hide flex gap-2 overflow-x-auto"
         maskSize={50}
       >
         <button
+          type="button"
           onClick={handleAllClick}
           className={cn(
-            `flex-shrink-0 px-3 py-1 text-sm rounded-full border transition-colors whitespace-nowrap`,
+            `flex-shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-sm transition-colors`,
             !selectedTag &&
-              'bg-primary text-white border-primary dark:bg-primary-dark dark:border-primary-dark dark:text-black',
+              'border-primary bg-primary text-white dark:border-primary-dark dark:bg-primary-dark dark:text-black',
             selectedTag &&
-              'bg-gray-100 text-gray-700 dark:text-gray-300 dark:bg-neutral-800 dark:border-neutral-700 border-gray-300 hover:bg-gray-200',
+              'border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300',
           )}
         >
           전체
         </button>
-        {tags.map((tag) => (
+        {tags.map(tag => (
           <button
             key={tag}
+            type="button"
             onClick={() => handleTagClick(tag)}
             className={cn(
-              `flex-shrink-0 px-3 py-1 text-sm rounded-full border transition-colors whitespace-nowrap`,
+              `flex-shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-sm transition-colors`,
               selectedTag === tag &&
-                'bg-primary text-white border-primary dark:bg-primary-dark dark:border-primary-dark dark:text-black',
+                'border-primary bg-primary text-white dark:border-primary-dark dark:bg-primary-dark dark:text-black',
               selectedTag !== tag &&
-                'bg-gray-100 text-gray-700 dark:text-gray-300 dark:bg-neutral-800 dark:border-neutral-700 border-gray-300 hover:bg-gray-200',
+                'border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300',
             )}
           >
             {tag}

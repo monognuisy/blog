@@ -32,7 +32,7 @@ function highlightText(text: string, query: string): React.ReactNode {
     regex.test(part) ? (
       <mark
         key={index}
-        className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded"
+        className="rounded bg-yellow-200 px-1 dark:bg-yellow-800"
       >
         {part}
       </mark>
@@ -51,22 +51,22 @@ function SearchResultCard({
 }) {
   return (
     <Link href={`/${result.category}/${result.slug}`}>
-      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-gray-800">
-        <div className="flex justify-between items-start mb-2">
-          <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+        <div className="mb-2 flex items-start justify-between">
+          <span className="font-medium text-blue-600 text-sm dark:text-blue-400">
             {result.category}
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-gray-500 text-sm dark:text-gray-400">
             {new Date(result.date).toLocaleDateString('ko-KR')}
           </span>
         </div>
 
-        <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        <h3 className="mb-2 font-semibold text-gray-900 text-lg dark:text-gray-100">
           {highlightText(result.title, query)}
         </h3>
 
         {result.description && (
-          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
+          <p className="line-clamp-2 text-gray-600 text-sm dark:text-gray-300">
             {highlightText(result.description, query)}
           </p>
         )}
@@ -76,13 +76,13 @@ function SearchResultCard({
             {result.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded"
+                className="rounded bg-gray-100 px-2 py-1 text-gray-600 text-xs dark:bg-gray-700 dark:text-gray-300"
               >
                 {tag}
               </span>
             ))}
             {result.tags.length > 3 && (
-              <span className="text-xs text-gray-500">
+              <span className="text-gray-500 text-xs">
                 +{result.tags.length - 3}
               </span>
             )}
@@ -104,14 +104,14 @@ export function SearchResults({
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
-              <div className="flex justify-between mb-2">
-                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-16"></div>
-                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-20"></div>
+            <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+              <div className="mb-2 flex justify-between">
+                <div className="h-4 w-16 rounded bg-gray-300 dark:bg-gray-600"></div>
+                <div className="h-4 w-20 rounded bg-gray-300 dark:bg-gray-600"></div>
               </div>
-              <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-full mb-1"></div>
-              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-2/3"></div>
+              <div className="mb-2 h-6 w-3/4 rounded bg-gray-300 dark:bg-gray-600"></div>
+              <div className="mb-1 h-4 w-full rounded bg-gray-300 dark:bg-gray-600"></div>
+              <div className="h-4 w-2/3 rounded bg-gray-300 dark:bg-gray-600"></div>
             </div>
           </div>
         ))}
@@ -121,20 +121,20 @@ export function SearchResults({
 
   if (error) {
     return (
-      <div className="text-center py-8">
-        <div className="text-red-500 mb-2">⚠️ 검색 중 오류가 발생했습니다</div>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">{error}</p>
+      <div className="py-8 text-center">
+        <div className="mb-2 text-red-500">⚠️ 검색 중 오류가 발생했습니다</div>
+        <p className="text-gray-600 text-sm dark:text-gray-400">{error}</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="text-center py-8">
-        <div className="text-gray-500 dark:text-gray-400 mb-2">
+      <div className="py-8 text-center">
+        <div className="mb-2 text-gray-500 dark:text-gray-400">
           🔍 검색 결과가 없습니다
         </div>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
+        <p className="text-gray-600 text-sm dark:text-gray-400">
           다른 검색어를 시도해보세요.
         </p>
       </div>
@@ -143,11 +143,11 @@ export function SearchResults({
 
   return (
     <div className="space-y-4">
-      <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <div className="mb-4 text-gray-600 text-sm dark:text-gray-400">
         <strong>{`${query}`}</strong>에 대한 검색 결과 {results.length}개
       </div>
 
-      {results.map((result) => (
+      {results.map(result => (
         <SearchResultCard key={result.id} result={result} query={query} />
       ))}
     </div>

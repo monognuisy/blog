@@ -5,17 +5,17 @@ import { useEffect, useState } from 'react';
 const ScrollProgressBar = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleScroll = () => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    setScrollProgress(progress);
-  };
-
   useEffect(() => {
+    const handleScroll = (): void => {
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      setScrollProgress(progress);
+    };
+
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);

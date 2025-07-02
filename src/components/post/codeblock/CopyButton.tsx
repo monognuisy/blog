@@ -1,8 +1,8 @@
 'use client';
 
+import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/styles';
-import { Check, Copy } from 'lucide-react';
 
 type TCopyButtonProps = {
   raw: string;
@@ -23,8 +23,9 @@ const CopyButton = ({ raw, className }: TCopyButtonProps) => {
 
   return (
     <button
+      type="button"
       className={cn(
-        'opacity-0 copy-button rounded-md p-1 absolute top-2 right-2 ease-in-out duration-300 group-hover:opacity-100',
+        'copy-button absolute top-2 right-2 rounded-md p-1 opacity-0 duration-300 ease-in-out group-hover:opacity-100',
         className,
       )}
       style={{
@@ -33,9 +34,9 @@ const CopyButton = ({ raw, className }: TCopyButtonProps) => {
       onClick={handleCopy}
     >
       {isCopied ? (
-        <Check className="text-gray-500 w-4 h-4" />
+        <Check className="h-4 w-4 text-gray-500" />
       ) : (
-        <Copy className="text-gray-500 w-4 h-4" />
+        <Copy className="h-4 w-4 text-gray-500" />
       )}
     </button>
   );

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/styles';
 import Image from 'next/image';
+import { cn } from '@/lib/styles';
 
 type TCardImageProps = {
   className?: string;
@@ -20,7 +20,7 @@ const CardImage = ({
     return (
       <div
         className={cn(
-          'w-full aspect-video bg-gray-100 dark:bg-neutral-800 absolute h-full',
+          'absolute aspect-video h-full w-full bg-gray-100 dark:bg-neutral-800',
           className,
         )}
       ></div>

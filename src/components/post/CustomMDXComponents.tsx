@@ -1,13 +1,13 @@
-import { MDXProvider } from '@mdx-js/react';
+import type { MDXProvider } from '@mdx-js/react';
+import { LucideLink } from 'lucide-react';
 import Image from 'next/image';
-import LinkCard from './LinkCard';
-import Pre, { TPreProps } from './codeblock/Pre';
 import Link from 'next/link';
-import React from 'react';
+import type React from 'react';
 import { cn } from '@/lib/styles';
+import Pre, { type TPreProps } from './codeblock/Pre';
 import Highlight from './custom/Highlight';
 import Note from './custom/Note';
-import { LucideLink } from 'lucide-react';
+import LinkCard from './LinkCard';
 
 // 헤더 ID 생성 함수
 const generateId = () => {
@@ -23,11 +23,11 @@ const generateId = () => {
       if (typeof text === 'string') {
         textContent = text;
       } else if (Array.isArray(text)) {
-        textContent = text.map((item) => generator(item)).join('');
+        textContent = text.map(item => generator(item)).join('');
       } else if (typeof text === 'object' && text !== null) {
         // 간단한 텍스트 추출 로직
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: <>
           textContent = generator((text as any).props.children);
         } catch {
           textContent = '';
@@ -58,46 +58,46 @@ const CustomMDXComponents = (
   const generateIdFromText = generateId();
 
   return {
-    h1: (props) => {
+    h1: props => {
       const id = props.id || generateIdFromText(props.children, 1);
-      return <h1 id={id} className="text-3xl font-bold mt-6 mb-4" {...props} />;
+      return <h1 id={id} className="mt-6 mb-4 font-bold text-3xl" {...props} />;
     },
-    h2: (props) => {
+    h2: props => {
       const id = props.id || generateIdFromText(props.children, 2);
       return (
-        <div className="*:text-2xl *:font-bold mt-8 mb-4 pt-6 border-t border-gray-200 dark:border-gray-700 relative group flex items-center gap-2">
+        <div className="group relative mt-8 mb-4 flex items-center gap-2 border-gray-200 border-t pt-6 *:font-bold *:text-2xl dark:border-gray-700">
           <h2 id={id} className="m-0 p-0" {...props} />
           <HeaderAnchor id={id} />
         </div>
       );
     },
-    h3: (props) => {
+    h3: props => {
       const id = props.id || generateIdFromText(props.children, 3);
       return (
-        <div className="*:text-xl *:font-bold mt-6 mb-3 pt-4 relative group flex items-center gap-2">
+        <div className="group relative mt-6 mb-3 flex items-center gap-2 pt-4 *:font-bold *:text-xl">
           <h3 id={id} className="m-0 p-0" {...props} />
           <HeaderAnchor id={id} />
         </div>
       );
     },
-    h4: (props) => {
+    h4: props => {
       const id = props.id || generateIdFromText(props.children, 4);
       return (
-        <div className="*:text-lg *:font-semibold mt-4 mb-2 relative group flex items-center gap-2">
+        <div className="group relative mt-4 mb-2 flex items-center gap-2 *:font-semibold *:text-lg">
           <h4 id={id} className="m-0 p-0" {...props} />
           <HeaderAnchor id={id} />
         </div>
       );
     },
-    h5: (props) => {
+    h5: props => {
       const id = props.id || generateIdFromText(props.children, 5);
       return (
-        <div className="*:text-base *:font-semibold mt-4 mb-2 relative group flex items-center gap-2">
+        <div className="group relative mt-4 mb-2 flex items-center gap-2 *:font-semibold *:text-base">
           <h5 id={id} className="m-0 p-0" {...props} />
         </div>
       );
     },
-    img: (props) => (
+    img: props => (
       <>
         {props.src && (
           <>
@@ -108,53 +108,53 @@ const CustomMDXComponents = (
                 src={`/images/post/${category}/${slug}/${props.src}`}
                 width={1024}
                 height={1024}
-                className="w-full max-w-[768px] h-auto mx-auto"
+                className="mx-auto h-auto w-full max-w-[768px]"
               />
             </Link>
-            <em className="inline-block mt-2 image-caption">{props.alt}</em>
+            <em className="image-caption mt-2 inline-block">{props.alt}</em>
           </>
         )}
       </>
     ),
-    a: (props) => (
+    a: props => (
       <Link href={props.href ?? ''} {...props}>
         {props.children}
         <sup className="outer-link text-xs">↗</sup>
       </Link>
     ),
-    pre: (props) => <Pre {...(props as TPreProps)} />,
-    table: (props) => (
-      <div className="overflow-x-auto my-6">
+    pre: props => <Pre {...(props as TPreProps)} />,
+    table: props => (
+      <div className="my-6 overflow-x-auto">
         <table
-          className="min-w-full text-sm border-collapse border border-gray-200 dark:border-neutral-700 rounded-lg overflow-hidden shadow-sm"
+          className="min-w-full border-collapse overflow-hidden rounded-lg border border-gray-200 text-sm shadow-sm dark:border-neutral-700"
           {...props}
         />
       </div>
     ),
-    thead: (props) => (
+    thead: props => (
       <thead className="bg-gray-50 dark:bg-neutral-800" {...props} />
     ),
-    tbody: (props) => (
+    tbody: props => (
       <tbody
-        className="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-neutral-700"
+        className="divide-y divide-gray-200 bg-white dark:divide-neutral-700 dark:bg-neutral-900"
         {...props}
       />
     ),
-    tr: (props) => (
+    tr: props => (
       <tr
-        className="hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors duration-200"
+        className="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-neutral-800"
         {...props}
       />
     ),
-    th: (props) => (
+    th: props => (
       <th
-        className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-neutral-300 uppercase tracking-wider border-b border-gray-200 dark:border-neutral-700"
+        className="border-gray-200 border-b px-4 py-3 text-left font-semibold text-gray-700 text-xs uppercase tracking-wider dark:border-neutral-700 dark:text-neutral-300"
         {...props}
       />
     ),
-    td: (props) => (
+    td: props => (
       <td
-        className="px-4 py-3 text-sm text-gray-900 dark:text-neutral-100 border-b border-gray-200 dark:border-neutral-700"
+        className="border-gray-200 border-b px-4 py-3 text-gray-900 text-sm dark:border-neutral-700 dark:text-neutral-100"
         {...props}
       />
     ),
@@ -177,11 +177,11 @@ const HeaderAnchor = ({ id, className }: IHeaderAnchorProps) => {
     <Link
       href={`#${id}`}
       className={cn(
-        'group-hover:opacity-100 opacity-0 transition-opacity duration-300 ease-in-out cursor-pointer text-gray-500 dark:text-gray-400',
+        'cursor-pointer text-gray-500 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 dark:text-gray-400',
         className,
       )}
     >
-      <LucideLink className="w-4 h-4" />
+      <LucideLink className="h-4 w-4" />
     </Link>
   );
 };

@@ -1,8 +1,8 @@
 import { visit } from 'unist-util-visit';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <>
 export const rehypeCodePreProcess = () => (tree: any) => {
-  visit(tree, (node) => {
+  visit(tree, node => {
     if (node?.type === 'element' && node?.tagName === 'pre') {
       const [codeEl] = node.children;
 
@@ -13,11 +13,11 @@ export const rehypeCodePreProcess = () => (tree: any) => {
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <>
 export const rehypeCodePostProcess = () => (tree: any) => {
-  visit(tree, 'element', (node) => {
+  visit(tree, 'element', node => {
     if (node?.type === 'element' && node?.tagName === 'pre') {
-      node.properties['raw'] = node.raw;
+      node.properties.raw = node.raw;
       // console.log(node) here to see if you're getting the raw text
     }
   });

@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes } from 'react';
+import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import CopyButton from './CopyButton';
 
 export type TPreProps = DetailedHTMLProps<
@@ -10,7 +10,7 @@ export type TPreProps = DetailedHTMLProps<
 
 const Pre = ({ raw, children, ...props }: TPreProps) => {
   return (
-    <div className="relative group">
+    <div className="group relative">
       <pre {...props}>{children}</pre>
       <CopyButton raw={raw} />
     </div>

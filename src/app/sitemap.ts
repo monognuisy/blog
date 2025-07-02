@@ -1,5 +1,5 @@
+import type { MetadataRoute } from 'next';
 import { getSortedPostList } from '@/lib/getBlogPost';
-import { MetadataRoute } from 'next';
 
 const defaultSitemap = [
   {
@@ -19,7 +19,7 @@ const defaultSitemap = [
 const getBlogSitemap = async () => {
   const blogPosts = await getSortedPostList();
   return [
-    ...blogPosts.map((post) => ({
+    ...blogPosts.map(post => ({
       url: `${process.env.NEXT_PUBLIC_URI}/${post.category}/${post.slug}`,
       lastModified: new Date(post.date),
       changeFrequency: 'daily',
