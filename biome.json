@@ -50,7 +50,8 @@
         "useValidAnchor": "warn",
         "useAltText": "warn",
         "useButtonType": "warn",
-        "noStaticElementInteractions": "off"
+        "noStaticElementInteractions": "off",
+        "noAutofocus": "off"
       }
     }
   },

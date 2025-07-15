@@ -169,6 +169,7 @@ const SearchBar = () => {
                 <input
                   type="text"
                   placeholder="검색어를 입력하세요..."
+                  autoFocus
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="w-full bg-transparent text-gray-900 text-lg placeholder-gray-500 focus:outline-none dark:text-gray-100"

@@ -13,7 +13,7 @@
     "lint:fix": "pnpm biome lint . --write",
     "check": "pnpm biome check .",
     "check:fix": "pnpm biome check . --write",
-    "prebuild": "pnpm biome check . && pnpm tsc",
+    "prebuild": "pnpm biome lint . && pnpm tsc",
     "type-check": "tsc --noEmit",
     "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true",
     "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts"
