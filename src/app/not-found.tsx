@@ -2,8 +2,10 @@ import Link from 'next/link';
 
 const NotFound = () => {
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4">
-      <h1 className="font-bold text-4xl">페이지를 찾을 수 없었어요 :(</h1>
+    <div className="flex min-h-[calc(100vh-52px)] flex-col items-center justify-center gap-4 p-4">
+      <h1 className="font-bold text-2xl md:text-4xl">
+        페이지를 찾을 수 없었어요 :(
+      </h1>
       <p className="text-gray-600 dark:text-gray-400">
         이런 것을 404 라고 하는 것 같아요.
       </p>
