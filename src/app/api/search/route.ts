@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabaseQuery = supabase
-      .rpc('search_posts_flexible', { search_text: query })
+      .rpc('search_posts_simple', { search_text: query })
       .order('date', { ascending: false })
       .limit(parseInt(limit));
 
