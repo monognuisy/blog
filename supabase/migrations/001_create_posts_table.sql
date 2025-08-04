@@ -55,12 +55,27 @@ $$ LANGUAGE 'plpgsql';
     FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column(); 
 
-create or replace function search_posts_flexible(search_text text)
-returns setof posts as $$
-begin
-  return query
-  select * from posts 
-  where replace(title, ' ', '') ilike '%' || replace(search_text, ' ', '') || '%'
-  or replace(description, ' ', '') ilike '%' || replace(search_text, ' ', '') || '%';
-end;
-$$ language plpgsql;
+-- 또는 더 강력한 정규화를 위해
+CREATE INDEX pgroonga_posts_index ON posts 
+USING pgroonga (title, description)
+WITH (normalizers='NormalizerNFKC130');
+
+-- 간단한 띄어쓰기 무시 검색 함수
+CREATE OR REPLACE FUNCTION search_posts_simple(search_text text)
+RETURNS SETOF posts AS $$
+DECLARE
+  clean_search text;
+BEGIN
+  -- 공백 제거
+  clean_search := regexp_replace(search_text, '\s+', '', 'g');
+  
+  RETURN QUERY
+  SELECT * FROM posts 
+  WHERE regexp_replace(title, '\s+', '', 'g') &@~ clean_search
+    OR regexp_replace(description, '\s+', '', 'g') &@~ clean_search
+    OR title &@~ search_text  -- 원본 검색도 포함
+    OR description &@~ search_text
+  ORDER BY pgroonga_score(tableoid, ctid) DESC
+  LIMIT 50;
+END;
+$$ LANGUAGE plpgsql;
