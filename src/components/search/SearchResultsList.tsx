@@ -5,7 +5,8 @@ interface SearchResultsListProps {
   searchQuery: string;
   results: SearchResult[];
   isLoading: boolean;
-  error: string | null;
+  isFetching?: boolean;
+  error: Error | null;
   closeModal: () => void;
 }
 
@@ -13,6 +14,7 @@ export const SearchResultsList = ({
   searchQuery,
   results,
   isLoading,
+  isFetching = false,
   error,
   closeModal,
 }: SearchResultsListProps) => {
@@ -70,7 +72,9 @@ export const SearchResultsList = ({
     return (
       <div className="p-4 text-center">
         <div className="mb-2 text-red-500">⚠️ 검색 중 오류가 발생했습니다</div>
-        <p className="text-gray-600 text-sm dark:text-gray-400">{error}</p>
+        <p className="text-gray-600 text-sm dark:text-gray-400">
+          {error.message}
+        </p>
       </div>
     );
   }
@@ -80,11 +84,20 @@ export const SearchResultsList = ({
     <div className="p-4">
       {results.length > 0 ? (
         <>
-          <div className="mb-4 text-gray-600 text-sm dark:text-gray-400">
-            <strong>{`"${searchQuery}"`}</strong>에 대한 검색 결과{' '}
-            {results.length}개
+          <div className="mb-4 flex items-center justify-between">
+            <div className="text-gray-600 text-sm dark:text-gray-400">
+              <strong>{`"${searchQuery}"`}</strong>에 대한 검색 결과{' '}
+              {results.length}개
+            </div>
+            {/* 백그라운드 로딩 인디케이터 */}
+            {isFetching && (
+              <div className="flex items-center text-gray-500 text-xs dark:text-gray-400">
+                <div className="mr-1 h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                업데이트 중...
+              </div>
+            )}
           </div>
-          <div className="space-y-3">
+          <div className={`space-y-3 ${isFetching ? 'opacity-80' : ''}`}>
             {results.map(result => (
               <SearchResultCard
                 key={result.id}

@@ -1,33 +1,34 @@
-import { useEffect } from 'react';
-import type { SearchResult } from '@/types/search';
+import { useCallback, useEffect } from 'react';
+import { useSearch } from '@/hooks/useSearch';
 import { SearchResultsList } from './SearchResultsList';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  results: SearchResult[];
-  isLoading: boolean;
-  error: string | null;
-  performSearch: (query: string) => void;
 }
 
-export const SearchModal = ({
-  isOpen,
-  onClose,
-  searchQuery,
-  setSearchQuery,
-  results,
-  isLoading,
-  error,
-  performSearch,
-}: SearchModalProps) => {
+export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
+  const {
+    searchQuery,
+    setSearchQuery,
+    results,
+    isLoading,
+    isFetching,
+    error,
+    performSearch,
+    resetSearch,
+  } = useSearch();
+
+  const closeModal = useCallback(() => {
+    resetSearch();
+    onClose();
+  }, [resetSearch, onClose]);
+
   // ESC 키로 모달 닫기
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose();
+        closeModal();
       }
     };
 
@@ -37,7 +38,7 @@ export const SearchModal = ({
         window.removeEventListener('keydown', handleKeyDown);
       };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, closeModal]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +53,7 @@ export const SearchModal = ({
   return (
     <div
       className="fixed top-0 left-0 z-50 flex h-[100vh] w-dvw items-start justify-center bg-black/50 pt-20"
-      onClick={onClose}
+      onClick={closeModal}
     >
       <div className="mx-auto w-[700px] max-w-[90vw] px-4">
         <div
@@ -80,8 +81,9 @@ export const SearchModal = ({
               searchQuery={searchQuery}
               results={results}
               isLoading={isLoading}
+              isFetching={isFetching}
               error={error}
-              closeModal={onClose}
+              closeModal={closeModal}
             />
           </div>
         </div>
