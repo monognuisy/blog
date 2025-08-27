@@ -29,7 +29,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
             <p className="mb-4 text-gray-500 text-xs dark:text-gray-400">
               <b>{categories}</b> - {date}
             </p>
-            <p className="text-sm">{description}</p>
+            <p className="text-sm line-clamp-2">{description}</p>
           </div>
         </div>
       </Link>

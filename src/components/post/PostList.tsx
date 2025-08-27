@@ -34,11 +34,11 @@ const PostList = ({ tag }: PostListProps) => {
 
   return (
     <div>
-      <div className="grid grid-cols-[2fr_1fr] gap-4 py-6 h-[600px]">
+      <div className="flex lg:grid lg:grid-cols-[2fr_1fr] gap-4 py-6">
         <PostCardLatest post={latestPost} />
         <LogContainer />
       </div>
-      <h1 className="mt-8 text-3xl md:mt-20 md:text-4xl">최신 글</h1>
+      <h1 className="mt-8 text-3xl md:text-2xl">모든 글</h1>
       <TagList tags={tags} />
       <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
         {postInfos.map(({ id, category, slug, ...frontmatter }) => (

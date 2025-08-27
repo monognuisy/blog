@@ -46,7 +46,7 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
                   day: 'numeric',
                 })}
               </p>
-              <p className="text-sm">{description}</p>
+              <p className="text-sm line-clamp-2">{description}</p>
             </div>
           </div>
         </div>
