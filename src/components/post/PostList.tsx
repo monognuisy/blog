@@ -34,7 +34,7 @@ const PostList = ({ tag }: PostListProps) => {
 
   return (
     <div>
-      <div className="flex lg:grid lg:grid-cols-[2fr_1fr] gap-4 py-6">
+      <div className="hidden md:flex lg:grid lg:grid-cols-[2fr_1fr] gap-4 py-6">
         <PostCardLatest post={latestPost} />
         <LogContainer />
       </div>
