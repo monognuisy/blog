@@ -24,7 +24,9 @@ const PostCardLatest = ({ post }: TPostCardLatestProps) => {
             cover={cover}
             alt={`Cover image of latest post`}
             className="z-[0] rounded-2xl object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 1024px) 100vw, (max-width: 1300px) 60w, (max-width: 1536px) 862px, 1000px"
             priority
+            fetchPriority="high"
           />
           <div className="absolute top-4 left-4 z-10 bg-white/50 backdrop-blur-sm dark:bg-black/50 rounded-md px-2 py-1">
             <h2 className="text-xl font-bold my-0 text-black dark:text-white py-0">
