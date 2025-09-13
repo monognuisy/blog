@@ -38,7 +38,7 @@ const CardImage = ({
       fill
       sizes={sizes}
       className={className}
-      quality={80}
+      quality={75}
       priority={priority}
       fetchPriority={fetchPriority}
       loading={lazy === undefined ? undefined : lazy ? 'lazy' : 'eager'}
