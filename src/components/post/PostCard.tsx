@@ -12,7 +12,7 @@ type TPostCardProps = {
 const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
   const { title, date, description, tags, categories, cover } = frontmatter;
   return (
-    <div className="group my-6 min-w-full rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-md md:min-w-[32%] md:first:hidden dark:border-neutral-800">
+    <div className="group my-6 min-w-full rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-md md:min-w-[32%] dark:border-neutral-700">
       <Link href={`/${category}/${slug}`}>
         <div>
           <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-t-xl">
@@ -21,6 +21,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
               alt={`Cover image of ${slug}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="rounded-xl rounded-b-none object-cover transition-transform duration-300 group-hover:scale-105"
+              lazy
             />
           </div>
           <div className="mt-0 p-4">
@@ -29,7 +30,7 @@ const PostCard = ({ frontmatter, category, slug }: TPostCardProps) => {
             <p className="mb-4 text-gray-500 text-xs dark:text-gray-400">
               <b>{categories}</b> - {date}
             </p>
-            <p className="text-sm">{description}</p>
+            <p className="text-sm line-clamp-2">{description}</p>
           </div>
         </div>
       </Link>

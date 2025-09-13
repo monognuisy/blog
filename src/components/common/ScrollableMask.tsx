@@ -118,7 +118,7 @@ const ScrollableMask = ({
     !scrollState.isAtRight;
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       {/* 스크롤 컨테이너 */}
       <div ref={containerRef} className={className}>
         {children}

@@ -7,6 +7,8 @@ type TCardImageProps = {
   sizes?: string;
   alt: string;
   priority?: boolean;
+  fetchPriority?: 'auto' | 'high' | 'low';
+  lazy?: boolean | undefined;
 };
 
 const CardImage = ({
@@ -15,6 +17,8 @@ const CardImage = ({
   alt,
   sizes = '100vw',
   priority = false,
+  fetchPriority,
+  lazy = undefined,
 }: TCardImageProps) => {
   if (!cover) {
     return (
@@ -36,6 +40,8 @@ const CardImage = ({
       className={className}
       quality={80}
       priority={priority}
+      fetchPriority={fetchPriority}
+      loading={lazy === undefined ? undefined : lazy ? 'lazy' : 'eager'}
     />
   );
 };
