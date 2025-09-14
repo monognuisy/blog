@@ -21,14 +21,18 @@ const generateMetadata = async ({ params }: TCategoryPageProps) => {
 
   const title = `${categoryName}`;
   const description = `${categoryName} posts`;
+  const url = `${process.env.NEXT_PUBLIC_URI}/${category}`;
 
   return {
     title,
     description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description,
-      url: `${process.env.NEXT_PUBLIC_URI}/${category}`,
+      url,
       siteName: 'monognuisy blog',
       images: [
         {

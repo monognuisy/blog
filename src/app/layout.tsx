@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   ),
   title: 'monognuisy blog',
   description: 'Technical blog about web development, programming, and more.',
+  alternates: {
+    canonical: isProduction
+      ? process.env.NEXT_PUBLIC_URI!
+      : 'http://localhost:3000',
+  },
   openGraph: {
     title: 'monognuisy blog',
     description: 'Technical blog about web development, programming, and more.',
