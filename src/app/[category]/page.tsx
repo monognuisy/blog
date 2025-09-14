@@ -19,7 +19,7 @@ const generateMetadata = async ({ params }: TCategoryPageProps) => {
   const contents = getSortedPostListByCategory(category);
   const categoryName = contents?.[0]?.categories ?? category;
 
-  const title = `${categoryName}`;
+  const title = `${categoryName} 카테고리의 글 | monognuisy blog`;
   const description = `${categoryName} posts`;
   const url = `${process.env.NEXT_PUBLIC_URI}/${category}`;
 
