@@ -32,15 +32,15 @@ const AnnouncementPage = async ({ params }: TAnnouncementPageProps) => {
   });
 
   return (
-    <div className="post-wrapper">
-      <div className="relative mx-auto max-w-[1024px] px-4 pt-10">
+    <section className="post-wrapper">
+      <article className="relative mx-auto max-w-[1024px] px-4 pt-10">
         <div>
           <h1>{frontmatter.title}</h1>
           <p>{frontmatter.date}</p>
         </div>
         <div className="">{content}</div>
-      </div>
-    </div>
+      </article>
+    </section>
   );
 };
 

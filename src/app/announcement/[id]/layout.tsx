@@ -4,7 +4,7 @@ type TAnnouncementLayoutProps = {
 
 // max-w-[768px]
 const AnnouncementLayout = ({ children }: TAnnouncementLayoutProps) => {
-  return <div className="mx-auto min-h-[100vh]">{children}</div>;
+  return <section className="mx-auto min-h-[100vh]">{children}</section>;
 };
 
 export default AnnouncementLayout;

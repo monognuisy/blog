@@ -77,16 +77,16 @@ const CategoryPage = async ({ params }: TCategoryPageProps) => {
         category={categoryName}
         posts={postsForSchema}
       />
-      <div className="mx-auto max-w-[1200px] px-4">
+      <section className="mx-auto max-w-[1200px] px-4">
         <h1 className="my-2 text-[2rem] md:my-12 md:text-[2.5rem]">
           {`${categoryName}`} 카테고리의 글
         </h1>
-        <div className="hidden border-l md:flex md:flex-col md:gap-12">
+        <section className="hidden border-l md:flex md:flex-col md:gap-12">
           {contents.map(post => (
             <CategoryPostCard key={post.id} post={post} />
           ))}
-        </div>
-        <div className="flex flex-col gap-0 md:hidden">
+        </section>
+        <section className="flex flex-col gap-0 md:hidden">
           {contents.map(post => (
             <PostCard
               key={post.id}
@@ -95,8 +95,8 @@ const CategoryPage = async ({ params }: TCategoryPageProps) => {
               slug={post.slug}
             />
           ))}
-        </div>
-      </div>
+        </section>
+      </section>
     </>
   );
 };

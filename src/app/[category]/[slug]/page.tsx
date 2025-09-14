@@ -111,21 +111,21 @@ const PostPage = async ({ params }: TPostPageProps) => {
           slug={slug}
         />
         <div>
-          <div>
+          <section>
             <PostTitle post={frontmatter} />
-          </div>
+          </section>
 
           <div className="items-start bg-white dark:bg-dark-bg">
             {/* 목차 사이드바 */}
             <div className="mx-auto w-full max-w-[1200px] lg:flex lg:gap-20">
-              <div className="post-wrapper relative max-w-[800px] px-4 pt-10">
-                {content}
+              <section className="post-wrapper relative max-w-[800px] px-4 pt-10">
+                <article>{content}</article>
                 <AdjacentPostLinks prev={prev} next={next} />
                 <Comment />
-              </div>
-              <div className="hidden lg:block">
+              </section>
+              <section className="hidden lg:block">
                 <TableOfContentsWrapper />
-              </div>
+              </section>
             </div>
           </div>
         </div>
