@@ -109,6 +109,11 @@ const getSortedPostListByCategory = (
   return categoryPosts.toSorted((a, b) => sortFn(a.date, b.date));
 };
 
+const getLatestPost = () => {
+  const allPosts = getSortedPostList();
+  return allPosts[0];
+};
+
 /**
  * Generate post data from category and slug.
  */
@@ -183,6 +188,7 @@ export {
   getAllCategories,
   getSortedPostList,
   getSortedPostListByCategory,
+  getLatestPost,
   getPostData,
   getAllTags,
   getSortedPostListByTag,

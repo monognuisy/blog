@@ -1,5 +1,6 @@
 import {
   getAllTags,
+  getLatestPost,
   getSortedPostList,
   getSortedPostListByTag,
 } from '@/lib/getBlogPost';
@@ -30,7 +31,7 @@ const PostList = ({ tag }: PostListProps) => {
     );
   }
 
-  const latestPost = postInfos[0];
+  const latestPost = getLatestPost();
 
   return (
     <div>
