@@ -4,7 +4,7 @@ type TBlogPostLayoutProps = {
 
 // max-w-[768px]
 const BlogPostLayout = ({ children }: TBlogPostLayoutProps) => {
-  return <div className="mx-auto">{children}</div>;
+  return <section className="mx-auto">{children}</section>;
 };
 
 export default BlogPostLayout;

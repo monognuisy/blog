@@ -8,12 +8,6 @@ const defaultSitemap = [
     changeFrequency: 'daily',
     priority: 0.7,
   },
-  {
-    url: `${process.env.NEXT_PUBLIC_URI}/announcement`,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 0.5,
-  },
 ] satisfies MetadataRoute.Sitemap;
 
 const getBlogSitemap = async () => {

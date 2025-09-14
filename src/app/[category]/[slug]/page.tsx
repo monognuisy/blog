@@ -5,6 +5,7 @@ import AdjacentPostLinks from '@/components/post/AdjacentPostLinks';
 import CustomMDXComponents from '@/components/post/CustomMDXComponents';
 import PostTitle from '@/components/post/PostTitle';
 import TableOfContentsWrapper from '@/components/post/TableOfContents';
+import { BlogPostingStructuredData } from '@/components/seo/StructuredData';
 import Comment from '@/components/utterance/Comment';
 import {
   getAdjacentPosts,
@@ -38,6 +39,9 @@ const generateMetadata = async ({
     return {
       title,
       description,
+      alternates: {
+        canonical: url,
+      },
       openGraph: {
         title,
         description,
@@ -99,25 +103,33 @@ const PostPage = async ({ params }: TPostPageProps) => {
     const { prev, next } = getAdjacentPosts(category, slug);
 
     return (
-      <div>
+      <>
+        {/* React 19 automatically hoists this script tag to <head> */}
+        <BlogPostingStructuredData
+          frontmatter={frontmatter}
+          category={category}
+          slug={slug}
+        />
         <div>
-          <PostTitle post={frontmatter} />
-        </div>
+          <section>
+            <PostTitle post={frontmatter} />
+          </section>
 
-        <div className="items-start bg-white dark:bg-dark-bg">
-          {/* 목차 사이드바 */}
-          <div className="mx-auto w-full max-w-[1200px] lg:flex lg:gap-20">
-            <div className="post-wrapper relative max-w-[800px] px-4 pt-10">
-              {content}
-              <AdjacentPostLinks prev={prev} next={next} />
-              <Comment />
-            </div>
-            <div className="hidden lg:block">
-              <TableOfContentsWrapper />
+          <div className="items-start bg-white dark:bg-dark-bg">
+            {/* 목차 사이드바 */}
+            <div className="mx-auto w-full max-w-[1200px] lg:flex lg:gap-20">
+              <section className="post-wrapper relative max-w-[800px] px-4 pt-10">
+                <article>{content}</article>
+                <AdjacentPostLinks prev={prev} next={next} />
+                <Comment />
+              </section>
+              <section className="hidden lg:block">
+                <TableOfContentsWrapper />
+              </section>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   } catch {
     // 못 찾았을 시 404 페이지로 이동

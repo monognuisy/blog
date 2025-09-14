@@ -21,11 +21,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     isProduction ? process.env.NEXT_PUBLIC_URI! : 'http://localhost:3000',
   ),
-  title: 'monognuisy blog',
-  description: 'Technical blog about web development, programming, and more.',
+  title: '블로그 홈 | monognuisy blog',
+  description: '웹 개발, 인공지능 등 다양한 프로그래밍 관련 개발 블로그입니다.',
+  alternates: {
+    canonical: isProduction
+      ? process.env.NEXT_PUBLIC_URI!
+      : 'http://localhost:3000',
+  },
   openGraph: {
-    title: 'monognuisy blog',
-    description: 'Technical blog about web development, programming, and more.',
+    title: '블로그 홈 | monognuisy blog',
+    description:
+      '웹 개발, 인공지능 등 다양한 프로그래밍 관련 개발 블로그입니다.',
     url: `${process.env.NEXT_PUBLIC_URI}`,
     siteName: 'monognuisy blog',
     locale: 'ko_KR',
@@ -41,8 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'monognuisy blog',
-    description: 'Technical blog about web development, programming, and more.',
+    title: '블로그 홈 | monognuisy blog',
+    description:
+      '웹 개발, 인공지능 등 다양한 프로그래밍 관련 개발 블로그입니다.',
     images: [`/images/cover/blog-cover.webp`],
   },
   verification: {

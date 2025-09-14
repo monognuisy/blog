@@ -1,4 +1,5 @@
 import PostList from '@/components/post/PostList';
+import { BlogStructuredData } from '@/components/seo/StructuredData';
 import { getRecentAnnouncements } from '@/lib/getAnnouncement';
 import AnnouncementCard from '../components/announcement/AnnouncementCard';
 
@@ -12,11 +13,14 @@ export default async function Home({ searchParams }: HomeProps) {
   const selectedTag = params.tag;
 
   return (
-    <main className="mx-auto h-full max-w-[80rem] px-4 2xl:max-w-[96rem] ">
-      {recentAnnouncements.map(announcement => (
-        <AnnouncementCard announcement={announcement} key={announcement.id} />
-      ))}
-      <PostList tag={selectedTag} />
-    </main>
+    <>
+      <BlogStructuredData />
+      <main className="mx-auto h-full max-w-[80rem] px-4 2xl:max-w-[96rem] ">
+        {recentAnnouncements.map(announcement => (
+          <AnnouncementCard announcement={announcement} key={announcement.id} />
+        ))}
+        <PostList tag={selectedTag} />
+      </main>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { CollectionPageStructuredData } from '@/components/seo/StructuredData';
 import {
   getAllCategories,
   getSortedPostListByCategory,
@@ -18,16 +19,20 @@ const generateMetadata = async ({ params }: TCategoryPageProps) => {
   const contents = getSortedPostListByCategory(category);
   const categoryName = contents?.[0]?.categories ?? category;
 
-  const title = `${categoryName}`;
+  const title = `${categoryName} 카테고리의 글 | monognuisy blog`;
   const description = `${categoryName} posts`;
+  const url = `${process.env.NEXT_PUBLIC_URI}/${category}`;
 
   return {
     title,
     description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description,
-      url: `${process.env.NEXT_PUBLIC_URI}/${category}`,
+      url,
       siteName: 'monognuisy blog',
       images: [
         {
@@ -57,27 +62,42 @@ const CategoryPage = async ({ params }: TCategoryPageProps) => {
 
   const categoryName = contents[0]?.categories ?? category;
 
+  // CollectionPageStructuredData에 필요한 데이터 형식으로 변환
+  const postsForSchema = contents.map(post => ({
+    title: post.title,
+    slug: post.slug,
+    category: post.category,
+    date: post.date,
+  }));
+
   return (
-    <div className="mx-auto max-w-[1200px] px-4">
-      <h1 className="my-2 text-[2rem] md:my-12 md:text-[2.5rem]">
-        {`${categoryName}`} 카테고리의 글
-      </h1>
-      <div className="hidden border-l md:flex md:flex-col md:gap-12">
-        {contents.map(post => (
-          <CategoryPostCard key={post.id} post={post} />
-        ))}
-      </div>
-      <div className="flex flex-col gap-0 md:hidden">
-        {contents.map(post => (
-          <PostCard
-            key={post.id}
-            frontmatter={post}
-            category={post.category}
-            slug={post.slug}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      {/* React 19 automatically hoists this script tag to <head> */}
+      <CollectionPageStructuredData
+        category={categoryName}
+        posts={postsForSchema}
+      />
+      <section className="mx-auto max-w-[1200px] px-4">
+        <h1 className="my-2 text-[2rem] md:my-12 md:text-[2.5rem]">
+          {`${categoryName}`} 카테고리의 글
+        </h1>
+        <section className="hidden border-l md:flex md:flex-col md:gap-12">
+          {contents.map(post => (
+            <CategoryPostCard key={post.id} post={post} />
+          ))}
+        </section>
+        <section className="flex flex-col gap-0 md:hidden">
+          {contents.map(post => (
+            <PostCard
+              key={post.id}
+              frontmatter={post}
+              category={post.category}
+              slug={post.slug}
+            />
+          ))}
+        </section>
+      </section>
+    </>
   );
 };
 
