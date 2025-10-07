@@ -16,7 +16,9 @@
     "prebuild": "pnpm biome lint . && pnpm tsc",
     "type-check": "tsc --noEmit",
     "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true",
-    "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts"
+    "migrate:supabase": "pnpx tsx scripts/migrate-to-supabase.ts",
+    "migrate:oracle": "pnpx tsx scripts/migrate-to-oracle.ts",
+    "download:oracle": "pnpx tsx scripts/download-from-oracle.ts"
   },
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
@@ -35,6 +37,7 @@
     "next": "15.5.3",
     "next-mdx-remote": "^5.0.0",
     "next-themes": "^0.4.6",
+    "oci-sdk": "^2.118.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "rehype-katex": "^7.0.1",
